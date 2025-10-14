@@ -1,4 +1,5 @@
 import React from "react";
+import "./Register.css"
 import Header from "../components/shared/Header";
 import Footer from "../components/shared/Footer";
 
