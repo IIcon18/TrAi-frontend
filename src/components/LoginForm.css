@@ -1,0 +1,117 @@
+.login-form-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 140px);
+    padding: 10px 15px;
+    background-color: #000;
+}
+
+.login-form-box {
+    width: 400px;
+    background: #1c1c1c;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+.login-form-title {
+    color: white;
+    font-size: 24px;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.login-form-group {
+    margin-bottom: 20px;
+}
+
+.login-input-label {
+    color: white;
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.login-input-field {
+    width: 100%;
+    padding: 12px 15px;
+    background: rgba(47, 47, 47, 0.71);
+    border: 2px solid transparent;
+    border-radius: 6px;
+    color: white;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+.login-input-field::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+    text-align: left;
+    opacity: 1;
+}
+
+.login-password-input-container {
+    position: relative;
+    width: 100%;
+}
+
+.login-password-field {
+    width: 100%;
+    padding: 12px 40px 12px 15px;
+    background: rgba(47, 47, 47, 0.71);
+    border: 2px solid transparent;
+    border-radius: 6px;
+    color: white;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+.login-password-field::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+    text-align: left;
+    opacity: 1;
+}
+
+.login-password-toggle {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 4px;
+    z-index: 2;
+}
+
+.login-password-toggle:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.login-password-toggle img {
+    width: 18px;
+    height: 18px;
+    filter: brightness(0) invert(0.6);
+}
+
+.login-divider {
+    height: 1px;
+    background: #333;
+    margin: 25px 0;
+}
+
+.login-buttons-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+

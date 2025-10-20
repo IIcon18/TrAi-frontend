@@ -1,8 +1,7 @@
-// src/router/AppRouter.tsx
 import React from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-// import Login from "../pages/Login";
 import Register from "../components/pages/Register";
+import Login from "../components/pages/Login";
 // import Dashboard from "../pages/Dashboard";
 // import Profile from "../pages/Profile";
 // import Workouts from "../pages/Workouts";
@@ -15,7 +14,7 @@ const AppRouter: React.FC = () => {
             <Routes>
                 <Route path="/" element={<Navigate to="/register" replace />} />
 
-                {/*<Route path="/login" element={<Login />} />*/}
+                <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
 
                 {/*<Route path="/dashboard" element={<Dashboard />} />*/}
