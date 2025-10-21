@@ -1,3 +1,6 @@
+/* Подключение шрифта SF Pro */
+@import url('https://cdn.jsdelivr.net/npm/sf-pro-display@1.0.0/sf-pro-display.css');
+
 .header {
     display: flex;
     justify-content: space-between;
@@ -7,6 +10,7 @@
     color: white;
     width: 100%;
     box-sizing: border-box;
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 .header-left {
@@ -23,7 +27,7 @@
 .tagline {
     font-size: 12px;
     color: #B9B9B9;
-    font-family: Arial, sans-serif;
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
     font-weight: bold;
     margin-top: -20px;
 }
@@ -31,7 +35,7 @@
 .logo {
     font-size: 64px;
     font-weight: bold;
-    font-family: Arial, sans-serif;
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 .logo-white {
@@ -47,7 +51,7 @@
     border: none;
     color: #B9B9B9;
     font-size: 16px;
-    font-family: Arial, sans-serif;
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
     cursor: pointer;
     padding: 8px 16px;
     transition: all 0.3s ease;

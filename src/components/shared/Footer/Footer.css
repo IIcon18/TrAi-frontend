@@ -1,3 +1,6 @@
+/* Подключение шрифта SF Pro */
+@import url('https://cdn.jsdelivr.net/npm/sf-pro-display@1.0.0/sf-pro-display.css');
+
 .footer {
     width: 100%;
     background-color: #000000;
@@ -6,7 +9,7 @@
     justify-content: flex-end;
     padding: 13px 100px;
     color: #9E9E9E;
-    font-family: "SF Pro", sans-serif;
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
     font-weight: 600;
     font-size: 16px;
     box-sizing: border-box;

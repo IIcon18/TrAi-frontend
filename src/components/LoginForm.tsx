@@ -37,24 +37,26 @@ const LoginForm: React.FC = () => {
                 <h2 className="login-form-title">Authorization</h2>
 
                 <div className="login-form">
+                    {/* Email Section */}
                     <div className="login-form-group">
-                        <label className="login-input-label">Username:</label>
+                        <label className="login-input-label">Email:</label>
                         <input
                             type="text"
                             className="login-input-field"
-                            placeholder="Имя пользователя"
+                            placeholder="Email"
                             value={formData.username}
                             onChange={(e) => handleInputChange("username", e.target.value)}
                         />
                     </div>
 
+                    {/* Password Section */}
                     <div className="login-form-group">
                         <label className="login-input-label">Password:</label>
                         <div className="login-password-input-container">
                             <input
                                 type={showPassword ? "text" : "password"}
                                 className="login-password-field"
-                                placeholder="Пароль"
+                                placeholder="Password"
                                 value={formData.password}
                                 onChange={(e) => handleInputChange("password", e.target.value)}
                             />
@@ -66,15 +68,21 @@ const LoginForm: React.FC = () => {
                                 <img
                                     src={showPassword ? EyeClosed : EyeOpen}
                                     alt={showPassword ? "Hide password" : "Show password"}
+                                    width="20"
+                                    height="20"
                                 />
                             </button>
                         </div>
                     </div>
 
-                    <div className="login-divider"></div>
-
+                    {/* Buttons Section */}
                     <div className="login-buttons-container">
-                        <ConfirmButton onClick={handleLogin} />
+                        <div className="login-confirm-wrapper">
+                            <ConfirmButton onClick={handleLogin} />
+                        </div>
+
+                        <div className="login-divider"></div>
+
                         <NewAccountButton onClick={handleCreateAccount} />
                     </div>
                 </div>

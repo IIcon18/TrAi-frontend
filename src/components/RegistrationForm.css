@@ -1,3 +1,6 @@
+/* Подключение шрифта SF Pro */
+@import url('https://cdn.jsdelivr.net/npm/sf-pro-display@1.0.0/sf-pro-display.css');
+
 .registration-container {
     flex: 1;
     display: flex;
@@ -7,38 +10,33 @@
     padding: 10px 15px;
     background-color: #000;
     overflow-y: hidden;
-}
-
-.registration-box {
-    width: 400px;
-    max-height: 80vh;
-    overflow-y: auto;
-    background: #1c1c1c;
-    border-radius: 12px;
-    padding: 20px 25px;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
-}
-
-input[type="number"] {
-    -moz-appearance: textfield;
-}
-
-input[type="number"]::-webkit-outer-spin-button,
-input[type="number"]::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-}
-
-input[type="number"] {
-    appearance: textfield;
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 .registration-box {
     width: 500px;
+    max-height: 80vh;
+    overflow-y: auto;
     background: #1c1c1c;
     border-radius: 12px;
     padding: 30px 35px;
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Стили для скрытия стрелок в числовых полях */
+input[type="number"] {
+    -moz-appearance: textfield; /* Firefox */
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none; /* Chrome, Safari, Edge */
+    margin: 0;
+}
+
+input[type="number"] {
+    appearance: textfield; /* Стандарт */
 }
 
 .registration-title {
@@ -47,6 +45,7 @@ input[type="number"] {
     font-weight: 600;
     text-align: center;
     margin-bottom: 30px;
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 .form-group {
@@ -63,6 +62,7 @@ input[type="number"] {
     font-weight: 500;
     width: 120px;
     text-align: right;
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 .input-field {
@@ -74,12 +74,14 @@ input[type="number"] {
     color: white;
     font-size: 14px;
     box-sizing: border-box;
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 .input-field::placeholder {
     color: rgba(255, 255, 255, 0.4);
     text-align: center;
     opacity: 1;
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 .password-input-container {
@@ -102,11 +104,31 @@ input[type="number"] {
     position: relative;
     z-index: 1;
     text-align: left;
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Исправленный блок для браузерного автозаполнения */
+.password-field {
+    /* Для Chrome/Safari */
+    &::-webkit-credentials-auto-fill-button {
+        display: none !important;
+        visibility: hidden !important;
+        pointer-events: none !important;
+        position: absolute;
+        right: -1000px;
+    }
+
+    /* Для Edge */
+    &::-ms-reveal,
+    &::-ms-clear {
+        display: none !important;
+    }
 }
 
 .password-field::placeholder {
     text-align: center;
     color: rgba(255, 255, 255, 0.4);
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 .password-toggle {
@@ -188,6 +210,9 @@ input[type="number"] {
     height: 1px;
     background: #333;
     margin: 25px 0;
+    width: 100%;
+    margin-left: -35px;
+    width: calc(100% + 70px);
 }
 
 .select-field {
@@ -198,13 +223,14 @@ input[type="number"] {
     border-radius: 6px;
     font-size: 14px;
     box-sizing: border-box;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
+    -webkit-appearance: none; /* Chrome, Safari */
+    -moz-appearance: none; /* Firefox */
+    appearance: none; /* Стандарт */
     padding: 10px 20px 10px 14px;
     text-align: center;
     text-align-last: center;
     width: 100%;
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 .select-field:valid,
@@ -216,4 +242,5 @@ input[type="number"] {
     text-align: center;
     background: #2b2b2b;
     font-size: 14px;
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
 }

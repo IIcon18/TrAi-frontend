@@ -1,3 +1,6 @@
+/* Подключение шрифта SF Pro */
+@import url('https://cdn.jsdelivr.net/npm/sf-pro-display@1.0.0/sf-pro-display.css');
+
 .login-form-container {
     flex: 1;
     display: flex;
@@ -6,6 +9,7 @@
     min-height: calc(100vh - 140px);
     padding: 10px 15px;
     background-color: #000;
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif; /* ← Добавлен шрифт */
 }
 
 .login-form-box {
@@ -14,6 +18,7 @@
     border-radius: 12px;
     padding: 30px;
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif; /* ← Добавлен шрифт */
 }
 
 .login-form-title {
@@ -22,9 +27,14 @@
     font-weight: 600;
     text-align: center;
     margin-bottom: 30px;
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif; /* ← Добавлен шрифт */
 }
 
 .login-form-group {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
     margin-bottom: 20px;
 }
 
@@ -32,8 +42,9 @@
     color: white;
     font-size: 16px;
     font-weight: 500;
-    margin-bottom: 8px;
-    display: block;
+    width: 120px;
+    text-align: right;
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif; /* ← Добавлен шрифт */
 }
 
 .login-input-field {
@@ -45,12 +56,26 @@
     color: white;
     font-size: 14px;
     box-sizing: border-box;
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif; /* ← Добавлен шрифт */
+}
+
+/* Убрать выделение при фокусе */
+.login-input-field:focus {
+    outline: none;
+    box-shadow: none;
+    border-color: transparent;
 }
 
 .login-input-field::placeholder {
     color: rgba(255, 255, 255, 0.4);
-    text-align: left;
+    text-align: center;
     opacity: 1;
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif; /* ← Добавлен шрифт */
+}
+
+/* Убрать выделение placeholder при фокусе */
+.login-input-field:focus::placeholder {
+    color: rgba(255, 255, 255, 0.4);
 }
 
 .login-password-input-container {
@@ -60,21 +85,50 @@
 
 .login-password-field {
     width: 100%;
-    padding: 12px 40px 12px 15px;
+    padding: 12px 15px 12px 15px;
     background: rgba(47, 47, 47, 0.71);
     border: 2px solid transparent;
     border-radius: 6px;
     color: white;
     font-size: 14px;
     box-sizing: border-box;
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif; /* ← Добавлен шрифт */
+}
+
+/* Убрать выделение при фокусе для поля пароля */
+.login-password-field:focus {
+    outline: none;
+    box-shadow: none;
+    border-color: transparent;
+}
+
+/* Скрыть браузерный глаз для автозаполнения */
+.login-password-field::-webkit-credentials-auto-fill-button {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    position: absolute;
+    right: -1000px;
+}
+
+.login-password-field::-ms-reveal,
+.login-password-field::-ms-clear {
+    display: none !important;
 }
 
 .login-password-field::placeholder {
     color: rgba(255, 255, 255, 0.4);
-    text-align: left;
+    text-align: center;
     opacity: 1;
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif; /* ← Добавлен шрифт */
 }
 
+/* Убрать выделение placeholder при фокусе для пароля */
+.login-password-field:focus::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+/* Стили для кастомной кнопки глаза */
 .login-password-toggle {
     position: absolute;
     right: 10px;
@@ -83,35 +137,49 @@
     background: none;
     border: none;
     cursor: pointer;
-    padding: 5px;
+    z-index: 3;
+    padding: 3px;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 30px;
-    height: 30px;
-    border-radius: 4px;
-    z-index: 2;
+    width: 24px;
+    height: 24px;
+    border-radius: 3px;
 }
 
+/* Убрать выделение при наведении */
 .login-password-toggle:hover {
-    background: rgba(255, 255, 255, 0.1);
+    background-color: transparent;
 }
 
 .login-password-toggle img {
-    width: 18px;
-    height: 18px;
-    filter: brightness(0) invert(0.6);
+    filter: brightness(0) invert(0.5);
+    width: 16px;
+    height: 16px;
+    transition: filter 0.2s;
+}
+
+.login-password-toggle:hover img {
+    filter: brightness(0) invert(0.5);
 }
 
 .login-divider {
     height: 1px;
     background: #333;
-    margin: 25px 0;
+    margin: 5px 0;
+    width: 100%;
+    margin-left: -30px;
+    width: calc(100% + 60px);
+}
+
+.login-confirm-wrapper .confirm-button {
+    margin-left: 95px;
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif; /* ← Добавлен шрифт */
 }
 
 .login-buttons-container {
     display: flex;
     flex-direction: column;
     gap: 12px;
+    margin-top: 40px;
 }
-
