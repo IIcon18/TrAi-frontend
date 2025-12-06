@@ -1,11 +1,14 @@
-import React, { useState } from "react";
-import "./Header.css"
+// src/components/shared/Header/Header.tsx
+
+import React from "react";
+import { useNavigate } from "react-router-dom"; // ← добавляем
+import "./Header.css";
 
 const Header: React.FC = () => {
-    const [activeButton, setActiveButton] = useState<string | null>(null);
+    const navigate = useNavigate();
 
-    const handleButtonClick = (buttonName: string) => {
-        setActiveButton(buttonName);
+    const handleNavClick = (path: string) => {
+        navigate(path);
     };
 
     return (
@@ -22,26 +25,26 @@ const Header: React.FC = () => {
 
             <nav className="header-right">
                 <button
-                    className={`nav-button ${activeButton === "Dashboard" ? "active" : ""}`}
-                    onClick={() => handleButtonClick("Dashboard")}
+                    className="nav-button"
+                    onClick={() => handleNavClick("/dashboard")}
                 >
                     Dashboard
                 </button>
                 <button
-                    className={`nav-button ${activeButton === "Workouts" ? "active" : ""}`}
-                    onClick={() => handleButtonClick("Workouts")}
+                    className="nav-button"
+                    onClick={() => handleNavClick("/workouts")}
                 >
                     Workouts
                 </button>
                 <button
-                    className={`nav-button ${activeButton === "Progress" ? "active" : ""}`}
-                    onClick={() => handleButtonClick("Progress")}
+                    className="nav-button"
+                    onClick={() => handleNavClick("/progress")}
                 >
                     Progress
                 </button>
                 <button
-                    className={`nav-button ${activeButton === "Profile" ? "active" : ""}`}
-                    onClick={() => handleButtonClick("Profile")}
+                    className="nav-button"
+                    onClick={() => handleNavClick("/profile")}
                 >
                     Profile
                 </button>

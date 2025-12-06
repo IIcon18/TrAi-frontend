@@ -1,0 +1,46 @@
+.new-account-button {
+    width: 45%;
+    padding: 12px;
+    background: #9D2628;
+    color: white; /* ← Изменено с rgba(255, 255, 255, 0.8) на white */
+    border: 1px solid transparent;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-left: 95px;
+}
+
+.new-account-button:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: white; /* ← Остается белым */
+    border: 1px solid #333; /* ← Добавлена граница при hover */
+}
+
+.new-account-button:disabled {
+    background: #2d2d2d;
+    color: #666;
+    cursor: not-allowed;
+    border: 1px solid #333;
+}
+
+.new-account-button:disabled:hover {
+    background: #2d2d2d;
+    color: #666;
+    border-color: #333;
+}
+
+.new-account-icon {
+    width: 16px;
+    height: 16px;
+    filter: brightness(0) invert(1); /* Белая иконка */
+}
+
+.new-account-button:disabled .new-account-icon {
+    filter: brightness(0) invert(0.3); /* Сероватая иконка при disabled */
+}
