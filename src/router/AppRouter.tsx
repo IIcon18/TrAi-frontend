@@ -1,4 +1,5 @@
 // src/router/AppRouter.tsx
+import Workouts from "../components/pages/Workouts"; // <-- Добавь эту строку
 
 import React from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
@@ -50,8 +51,11 @@ const AppRouter: React.FC = () => {
                     path="/dashboard"
                     element={<Dashboard {...dashboardData} />}
                 />
+
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/progress" element={<Progress />} /> {/* <-- Добавьте этот маршрут */}
+                <Route path="/workouts" element={<Workouts />} /> {/* <-- Добавь этот маршрут */}
+
             </Routes>
         </BrowserRouter>
     );

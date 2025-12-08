@@ -1,0 +1,363 @@
+/* src/components/pages/Workouts.css */
+
+/* === Общая структура === */
+.wk-page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: #000;
+    color: white;
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.wk-main {
+    flex: 1;
+    padding: 40px 20px;
+}
+
+.wk-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    width: 100%;
+}
+
+/* === Основная сетка === */
+.wk-content {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 24px;
+}
+
+/* === Карточка "Your Plan!" === */
+.wk-plan-card {
+    background: #1A1A1A;
+    border-radius: 12px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.wk-plan-title {
+    font-size: 28px;
+    font-weight: 600;
+    color: white;
+    margin-bottom: 16px;
+}
+
+/* Вкладки */
+.wk-plan-tabs {
+    display: flex;
+    background: #2D2D2D;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 16px;
+}
+
+.wk-plan-tab {
+    flex: 1;
+    padding: 12px;
+    background: transparent;
+    color: #CCCCCC;
+    border: none;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-align: center;
+}
+
+.wk-plan-tab:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: white;
+}
+
+.wk-plan-tab.wk-active {
+    background: #9D2628;
+    color: white;
+    font-weight: 600;
+}
+
+/* Таблица тренировки */
+.wk-plan-table {
+    background: #2D2D2D;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 16px;
+}
+
+.wk-table-header,
+.wk-table-row {
+    display: grid;
+    grid-template-columns: 0.5fr 2fr 1fr 0.5fr;
+    gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px solid #333;
+}
+
+.wk-table-header {
+    margin-bottom: 8px;
+    border-bottom-color: #444;
+}
+
+.wk-header-cell {
+    color: #CCCCCC;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.wk-cell {
+    color: white;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.wk-cell:first-child {
+    font-weight: 600;
+}
+
+.wk-weight-badge {
+    background: #2D2D2D;
+    border-radius: 6px;
+    padding: 4px 8px;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+}
+
+.wk-load-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin: 0 auto;
+}
+
+/* Кнопки действий */
+.wk-plan-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.wk-action-button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.wk-end-workout {
+    background: #9D2628;
+    color: white;
+}
+
+.wk-end-workout:hover {
+    background: #b73e40;
+}
+
+.wk-generate-new,
+.wk-add-workout {
+    background: #2D2D2D;
+    color: white;
+}
+
+.wk-generate-new:hover,
+.wk-add-workout:hover {
+    background: #333333;
+}
+
+/* === Правая колонка === */
+.wk-right-column {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* Карточка Actions */
+.wk-actions-card {
+    background: #1A1A1A;
+    border-radius: 12px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.wk-actions-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: white;
+    margin-bottom: 16px;
+    text-align: center;
+}
+
+.wk-actions-buttons {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.wk-open-statistic,
+.wk-change-goal {
+    flex: 1;
+    background: #9D2628;
+    color: white;
+}
+
+.wk-open-statistic:hover,
+.wk-change-goal:hover {
+    background: #b73e40;
+}
+
+.wk-bot-status {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #4CAF50;
+    font-size: 14px;
+    justify-content: center;
+}
+
+.wk-status-dot {
+    width: 8px;
+    height: 8px;
+    background: #4CAF50;
+    border-radius: 50%;
+    animation: wk-pulse 2s infinite;
+}
+
+@keyframes wk-pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+/* === Карточка "Your Calendar" === */
+.wk-calendar-card {
+    background: #1A1A1A;
+    border-radius: 12px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.wk-calendar-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: white;
+    margin-bottom: 16px;
+}
+
+.wk-calendar-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+}
+
+.wk-calendar-navigation {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    gap: 12px;
+}
+
+.wk-nav-button {
+    background: none;
+    border: none;
+    color: #CCCCCC;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 8px;
+    transition: color 0.3s;
+}
+
+.wk-nav-button:hover {
+    color: white;
+}
+
+.wk-calendar-date-display {
+    background: #2D2D2D;
+    border-radius: 12px;
+    padding: 16px;
+    min-width: 150px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.wk-date-day {
+    color: #CCCCCC;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.wk-date-number {
+    font-size: 48px;
+    font-weight: 600;
+    color: white;
+}
+
+.wk-date-month {
+    color: #CCCCCC;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.wk-calendar-message {
+    color: #CCCCCC;
+    font-size: 14px;
+    font-weight: 500;
+    margin-top: 8px;
+}
+
+/* === Адаптивность === */
+@media (max-width: 1024px) {
+    .wk-main {
+        padding: 30px 20px;
+    }
+    .wk-content {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    .wk-plan-actions,
+    .wk-actions-buttons {
+        flex-direction: column;
+        gap: 8px;
+    }
+}
+
+@media (max-width: 768px) {
+    .wk-main {
+        padding: 20px 16px;
+    }
+    .wk-plan-title {
+        font-size: 24px;
+    }
+    .wk-plan-tabs {
+        flex-wrap: wrap;
+    }
+    .wk-plan-tab {
+        flex: 1 1 50%;
+        font-size: 12px;
+    }
+    .wk-date-number {
+        font-size: 36px;
+    }
+    .wk-calendar-date-display {
+        padding: 12px;
+        gap: 6px;
+    }
+}
