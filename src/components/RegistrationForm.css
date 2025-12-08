@@ -1,0 +1,285 @@
+/* src/components/RegistrationForm.css */
+/* Подключение шрифта SF Pro */
+@import url('https://cdn.jsdelivr.net/npm/sf-pro-display@1.0.0/sf-pro-display.css');
+
+.registration-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 140px); /* Убрано overflow-y: hidden; */
+    padding: 10px 15px;
+    background-color: #000;
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.registration-box {
+    width: 500px;
+    /* УБРАНО max-height: 77vh; и overflow-y: auto; */
+    background: #1c1c1c;
+    border-radius: 12px;
+    padding: 30px 35px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Стили для скрытия стрелок в числовых полях */
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+input[type="number"] {
+    appearance: textfield;
+}
+
+.registration-title {
+    color: white;
+    font-size: 28px;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 22px;
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+    margin-top: -19px;
+}
+
+.form-group {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.input-label {
+    color: white;
+    font-size: 20px;
+    font-weight: 500;
+    width: 120px;
+    text-align: right;
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.input-field {
+    flex: 1;
+    padding: 10px 14px;
+    background: rgba(47, 47, 47, 0.71);
+    border: 2px solid transparent;
+    border-radius: 6px;
+    color: white;
+    font-size: 14px;
+    box-sizing: border-box;
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.input-field::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+    text-align: center;
+    opacity: 1;
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.password-input-container {
+    position: relative;
+    flex: 1;
+    min-height: 40px;
+    display: inline-block;
+}
+
+.password-field {
+    width: 100%;
+    height: 40px;
+    padding: 0 20px 0 15px;
+    box-sizing: border-box;
+    border-radius: 6px;
+    border: 2px solid transparent;
+    background: rgba(47, 47, 47, 0.71);
+    color: white;
+    font-size: 14px;
+    position: relative;
+    z-index: 1;
+    text-align: left;
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.password-field {
+    &::-webkit-credentials-auto-fill-button {
+        display: none !important;
+        visibility: hidden !important;
+        pointer-events: none !important;
+        position: absolute;
+        right: -1000px;
+    }
+    &::-ms-reveal,
+    &::-ms-clear {
+        display: none !important;
+    }
+}
+
+.password-field::placeholder {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.4);
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    z-index: 3;
+    padding: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 3px;
+}
+
+.password-toggle:hover {
+    background-color: transparent;
+}
+
+.password-toggle img {
+    filter: brightness(0) invert(0.5);
+    width: 16px;
+    height: 16px;
+    transition: filter 0.2s;
+}
+
+.password-toggle:hover img {
+    filter: brightness(0) invert(0.5);
+}
+
+.password-strength-bar {
+    position: absolute;
+    top: calc(100% - 2px);
+    width: 96%;
+    left: 6px;
+    height: 2px;
+    border-radius: 0 0 2px 2px;
+    background: #444;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.password-strength-progress {
+    height: 100%;
+    width: 0;
+    transition: width 0.3s ease;
+}
+
+.password-strength-progress.weak {
+    width: 33%;
+    background: #F44336;
+}
+
+.password-strength-progress.medium {
+    width: 66%;
+    background: #FF9800;
+}
+
+.password-strength-progress.strong {
+    width: 100%;
+    background: #4CAF50;
+}
+
+.input-field:focus,
+.password-field:focus,
+.select-field:focus {
+    outline: none;
+    box-shadow: none;
+    border-color: transparent;
+}
+
+.divider {
+    height: 1px;
+    background: #333;
+    margin: 25px 0;
+    width: 100%;
+    margin-left: -35px;
+    width: calc(100% + 70px);
+}
+
+.select-field {
+    background: #2b2b2b url("../assets/icons/next.svg") no-repeat right 10px center;
+    background-size: 12px;
+    color: rgba(255, 255, 255, 0.4);
+    border: 2px solid transparent;
+    border-radius: 6px;
+    font-size: 14px;
+    box-sizing: border-box;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    padding: 10px 20px 10px 14px;
+    text-align: center;
+    text-align-last: center;
+    width: 100%;
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.select-field:valid,
+.select-field:focus {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.select-field option {
+    text-align: center;
+    background: #2b2b2b;
+    font-size: 14px;
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* === Кнопка Confirm — по центру и зелёная === */
+.confirm-button {
+    width: 100%; /* ← Занимает всю ширину */
+    padding: 14px;
+    background: #1f7a29; /* ← Зелёный цвет */
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center; /* ← Центрирование по горизонтали */
+    gap: 8px;
+    margin-top: 20px; /* ← Отступ сверху */
+    margin-left: 0; /* ← Убрано смещение */
+}
+
+.confirm-button:hover {
+    background: #008115;
+}
+
+.confirm-button:disabled {
+    background: #2d2d2d;
+    color: #666;
+    cursor: not-allowed;
+}
+
+.confirm-button:disabled:hover {
+    background: #2d2d2d;
+}
+
+.confirm-icon {
+    margin-left: 0;
+    width: 16px;
+    height: 16px;
+    filter: brightness(0) invert(1);
+}
+
+.confirm-button:disabled .confirm-icon {
+    filter: brightness(0) invert(0.3);
+}

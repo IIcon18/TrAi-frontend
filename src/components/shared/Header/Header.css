@@ -1,0 +1,117 @@
+/* Подключение шрифта SF Pro */
+@import url('https://cdn.jsdelivr.net/npm/sf-pro-display@1.0.0/sf-pro-display.css');
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    background-color: #000000;
+    color: white;
+    width: 100%;
+    box-sizing: border-box;
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.header-left {
+    margin-left: 122px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.header-right {
+    margin-right: 100px;
+}
+
+.tagline {
+    font-size: 12px;
+    color: #B9B9B9;
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-weight: bold;
+    margin-top: -20px;
+}
+
+.logo {
+    font-size: 64px;
+    font-weight: bold;
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.logo-white {
+    color: #FFFFFF;
+}
+
+.logo-red {
+    color: #9D2628;
+}
+
+.nav-button {
+    background: none;
+    border: none;
+    color: #B9B9B9;
+    font-size: 16px;
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+    cursor: pointer;
+    padding: 8px 16px;
+    transition: all 0.3s ease;
+    transform: scale(1);
+    position: relative;
+}
+
+.nav-button:hover {
+    color: #B9B9B9;
+    transform: scale(1.05);
+}
+
+.nav-button.active {
+    color: white;
+    font-weight: 500;
+}
+
+.nav-button.active::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 6px;
+    height: 6px;
+    background-color: white;
+    border-radius: 50%;
+}
+
+.nav-button.active {
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+}
+
+@media (max-width: 768px) {
+    .header {
+        flex-direction: column;
+        gap: 20px;
+        padding: 15px 0;
+    }
+
+    .header-left {
+        margin-left: 0;
+        text-align: center;
+    }
+
+    .header-right {
+        margin-right: 0;
+        gap: 15px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .nav-button {
+        font-size: 14px;
+        padding: 6px 12px;
+    }
+
+    .nav-button.active::after {
+        bottom: -3px;
+        width: 4px;
+        height: 4px;
+    }
+}

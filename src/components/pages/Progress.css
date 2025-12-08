@@ -1,0 +1,378 @@
+/* src/components/pages/Progress.css */
+
+/* === Глобальная обертка страницы === */
+.progress-page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: #000;
+    color: white;
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.progress-main {
+    flex: 1;
+    padding: 25px 20px;
+}
+
+.progress-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    width: 100%;
+}
+
+/* === Заголовок === */
+.progress-page-title {
+    font-size: 28px;
+    font-weight: 600;
+    color: white;
+    margin-bottom: 20px;
+}
+
+/* === Вкладки === */
+.progress-tabs-container {
+    display: flex;
+    background: #1A1A1A;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 24px;
+}
+
+.progress-tab-button {
+    flex: 1;
+    padding: 12px;
+    background: transparent;
+    color: #CCCCCC;
+    border: none;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-align: center;
+}
+
+.progress-tab-button:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: white;
+}
+
+.progress-tab-button.progress-active {
+    background: #2D2D2D;
+    color: white;
+    font-weight: 600;
+}
+
+/* === Основная сетка === */
+.progress-content {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 24px;
+}
+
+.progress-left-column,
+.progress-right-column {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* === Карточка с графиком === */
+.progress-card {
+    background: #1A1A1A;
+    border-radius: 12px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.progress-activity-chart-wrapper {
+    position: relative;
+}
+
+/* Стили для SVG графика */
+.progress-chart-svg {
+    background: transparent;
+    border-radius: 8px;
+    padding: 10px;
+    display: flex;
+}
+
+/* Сообщение от AI */
+.progress-ai-message {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background: #2D2D2D;
+    border-radius: 8px;
+    margin-top: 12px;
+}
+
+.progress-ai-icon {
+    font-size: 24px;
+    color: #4CAF50;
+}
+
+.progress-message-text {
+    color: white;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+/* === Карточка Goal Overview === */
+.progress-goal-overview-card {
+    background: #1A1A1A;
+    border-radius: 12px;
+    padding: 0px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    text-align: center;
+}
+
+.progress-card-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: white;
+    margin-bottom: 12px;
+}
+
+.progress-goal-circle-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 16px;
+}
+
+.progress-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.progress-stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.progress-stat-label {
+    color: #CCCCCC;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.progress-stat-value {
+    color: white;
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 1;
+}
+
+.progress-stat-sublabel {
+    color: #CCCCCC;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+/* === Карточка Nutrition Progress === */
+.progress-nutrition-card {
+    background: #1A1A1A;
+    border-radius: 12px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.progress-nutrition-progress-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.progress-linear-progress-item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.progress-progress-label {
+    color: #CCCCCC;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.progress-progress-bar-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.progress-progress-bar-background {
+    flex: 1;
+    height: 8px;
+    background: #2D2D2D;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progress-progress-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+.progress-progress-value {
+    color: white;
+    font-size: 13px;
+    font-weight: 600;
+    min-width: 45px;
+    text-align: right;
+}
+
+.progress-add-meal-button {
+    width: 100%;
+    padding: 10px;
+    background: #9D2628;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 12px;
+}
+
+.progress-add-meal-button:hover {
+    background: #9D2628;
+}
+
+/* === Адаптивность === */
+@media (max-width: 1024px) {
+    .progress-main {
+        padding: 30px 20px;
+    }
+    .progress-content {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    .progress-tabs-container {
+        flex-wrap: wrap;
+    }
+    .progress-tab-button {
+        flex: 1 1 50%;
+    }
+}
+
+@media (max-width: 768px) {
+    .progress-main {
+        padding: 20px 16px;
+    }
+    .progress-page-title {
+        font-size: 24px;
+    }
+    .progress-tabs-container {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    .progress-tab-button {
+        flex: 0 0 auto;
+        min-width: 100px;
+    }
+    .progress-content {
+        grid-template-columns: 1fr;
+    }
+    .progress-stats-grid {
+        grid-template-columns: 1fr;
+    }
+    .progress-goal-circle-wrapper {
+        margin-bottom: 8px;
+    }
+}
+
+/* === Новый блок: Your Nutrition Progress === */
+
+.progress-nutrition-card {
+    background: #1A1A1A;
+    border-radius: 12px;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 0px;
+}
+
+.progress-nutrition-card h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: white;
+    margin-bottom: 12px;
+}
+
+.nutrition-progress-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.nutrition-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #2D2D2D;
+    border-radius: 8px;
+    padding: 8px 12px;
+    width: 100%;
+}
+
+.nutrition-label {
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+    min-width: 120px;
+}
+
+.nutrition-bar {
+    flex: 1;
+    height: 12px;
+    background: #1A1A1A;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.nutrition-fill {
+    height: 100%;
+    border-radius: 6px;
+    transition: width 0.3s ease;
+}
+
+.nutrition-value {
+    color: white;
+    font-size: 13px;
+    font-weight: 600;
+    min-width: 60px;
+    text-align: right;
+}
+
+.progress-add-meal-button {
+    width: 100%;
+    padding: 10px;
+    background: #9D2628;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 12px;
+}
+
+.progress-add-meal-button:hover {
+    background: #9D2628;
+}
