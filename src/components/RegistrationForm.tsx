@@ -1,150 +1,200 @@
-// src/components/RegistrationForm.tsx
-import React, { useState } from "react";
-import "./RegistrationForm.css";
-import EyeOpen from "../assets/icons/eye.svg";
-import EyeClosed from "../assets/icons/hide_eye.svg";
-import ConfirmButton from "./shared/Buttons/ConfirmButton";
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { authService, RegisterData } from '../services/authService';
+import './RegistrationForm.css';
 
-export const RegistrationForm: React.FC = () => {
-    const [showPassword, setShowPassword] = useState(false);
-    const [password, setPassword] = useState("");
-    const [formData, setFormData] = useState({
-        username: "",
-        age: "",
-        lifestyle: "",
-        height: "",
-        weight: ""
-    });
+const lifestyleOptions = [
+  { value: 'low', label: 'Low (sedentary)' },
+  { value: 'medium', label: 'Medium (moderately active)' },
+  { value: 'high', label: 'High (very active)' }
+];
 
-    const togglePasswordVisibility = () => {
-        setShowPassword(!showPassword);
-    };
+const RegistrationForm: React.FC = () => {
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState<RegisterData>({
+    email: '',
+    password: '',
+    age: 25,
+    lifestyle: 'medium',
+    height: 170,
+    weight: 70
+  });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-    const handleInputChange = (field: string, value: string) => {
-        setFormData(prev => ({
-            ...prev,
-            [field]: value
-        }));
-    };
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value, type } = e.target;
 
-    const getPasswordStrength = (pass: string) => {
-        if (pass.length === 0) return "";
-        if (pass.length < 6) return "weak";
-        if (pass.length < 10) return "medium";
-        return "strong";
-    };
+    if (type === 'number') {
+      setFormData(prev => ({
+        ...prev,
+        [name]: parseFloat(value) || 0
+      }));
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        [name]: value
+      }));
+    }
+  };
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        console.log("Registration data:", { ...formData, password });
-    };
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
 
-    const passwordStrength = getPasswordStrength(password);
+    try {
+      await authService.register(formData);
+      navigate('/dashboard');
+    } catch (err: any) {
+      setError(err.message || 'Registration failed');
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    return (
-        <div className="registration-container">
-            <div className="registration-box">
-                <h2 className="registration-title">Registration</h2>
-                <form onSubmit={handleSubmit}>
-                    <div className="form-group">
-                        <label className="input-label">Username:</label>
-                        <input
-                            type="text"
-                            className="input-field"
-                            placeholder="Имя пользователя"
-                            value={formData.username}
-                            onChange={(e) => handleInputChange("username", e.target.value)}
-                        />
-                    </div>
+  return (
+    <div className="registration-form-container">
+      <h2>Create TrAi Account</h2>
 
-                    <div className="form-group">
-                        <label className="input-label">Password:</label>
-                        <div className="password-input-container">
-                            <input
-                                type={showPassword ? "text" : "password"}
-                                className="input-field password-field"
-                                placeholder="Пароль"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                            />
-                            <button
-                                type="button"
-                                className="password-toggle"
-                                onClick={togglePasswordVisibility}
-                            >
-                                <img
-                                    src={showPassword ? EyeClosed : EyeOpen}
-                                    alt={showPassword ? "Hide password" : "Show password"}
-                                    width="20"
-                                    height="20"
-                                />
-                            </button>
-                            {password && (
-                                <div className="password-strength-bar">
-                                    <div
-                                        className={`password-strength-progress ${passwordStrength.toLowerCase()}`}
-                                    />
-                                </div>
-                            )}
-                        </div>
-                    </div>
+      {error && <div className="error-message">{error}</div>}
 
-                    <div className="form-group">
-                        <label className="input-label">Age:</label>
-                        <input
-                            type="number"
-                            className="input-field"
-                            placeholder="20"
-                            value={formData.age}
-                            onChange={(e) => handleInputChange("age", e.target.value)}
-                        />
-                    </div>
+      <form onSubmit={handleSubmit}>
+        <div className="form-row">
+          <div className="form-group">
+            <label htmlFor="email">Email *</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+              placeholder="your@email.com"
+            />
+          </div>
 
-                    <div className="form-group">
-                        <label className="input-label">Lifestyle:</label>
-                        <select
-                            className="input-field select-field"
-                            value={formData.lifestyle}
-                            onChange={(e) => handleInputChange("lifestyle", e.target.value)}
-                        >
-                            <option value="">Select lifestyle</option>
-                            <option value="low">Low</option>
-                            <option value="medium">Medium</option>
-                            <option value="high">High</option>
-                        </select>
-                    </div>
-
-                    <div className="form-group">
-                        <label className="input-label">Height:</label>
-                        <input
-                            type="number"
-                            className="input-field"
-                            placeholder="175"
-                            value={formData.height}
-                            onChange={(e) => handleInputChange("height", e.target.value)}
-                        />
-                    </div>
-
-                    <div className="form-group">
-                        <label className="input-label">Weight:</label>
-                        <input
-                            type="number"
-                            className="input-field"
-                            placeholder="73"
-                            value={formData.weight}
-                            onChange={(e) => handleInputChange("weight", e.target.value)}
-                        />
-                    </div>
-
-                    {/* Убран разделитель */}
-                    {/* <div className="divider"></div> */}
-
-                    {/* Кнопка по центру и зелёная */}
-                    <ConfirmButton />
-                </form>
-            </div>
+          <div className="form-group">
+            <label htmlFor="password">Password *</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+              placeholder="Minimum 6 characters"
+              minLength={6}
+            />
+          </div>
         </div>
-    );
+
+        <div className="form-row">
+          <div className="form-group">
+            <label htmlFor="age">Age *</label>
+            <input
+              type="number"
+              id="age"
+              name="age"
+              value={formData.age}
+              onChange={handleChange}
+              required
+              min="10"
+              max="100"
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="height">Height (cm) *</label>
+            <input
+              type="number"
+              id="height"
+              name="height"
+              value={formData.height}
+              onChange={handleChange}
+              required
+              min="100"
+              max="250"
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="weight">Weight (kg) *</label>
+            <input
+              type="number"
+              id="weight"
+              name="weight"
+              value={formData.weight}
+              onChange={handleChange}
+              required
+              min="30"
+              max="300"
+              step="0.1"
+            />
+          </div>
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="lifestyle">Activity Level *</label>
+          <select
+            id="lifestyle"
+            name="lifestyle"
+            value={formData.lifestyle}
+            onChange={handleChange}
+            required
+          >
+            {lifestyleOptions.map(option => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="form-row">
+          <div className="form-group">
+            <label htmlFor="initial_weight">Initial Weight (kg)</label>
+            <input
+              type="number"
+              id="initial_weight"
+              name="initial_weight"
+              value={formData.initial_weight || formData.weight}
+              onChange={handleChange}
+              min="30"
+              max="300"
+              step="0.1"
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="target_weight">Target Weight (kg)</label>
+            <input
+              type="number"
+              id="target_weight"
+              name="target_weight"
+              value={formData.target_weight || formData.weight - 5}
+              onChange={handleChange}
+              min="30"
+              max="300"
+              step="0.1"
+            />
+          </div>
+        </div>
+
+        <button
+          type="submit"
+          className="submit-btn"
+          disabled={loading}
+        >
+          {loading ? 'Creating Account...' : 'Register'}
+        </button>
+      </form>
+
+      <div className="form-footer">
+        <p>Already have an account? <a href="/login">Login</a></p>
+      </div>
+    </div>
+  );
 };
 
 export default RegistrationForm;

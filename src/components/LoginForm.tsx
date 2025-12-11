@@ -1,94 +1,112 @@
-import React, { useState } from "react";
-import "./LoginForm.css";
-import EyeOpen from "../assets/icons/eye.svg";
-import EyeClosed from "../assets/icons/hide_eye.svg";
-import NewAccountButton from "./shared/Buttons/NewAccountButton";
-import ConfirmButton from "./shared/Buttons/ConfirmButton";
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { authService, LoginData } from '../services/authService';
+import './LoginForm.css';
 
 const LoginForm: React.FC = () => {
-    const [formData, setFormData] = useState({
-        username: "",
-        password: ""
-    });
-    const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState<LoginData>({
+    email: '',
+    password: ''
+  });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-    const togglePasswordVisibility = () => {
-        setShowPassword(!showPassword);
-    };
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
 
-    const handleInputChange = (field: string, value: string) => {
-        setFormData(prev => ({
-            ...prev,
-            [field]: value
-        }));
-    };
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
 
-    const handleLogin = () => {
-        console.log("Login data:", formData);
-    };
+    try {
+      await authService.login(formData);
+      navigate('/dashboard');
+    } catch (err: any) {
+      setError(err.message || 'Login failed');
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    const handleCreateAccount = () => {
-        window.location.href = "/register";
-    };
+  const handleTestLogin = async () => {
+    setLoading(true);
+    setError('');
 
-    return (
-        <div className="login-form-container">
-            <div className="login-form-box">
-                <h2 className="login-form-title">Authorization</h2>
+    try {
+      await authService.login({
+        email: 'test@example.com',
+        password: 'password123'
+      });
+      navigate('/dashboard');
+    } catch (err: any) {
+      setError(err.message || 'Test login failed');
+    } finally {
+      setLoading(false);
+    }
+  };
 
-                <div className="login-form">
-                    {/* Email Section */}
-                    <div className="login-form-group">
-                        <label className="login-input-label">Email:</label>
-                        <input
-                            type="text"
-                            className="login-input-field"
-                            placeholder="Email"
-                            value={formData.username}
-                            onChange={(e) => handleInputChange("username", e.target.value)}
-                        />
-                    </div>
+  return (
+    <div className="login-form-container">
+      <h2>Login to TrAi</h2>
 
-                    {/* Password Section */}
-                    <div className="login-form-group">
-                        <label className="login-input-label">Password:</label>
-                        <div className="login-password-input-container">
-                            <input
-                                type={showPassword ? "text" : "password"}
-                                className="login-password-field"
-                                placeholder="Password"
-                                value={formData.password}
-                                onChange={(e) => handleInputChange("password", e.target.value)}
-                            />
-                            <button
-                                type="button"
-                                className="login-password-toggle"
-                                onClick={togglePasswordVisibility}
-                            >
-                                <img
-                                    src={showPassword ? EyeClosed : EyeOpen}
-                                    alt={showPassword ? "Hide password" : "Show password"}
-                                    width="20"
-                                    height="20"
-                                />
-                            </button>
-                        </div>
-                    </div>
+      {error && <div className="error-message">{error}</div>}
 
-                    {/* Buttons Section */}
-                    <div className="login-buttons-container">
-                        <div className="login-confirm-wrapper">
-                            <ConfirmButton onClick={handleLogin} />
-                        </div>
-
-                        <div className="login-divider"></div>
-
-                        <NewAccountButton onClick={handleCreateAccount} />
-                    </div>
-                </div>
-            </div>
+      <form onSubmit={handleSubmit}>
+        <div className="form-group">
+          <label htmlFor="email">Email</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            required
+            placeholder="Enter your email"
+          />
         </div>
-    );
+
+        <div className="form-group">
+          <label htmlFor="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            required
+            placeholder="Enter your password"
+          />
+        </div>
+
+        <button
+          type="submit"
+          className="submit-btn"
+          disabled={loading}
+        >
+          {loading ? 'Logging in...' : 'Login'}
+        </button>
+      </form>
+
+      <div className="form-footer">
+        <p>Don't have an account? <a href="/register">Register</a></p>
+
+        <button
+          onClick={handleTestLogin}
+          className="test-login-btn"
+          disabled={loading}
+        >
+          {loading ? 'Loading...' : 'Test Account (demo)'}
+        </button>
+      </div>
+    </div>
+  );
 };
 
 export default LoginForm;
