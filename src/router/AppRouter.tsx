@@ -47,10 +47,7 @@ const AppRouter: React.FC = () => {
                 <Route path="/" element={<Navigate to="/login" replace />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
-                <Route
-                    path="/dashboard"
-                    element={<Dashboard {...dashboardData} />}
-                />
+                <Route path="/dashboard" element={<Dashboard />} />
 
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/progress" element={<Progress />} /> {/* <-- Добавьте этот маршрут */}

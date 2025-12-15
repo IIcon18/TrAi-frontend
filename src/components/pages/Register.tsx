@@ -9,9 +9,9 @@ const Register: React.FC = () => {
         <div  className="register-page">
             <Header />
 
-           <main className="main-content">
-               <RegistrationForm/>
-           </main>
+            <main className="main-content">
+                <RegistrationForm/>
+            </main>
 
             <Footer />
         </div>

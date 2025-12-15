@@ -1,13 +1,26 @@
 /* src/components/RegistrationForm.css */
-/* Подключение шрифта SF Pro */
-@import url('https://cdn.jsdelivr.net/npm/sf-pro-display@1.0.0/sf-pro-display.css');
+
+/* Стили для скрытия стрелок в числовых полях */
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"] {
+    appearance: textfield;
+}
 
 .registration-container {
     flex: 1;
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: calc(100vh - 140px); /* Убрано overflow-y: hidden; */
+    min-height: calc(100vh - 140px);
     padding: 10px 15px;
     background-color: #000;
     font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -15,25 +28,11 @@
 
 .registration-box {
     width: 500px;
-    /* УБРАНО max-height: 77vh; и overflow-y: auto; */
     background: #1c1c1c;
     border-radius: 12px;
     padding: 30px 35px;
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
     font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
-}
-
-/* Стили для скрытия стрелок в числовых полях */
-input[type="number"] {
-    -moz-appearance: textfield;
-}
-input[type="number"]::-webkit-outer-spin-button,
-input[type="number"]::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-}
-input[type="number"] {
-    appearance: textfield;
 }
 
 .registration-title {
@@ -103,20 +102,21 @@ input[type="number"] {
     z-index: 1;
     text-align: left;
     font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+    /* Уберите любые стили, которые могут блокировать ввод */
 }
 
-.password-field {
-    &::-webkit-credentials-auto-fill-button {
-        display: none !important;
-        visibility: hidden !important;
-        pointer-events: none !important;
-        position: absolute;
-        right: -1000px;
-    }
-    &::-ms-reveal,
-    &::-ms-clear {
-        display: none !important;
-    }
+/* Скрыть браузерный глаз для автозаполнения */
+.password-field::-webkit-credentials-auto-fill-button {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    position: absolute;
+    right: -1000px;
+}
+
+.password-field::-ms-reveal,
+.password-field::-ms-clear {
+    display: none !important;
 }
 
 .password-field::placeholder {
@@ -239,11 +239,10 @@ input[type="number"] {
     font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-/* === Кнопка Confirm — по центру и зелёная === */
 .confirm-button {
-    width: 100%; /* ← Занимает всю ширину */
+    width: 100%;
     padding: 14px;
-    background: #1f7a29; /* ← Зелёный цвет */
+    background: #1f7a29;
     color: white;
     border: none;
     border-radius: 6px;
@@ -253,10 +252,10 @@ input[type="number"] {
     transition: background-color 0.3s;
     display: flex;
     align-items: center;
-    justify-content: center; /* ← Центрирование по горизонтали */
+    justify-content: center;
     gap: 8px;
-    margin-top: 20px; /* ← Отступ сверху */
-    margin-left: 0; /* ← Убрано смещение */
+    margin-top: 20px;
+    margin-left: 0;
 }
 
 .confirm-button:hover {

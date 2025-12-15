@@ -1,27 +1,51 @@
-// Dashboard.types.ts
-export interface ActivityData {
-    day: string;
-    mood: number;
+// TrAi-frontend/src/types/dashboard.ts
+export interface EnergyChartData {
+    date: string;
     energy: number;
+    mood: number;
 }
 
-export interface ProgressItem {
-    label: string;
-    current: number;
-    total: number;
-    color: string;
+export interface WeeklyProgress {
+    planned_workouts: number;
+    completed_workouts: number;
+    completion_rate: number;
 }
 
-export interface QuickStat {
-    label: string;
-    value: string;
+export interface NutritionPlan {
+    calories: number;
+    protein: number;
+    carbs: number;
+    fat: number;
 }
 
-export interface DashboardProps {
-    username: string;
-    lastTraining: string;
-    activityData: ActivityData[];
-    weeklyProgress: ProgressItem;
-    aiPlan: ProgressItem[];
-    quickStats: QuickStat[];
+export interface QuickStats {
+    planned_workouts: number;
+    total_weight_lifted: number;
+    recovery_score: number;
+    goal_progress: number;
+    weight_change: number;
+}
+
+export interface QuickAction {
+    name: string;
+    icon: string;
+    route: string;
+}
+
+export interface AIRecommendation {
+    id: number;
+    type: string;
+    message: string;
+    created_at: string;
+}
+
+export interface DashboardResponse {
+    user_greeting: string;
+    progress_fact: string;
+    energy_chart: EnergyChartData[];
+    weekly_progress: WeeklyProgress;
+    nutrition_plan: NutritionPlan;
+    quick_stats: QuickStats;
+    quick_actions: QuickAction[];
+    ai_recommendations: AIRecommendation[];
 }

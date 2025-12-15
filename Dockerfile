@@ -1,19 +1,14 @@
-FROM node:18-alpine
-
+# Stage 1
+FROM node:18-alpine as builder
 WORKDIR /app
-
-# Копируем зависимости
 COPY package*.json ./
-
-# Устанавливаем зависимости
 RUN npm install --legacy-peer-deps
-
-# Копируем исходный код
 COPY . .
+RUN npm run build
 
-# Создаем .env файл
-RUN echo "REACT_APP_API_URL=http://localhost:8000" > .env
-
-EXPOSE 3000
-
-CMD ["npm", "start"]
+# Stage 2
+FROM nginx:alpine
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=builder /app/build /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]

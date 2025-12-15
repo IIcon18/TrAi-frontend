@@ -9,7 +9,7 @@
     min-height: calc(100vh - 140px);
     padding: 10px 15px;
     background-color: #000;
-    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif; /* ← Добавлен шрифт */
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 .login-form-box {
@@ -18,7 +18,7 @@
     border-radius: 12px;
     padding: 30px;
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
-    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif; /* ← Добавлен шрифт */
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 .login-form-title {
@@ -27,7 +27,7 @@
     font-weight: 600;
     text-align: center;
     margin-bottom: 30px;
-    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif; /* ← Добавлен шрифт */
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 .login-form-group {
@@ -44,7 +44,7 @@
     font-weight: 500;
     width: 120px;
     text-align: right;
-    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif; /* ← Добавлен шрифт */
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 .login-input-field {
@@ -56,7 +56,7 @@
     color: white;
     font-size: 14px;
     box-sizing: border-box;
-    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif; /* ← Добавлен шрифт */
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 /* Убрать выделение при фокусе */
@@ -70,7 +70,7 @@
     color: rgba(255, 255, 255, 0.4);
     text-align: center;
     opacity: 1;
-    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif; /* ← Добавлен шрифт */
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 /* Убрать выделение placeholder при фокусе */
@@ -92,7 +92,7 @@
     color: white;
     font-size: 14px;
     box-sizing: border-box;
-    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif; /* ← Добавлен шрифт */
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 /* Убрать выделение при фокусе для поля пароля */
@@ -120,7 +120,7 @@
     color: rgba(255, 255, 255, 0.4);
     text-align: center;
     opacity: 1;
-    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif; /* ← Добавлен шрифт */
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 /* Убрать выделение placeholder при фокусе для пароля */
@@ -174,7 +174,7 @@
 
 .login-confirm-wrapper .confirm-button {
     margin-left: 95px;
-    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif; /* ← Добавлен шрифт */
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 .login-buttons-container {

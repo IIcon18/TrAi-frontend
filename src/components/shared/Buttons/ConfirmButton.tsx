@@ -1,7 +1,7 @@
 import React from "react";
 import "./ConfirmButton.css";
 import ConfirmIcon from "../../../assets/icons/confirm.svg";
-    interface ConfirmButtonProps {
+interface ConfirmButtonProps {
     onClick?: () => void;
     disabled?: boolean;
     loading?: boolean;

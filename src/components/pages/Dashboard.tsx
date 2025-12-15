@@ -1,57 +1,100 @@
 // src/components/pages/Dashboard.tsx
-import React from 'react';
-import { useNavigate } from 'react-router-dom'; // ← добавлен
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Dashboard.css';
 import Header from '../shared/Header/Header';
 import Footer from '../shared/Footer/Footer';
 import CircularProgress from '../shared/CircularProgress';
-import AddMealModal from "../shared/AddMealModal";
-import ChangeGoalModal from "../shared/ChangeGoalModal";
+import AddMealModal from '../shared/AddMealModal';
+import ChangeGoalModal from '../shared/ChangeGoalModal';
+import apiClient from '../../api/apiClient';
+import type { DashboardResponse } from '../../types/dashboard';
 
-interface ActivityData {
-    day: string;
-    mood: number;
-    energy: number;
-}
+const Dashboard: React.FC = () => {
+    const navigate = useNavigate();
+    const [data, setData] = useState<DashboardResponse | null>(null);
+    const [loading, setLoading] = useState(true);
+    const [isAddMealOpen, setIsAddMealOpen] = useState(false);
+    const [isChangeGoalOpen, setIsChangeGoalOpen] = useState(false);
 
-interface ProgressItem {
-    label: string;
-    current: number;
-    total: number;
-    color: string;
-}
+    useEffect(() => {
+        const fetchDashboard = async () => {
+            try {
+                const res = await apiClient.get<DashboardResponse>('/dashboard');
+                setData(res.data);
+            } catch (err) {
+                console.error('Failed to load dashboard:', err);
+                alert('Не удалось загрузить дашборд. Попробуйте войти снова.');
+                localStorage.removeItem('access_token');
+                navigate('/login');
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchDashboard();
+    }, [navigate]);
 
-interface QuickStat {
-    label: string;
-    value: string;
-}
+    if (loading) {
+        return (
+            <div className="dashboard-page">
+                <Header />
+                <main className="dashboard-main">
+                    <div className="dashboard-container">
+                        <p style={{ color: 'white', textAlign: 'center' }}>Загрузка...</p>
+                    </div>
+                </main>
+                <Footer />
+            </div>
+        );
+    }
 
-interface DashboardProps {
-    username: string;
-    lastTraining: string;
-    activityData: ActivityData[];
-    weeklyProgress: ProgressItem;
-    aiPlan: ProgressItem[];
-    quickStats: QuickStat[];
-}
+    if (!data) return null;
 
-const Dashboard: React.FC<DashboardProps> = ({
-                                                 username,
-                                                 lastTraining,
-                                                 activityData,
-                                                 weeklyProgress,
-                                                 aiPlan,
-                                                 quickStats
-                                             }) => {
-    const navigate = useNavigate(); // ← хук навигации
-
-    const [isAddMealOpen, setIsAddMealOpen] = React.useState(false);
-    const [isChangeGoalOpen, setIsChangeGoalOpen] = React.useState(false);
+    const username = data.user_greeting.replace('Привет, ', '').replace('!', '') || '@user';
+    const lastTraining = 'недавно';
 
     const handleStartTraining = () => {
-        alert("Starting your training session... 🏋️‍♂️");
-        // Сюда можно добавить логику старта тренировки
+        alert('Запуск тренировки...');
+        // Можно добавить /workouts/generate-ai или редирект
     };
+
+    // Преобразуем weekly_progress в формат ProgressItem
+    const weeklyProgress = {
+        label: 'Trainings',
+        current: data.weekly_progress.completed_workouts,
+        total: data.weekly_progress.planned_workouts,
+        color: '#FF3B30',
+    };
+
+    // AI Plan — макронутриенты
+    const aiPlan = [
+        {
+            label: 'Proteins',
+            current: data.nutrition_plan.protein,
+            total: 120,
+            color: '#FF3B30',
+        },
+        {
+            label: 'Carbohydrates',
+            current: data.nutrition_plan.carbs,
+            total: 120,
+            color: '#FF9800',
+        },
+        {
+            label: 'Fats',
+            current: data.nutrition_plan.fat,
+            total: 80,
+            color: '#FFEB3B',
+        },
+    ];
+
+    // Quick stats
+    const quickStats = [
+        { label: 'Weekly Volume:', value: `${data.quick_stats.planned_workouts} trainings` },
+        { label: 'Average Weight:', value: `${data.quick_stats.total_weight_lifted} kg` },
+        { label: 'Average Recovery:', value: `${data.quick_stats.recovery_score}%` },
+        { label: 'AI Goal Progress:', value: `${data.quick_stats.weight_change} kg` },
+    ];
 
     return (
         <div className="dashboard-page">
@@ -66,7 +109,7 @@ const Dashboard: React.FC<DashboardProps> = ({
                     </section>
                     <div className="dashboard-content">
                         <div className="left-column">
-                            <div className="card main-dashboard-card">
+                            <div className="main-dashboard-card">
                                 <div className="activity-section">
                                     <h3>Your activity!</h3>
                                     <div className="activity-chart-wrapper">
@@ -103,9 +146,9 @@ const Dashboard: React.FC<DashboardProps> = ({
                                                         </g>
                                                     ))}
                                                     <polyline
-                                                        points={activityData
+                                                        points={data.energy_chart
                                                             .map((point, index) => {
-                                                                const x = START_X + (index / (activityData.length - 1)) * (END_X - START_X);
+                                                                const x = START_X + (index / (data.energy_chart.length - 1)) * (END_X - START_X);
                                                                 const y = 200 - Y_OFFSET - (point.mood / 10) * Y_SCALE;
                                                                 return `${x},${y}`;
                                                             })
@@ -114,9 +157,9 @@ const Dashboard: React.FC<DashboardProps> = ({
                                                         strokeLinejoin="round"
                                                     />
                                                     <polyline
-                                                        points={activityData
+                                                        points={data.energy_chart
                                                             .map((point, index) => {
-                                                                const x = START_X + (index / (activityData.length - 1)) * (END_X - START_X);
+                                                                const x = START_X + (index / (data.energy_chart.length - 1)) * (END_X - START_X);
                                                                 const y = 200 - Y_OFFSET - (point.energy / 10) * Y_SCALE;
                                                                 return `${x},${y}`;
                                                             })
@@ -124,22 +167,22 @@ const Dashboard: React.FC<DashboardProps> = ({
                                                         className="energy-line"
                                                         strokeLinejoin="round"
                                                     />
-                                                    {activityData.map((point, index) => {
-                                                        const x = START_X + (index / (activityData.length - 1)) * (END_X - START_X);
+                                                    {data.energy_chart.map((point, index) => {
+                                                        const x = START_X + (index / (data.energy_chart.length - 1)) * (END_X - START_X);
                                                         return (
                                                             <text
-                                                                key={point.day}
+                                                                key={point.date}
                                                                 x={x}
                                                                 y="180"
                                                                 className="axis-label"
                                                                 textAnchor="middle"
                                                             >
-                                                                {point.day}
+                                                                {point.date}
                                                             </text>
                                                         );
                                                     })}
-                                                    {activityData.map((point, index) => {
-                                                        const x = START_X + (index / (activityData.length - 1)) * (END_X - START_X);
+                                                    {data.energy_chart.map((point, index) => {
+                                                        const x = START_X + (index / (data.energy_chart.length - 1)) * (END_X - START_X);
                                                         const y = 200 - Y_OFFSET - (point.mood / 10) * Y_SCALE;
                                                         return (
                                                             <circle
@@ -153,8 +196,8 @@ const Dashboard: React.FC<DashboardProps> = ({
                                                             />
                                                         );
                                                     })}
-                                                    {activityData.map((point, index) => {
-                                                        const x = START_X + (index / (activityData.length - 1)) * (END_X - START_X);
+                                                    {data.energy_chart.map((point, index) => {
+                                                        const x = START_X + (index / (data.energy_chart.length - 1)) * (END_X - START_X);
                                                         const y = 200 - Y_OFFSET - (point.energy / 10) * Y_SCALE;
                                                         return (
                                                             <circle
@@ -198,8 +241,8 @@ const Dashboard: React.FC<DashboardProps> = ({
                                                     ></div>
                                                 </div>
                                                 <span className="progress-value">
-                                                    {weeklyProgress.current}/{weeklyProgress.total}
-                                                </span>
+                          {weeklyProgress.current}/{weeklyProgress.total}
+                        </span>
                                             </div>
                                             <p className="workouts-left">
                                                 {weeklyProgress.total - weeklyProgress.current} workout
@@ -207,7 +250,7 @@ const Dashboard: React.FC<DashboardProps> = ({
                                             </p>
                                         </div>
                                         <p className="progress-message">
-                                            Perfect, you need last step! 💪
+                                            {data.progress_fact}
                                         </p>
                                     </div>
                                     <div className="ai-plan-section">
@@ -217,7 +260,7 @@ const Dashboard: React.FC<DashboardProps> = ({
                                                 <CircularProgress
                                                     key={index}
                                                     progress={(item.current / item.total) * 100}
-                                                    color="#9D2628"
+                                                    color={item.color}
                                                     label={item.label}
                                                     current={item.current}
                                                     total={item.total}
@@ -249,7 +292,6 @@ const Dashboard: React.FC<DashboardProps> = ({
                             <div className="actions-card">
                                 <h3>Actions</h3>
                                 <div className="action-buttons">
-                                    {/* Кнопка "Open statistic" → ведёт на /progress */}
                                     <button
                                         className="action-btn red-btn"
                                         onClick={() => navigate('/progress')}
@@ -257,7 +299,6 @@ const Dashboard: React.FC<DashboardProps> = ({
                                         <span className="action-icon">📊</span>
                                         Open statistic
                                     </button>
-                                    {/* Кнопка "Change goal" → открывает модалку */}
                                     <button
                                         className="action-btn red-btn"
                                         onClick={() => setIsChangeGoalOpen(true)}
@@ -266,7 +307,6 @@ const Dashboard: React.FC<DashboardProps> = ({
                                         Change goal
                                     </button>
                                 </div>
-                                {/* Кнопка "Start training" */}
                                 <button
                                     className="action-btn start-training-btn"
                                     onClick={handleStartTraining}
