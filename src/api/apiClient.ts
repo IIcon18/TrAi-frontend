@@ -1,20 +1,19 @@
-// src/api/apiClient.ts
-import axios from 'axios';
+import axios, { InternalAxiosRequestConfig, AxiosHeaders } from 'axios';
 
 const apiClient = axios.create({
-    baseURL: '/', // ← важно! Nginx сам перенаправит /auth/register → backend
-    headers: {
-        'Content-Type': 'application/json',
-    },
+  baseURL: 'http://localhost:8000/api/v1',
+  headers: new AxiosHeaders({ 'Content-Type': 'application/json' }),
 });
 
-// Добавляем JWT-токен, если он есть
-apiClient.interceptors.request.use((config) => {
-    const token = localStorage.getItem('access_token');
-    if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
+apiClient.interceptors.request.use((config: InternalAxiosRequestConfig) => {
+  const token = localStorage.getItem('access_token');
+  if (token) {
+    if (!config.headers) {
+      config.headers = new AxiosHeaders();
     }
-    return config;
+    config.headers.set('Authorization', `Bearer ${token}`);
+  }
+  return config;
 });
 
 export default apiClient;
