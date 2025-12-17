@@ -339,6 +339,23 @@
     }
 }
 
+/* Полная ширина строки при отсутствии тренировки */
+.wk-cell-full {
+    grid-column: 1 / -1; /* занимает все колонки сетки */
+    text-align: center;
+    color: #CCCCCC;
+    font-style: italic;
+    padding: 12px 0;
+}
+
+/* Динамическое выделение нагрузки */
+.wk-load-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin: 0 auto;
+}
+
 @media (max-width: 768px) {
     .wk-main {
         padding: 20px 16px;
