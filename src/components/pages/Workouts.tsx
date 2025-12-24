@@ -4,7 +4,9 @@ import Header from '../shared/Header/Header';
 import Footer from '../shared/Footer/Footer';
 import apiClient from '../../api/apiClient';
 
-type MuscleGroup = 'upper_push' | 'upper_pull' | 'core' | 'lower';
+// Значения должны совпадать с backend enum MuscleGroup:
+// upper_body_push | upper_body_pull | core_stability | lower_body
+type MuscleGroup = 'upper_body_push' | 'upper_body_pull' | 'core_stability' | 'lower_body';
 
 interface Exercise {
   id: number;
@@ -25,15 +27,16 @@ interface Workout {
 }
 
 const muscleGroups: { [key in MuscleGroup]: string } = {
-  upper_push: 'Upper body push',
-  upper_pull: 'Upper body pull',
-  core: 'Core & stability',
-  lower: 'Lower body',
+  upper_body_push: 'Upper body push',
+  upper_body_pull: 'Upper body pull',
+  core_stability: 'Core & stability',
+  lower_body: 'Lower body',
 };
 
 const Workouts: React.FC = () => {
   const [activeWorkout, setActiveWorkout] = useState<Workout | null>(null);
-  const [selectedGroup, setSelectedGroup] = useState<MuscleGroup>('lower');
+  // Значение по умолчанию также должно соответствовать enum на бэке
+  const [selectedGroup, setSelectedGroup] = useState<MuscleGroup>('lower_body');
   const [loading, setLoading] = useState(false);
 
   // Дата

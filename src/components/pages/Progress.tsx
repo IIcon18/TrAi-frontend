@@ -1,9 +1,10 @@
 // src/components/pages/Progress.tsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Progress.css';
 import Header from '../shared/Header/Header';
 import Footer from '../shared/Footer/Footer';
 import GoalOverviewCircle from '../shared/GoalOverviewCircle';
+import apiClient from '../../api/apiClient';
 
 // Интерфейс для данных страницы
 interface ProgressData {
@@ -24,187 +25,164 @@ interface ProgressData {
         carbohydrates: { current: number; total: number };
         fats: { current: number; total: number };
     };
+    aiMessage?: string;
 }
 
-// Пример моковых данных — можно заменить на реальные из API
-const mockProgressData: ProgressData = {
+// Пустой прогресс (по умолчанию)
+const emptyProgressData: ProgressData = {
     username: "@username",
     activityData: [
-        { day: "Monday", mood: 7, energy: 6 },
-        { day: "Tuesday", mood: 8, energy: 7 },
-        { day: "Wednesday", mood: 6, energy: 8 },
-        { day: "Thursday", mood: 9, energy: 5 },
-        { day: "Friday", mood: 8, energy: 9 },
-        { day: "Saturday", mood: 7, energy: 7 },
-        { day: "Sunday", mood: 9, energy: 8 }
+        { day: "Monday", mood: 0, energy: 0 },
+        { day: "Tuesday", mood: 0, energy: 0 },
+        { day: "Wednesday", mood: 0, energy: 0 },
+        { day: "Thursday", mood: 0, energy: 0 },
+        { day: "Friday", mood: 0, energy: 0 },
+        { day: "Saturday", mood: 0, energy: 0 },
+        { day: "Sunday", mood: 0, energy: 0 }
     ],
     goalOverview: {
-        percentage: 65,
-        weightChange: "-1,8 kg",
-        caloriesChange: "-370kcal",
-        streak: 2
+        percentage: 0,
+        weightChange: "-",
+        caloriesChange: "-",
+        streak: 0
     },
     nutritionProgress: {
-        proteins: { current: 65, total: 120 },
-        carbohydrates: { current: 30, total: 120 },
-        fats: { current: 40, total: 80 }
-    }
+        proteins: { current: 0, total: 0 },
+        carbohydrates: { current: 0, total: 0 },
+        fats: { current: 0, total: 0 }
+    },
+    aiMessage: ''
 };
 
 const Progress: React.FC = () => {
     const [activeTab, setActiveTab] = useState<'weight' | 'bodyFat' | 'workouts' | 'recovery'>('weight');
+    const [progressData, setProgressData] = useState<ProgressData>(emptyProgressData);
+    const [aiMessage, setAiMessage] = useState<string>('');
 
-    // Здесь вы можете изменять данные динамически
-    const [progressData, setProgressData] = useState<ProgressData>(mockProgressData);
-
-    // Функция для изменения данных (например, при клике на кнопку или из API)
-    const updateProgressData = (newData: Partial<ProgressData>) => {
-        setProgressData(prev => ({ ...prev, ...newData }));
+    const metricMap: Record<string, string> = {
+        'weight': 'weight',
+        'bodyFat': 'body_fat',
+        'workouts': 'workouts',
+        'recovery': 'recovery'
     };
+
+    // Загрузка данных прогресса
+    const fetchProgressData = async (metric: string) => {
+        try {
+            const [progressRes, activityRes] = await Promise.all([
+                apiClient.get(`/progress?metric=${metric}`),
+                apiClient.get('/progress/activity')
+            ]);
+
+            const progress = progressRes.data;
+            const activity = activityRes.data;
+
+            setProgressData({
+                username: "@user",
+                activityData: activity.activityData || emptyProgressData.activityData,
+                goalOverview: {
+                    percentage: progress.goal_progress?.completion_percentage || 0,
+                    weightChange: progress.goal_progress?.weight_lost != null
+                        ? `${progress.goal_progress.weight_lost >= 0 ? '-' : '+'}${Math.abs(progress.goal_progress.weight_lost).toFixed(1)} kg`
+                        : '-',
+                    caloriesChange: progress.goal_progress?.daily_calorie_deficit != null
+                        ? `-${progress.goal_progress.daily_calorie_deficit} kcal`
+                        : '-',
+                    streak: progress.goal_progress?.streak_weeks || 0
+                },
+                nutritionProgress: {
+                    proteins: {
+                        current: 0,
+                        total: progress.nutrition_plan?.protein || 0
+                    },
+                    carbohydrates: {
+                        current: 0,
+                        total: progress.nutrition_plan?.carbs || 0
+                    },
+                    fats: {
+                        current: 0,
+                        total: progress.nutrition_plan?.fat || 0
+                    }
+                },
+                aiMessage: progress.ai_fact || ''
+            });
+
+            setAiMessage(progress.ai_fact || '');
+        } catch (err) {
+            console.error('Failed to load progress:', err);
+            // оставляем пустые данные
+        }
+    };
+
+    useEffect(() => {
+        const metric = metricMap[activeTab] || 'weight';
+        fetchProgressData(metric);
+    }, [activeTab]);
 
     return (
         <div className="progress-page">
             <Header />
             <main className="progress-main">
                 <div className="progress-container">
-                    {/* Основная сетка */}
                     <div className="progress-content">
-                        {/* Левая колонка: График */}
+                        {/* Левая колонка */}
                         <div className="progress-left-column">
                             <div className="progress-card">
                                 <h1 className="progress-page-title">Your Progress</h1>
-
-                                {/* Вкладки */}
                                 <div className="progress-tabs-container">
-                                    <button
-                                        className={`progress-tab-button ${activeTab === 'weight' ? 'progress-active' : ''}`}
-                                        onClick={() => setActiveTab('weight')}
-                                    >
-                                        Weight
-                                    </button>
-                                    <button
-                                        className={`progress-tab-button ${activeTab === 'bodyFat' ? 'progress-active' : ''}`}
-                                        onClick={() => setActiveTab('bodyFat')}
-                                    >
-                                        Body Fat
-                                    </button>
-                                    <button
-                                        className={`progress-tab-button ${activeTab === 'workouts' ? 'progress-active' : ''}`}
-                                        onClick={() => setActiveTab('workouts')}
-                                    >
-                                        Workouts
-                                    </button>
-                                    <button
-                                        className={`progress-tab-button ${activeTab === 'recovery' ? 'progress-active' : ''}`}
-                                        onClick={() => setActiveTab('recovery')}
-                                    >
-                                        Recovery
-                                    </button>
+                                    {['weight', 'bodyFat', 'workouts', 'recovery'].map(tab => (
+                                        <button
+                                            key={tab}
+                                            className={`progress-tab-button ${activeTab === tab ? 'progress-active' : ''}`}
+                                            onClick={() => setActiveTab(tab as any)}
+                                        >
+                                            {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                                        </button>
+                                    ))}
                                 </div>
 
                                 {/* График активности */}
                                 <div className="progress-activity-chart-wrapper">
-                                    {(() => {
-                                        const GRAPH_WIDTH_PCT = 92;
-                                        const START_X = -100;
-                                        const END_X = 500;
-                                        const Y_OFFSET = 40;
-                                        const Y_SCALE = 120;
-                                        return (
-                                            <svg
-                                                width={`${GRAPH_WIDTH_PCT}%`}
-                                                height="200"
-                                                className="chart-svg"
-                                                viewBox="0 0 400 200"
-                                                style={{ margin: '0 auto' }}
-                                            >
-                                                {[0, 2, 4, 6, 8, 10].map((value) => (
-                                                    <g key={value}>
-                                                        <line
-                                                            x1={START_X}
-                                                            y1={200 - Y_OFFSET - (value / 10) * Y_SCALE}
-                                                            x2={END_X}
-                                                            y2={200 - Y_OFFSET - (value / 10) * Y_SCALE}
-                                                            className="grid-line"
-                                                        />
-                                                        <text
-                                                            x={START_X - 10}
-                                                            y={200 - Y_OFFSET - (value / 10) * Y_SCALE}
-                                                            className="grid-text"
-                                                        >
-                                                            {value}
-                                                        </text>
-                                                    </g>
-                                                ))}
-                                                <polyline
-                                                    points={progressData.activityData
-                                                        .map((point, index) => {
-                                                            const x = START_X + (index / (progressData.activityData.length - 1)) * (END_X - START_X);
-                                                            const y = 200 - Y_OFFSET - (point.mood / 10) * Y_SCALE;
-                                                            return `${x},${y}`;
-                                                        })
-                                                        .join(' ')}
-                                                    className="mood-line"
-                                                    strokeLinejoin="round"
-                                                />
-                                                <polyline
-                                                    points={progressData.activityData
-                                                        .map((point, index) => {
-                                                            const x = START_X + (index / (progressData.activityData.length - 1)) * (END_X - START_X);
-                                                            const y = 200 - Y_OFFSET - (point.energy / 10) * Y_SCALE;
-                                                            return `${x},${y}`;
-                                                        })
-                                                        .join(' ')}
-                                                    className="energy-line"
-                                                    strokeLinejoin="round"
-                                                />
-                                                {progressData.activityData.map((point, index) => {
-                                                    const x = START_X + (index / (progressData.activityData.length - 1)) * (END_X - START_X);
-                                                    return (
-                                                        <text
-                                                            key={point.day}
-                                                            x={x}
-                                                            y="180"
-                                                            className="axis-label"
-                                                            textAnchor="middle"
-                                                        >
-                                                            {point.day}
-                                                        </text>
-                                                    );
-                                                })}
-                                                {progressData.activityData.map((point, index) => {
-                                                    const x = START_X + (index / (progressData.activityData.length - 1)) * (END_X - START_X);
-                                                    const y = 200 - Y_OFFSET - (point.mood / 10) * Y_SCALE;
-                                                    return (
-                                                        <circle
-                                                            key={`mood-${index}`}
-                                                            cx={x}
-                                                            cy={y}
-                                                            r="4"
-                                                            fill="#4CAF50"
-                                                            stroke="#000"
-                                                            strokeWidth="2"
-                                                        />
-                                                    );
-                                                })}
-                                                {progressData.activityData.map((point, index) => {
-                                                    const x = START_X + (index / (progressData.activityData.length - 1)) * (END_X - START_X);
-                                                    const y = 200 - Y_OFFSET - (point.energy / 10) * Y_SCALE;
-                                                    return (
-                                                        <circle
-                                                            key={`energy-${index}`}
-                                                            cx={x}
-                                                            cy={y}
-                                                            r="4"
-                                                            fill="#FF3B30"
-                                                            stroke="#000"
-                                                            strokeWidth="2"
-                                                        />
-                                                    );
-                                                })}
-                                            </svg>
-                                        );
-                                    })()}
+                                    {progressData.activityData.length > 0 ? (
+                                        <svg width="92%" height="200" className="chart-svg" viewBox="0 0 400 200" style={{ margin: '0 auto' }}>
+                                            {[0, 2, 4, 6, 8, 10].map(value => (
+                                                <g key={value}>
+                                                    <line
+                                                        x1={-100}
+                                                        y1={200 - 40 - (value / 10) * 120}
+                                                        x2={500}
+                                                        y2={200 - 40 - (value / 10) * 120}
+                                                        className="grid-line"
+                                                    />
+                                                    <text x={-110} y={200 - 40 - (value / 10) * 120} className="grid-text">
+                                                        {value}
+                                                    </text>
+                                                </g>
+                                            ))}
+                                            {/* Mood Line */}
+                                            <polyline
+                                                points={progressData.activityData.map((point, i) => {
+                                                    const x = -100 + (i / (progressData.activityData.length - 1)) * 600;
+                                                    const y = 200 - 40 - (point.mood / 10) * 120;
+                                                    return `${x},${y}`;
+                                                }).join(' ')}
+                                                className="mood-line"
+                                                strokeLinejoin="round"
+                                            />
+                                            {/* Energy Line */}
+                                            <polyline
+                                                points={progressData.activityData.map((point, i) => {
+                                                    const x = -100 + (i / (progressData.activityData.length - 1)) * 600;
+                                                    const y = 200 - 40 - (point.energy / 10) * 120;
+                                                    return `${x},${y}`;
+                                                }).join(' ')}
+                                                className="energy-line"
+                                                strokeLinejoin="round"
+                                            />
+                                        </svg>
+                                    ) : (
+                                        <p>No activity data yet</p>
+                                    )}
                                     <div className="progress-chart-legend">
                                         <div className="progress-legend-item">
                                             <div className="progress-legend-color progress-mood-color"></div>
@@ -217,17 +195,17 @@ const Progress: React.FC = () => {
                                     </div>
                                 </div>
 
-                                {/* Сообщение от AI */}
+                                {/* Сообщение AI */}
                                 <div className="progress-ai-message">
                                     <div className="progress-ai-icon">🤖</div>
                                     <p className="progress-message-text">
-                                        Great consistency this month! You're 2 weeks ahead of plan 🔥
+                                        {aiMessage || progressData.aiMessage || 'No AI data yet'}
                                     </p>
                                 </div>
                             </div>
                         </div>
 
-                        {/* Правая колонка: Статистика */}
+                        {/* Правая колонка */}
                         <div className="progress-right-column">
                             {/* Goal Overview */}
                             <div className="progress-goal-overview-card">
@@ -235,12 +213,12 @@ const Progress: React.FC = () => {
                                 <div className="progress-goal-circle-wrapper">
                                     <GoalOverviewCircle
                                         percentage={progressData.goalOverview.percentage}
-                                        size={100}          // ← Изменено по вашему запросу
-                                        strokeWidth={10}    // ← Изменено по вашему запросу
-                                        filledColor="#4CAF50"   // ← Зелёный — заполненная часть
-                                        emptyColor="#9D2628"    // ← Красный — незаполненная часть
+                                        size={100}
+                                        strokeWidth={10}
+                                        filledColor="#4CAF50"
+                                        emptyColor="#9D2628"
                                         textColor="white"
-                                        textSize={20}       // ← Изменено по вашему запросу
+                                        textSize={20}
                                         label="%"
                                     />
                                 </div>
@@ -263,64 +241,28 @@ const Progress: React.FC = () => {
                                 </div>
                             </div>
 
-                            {/* Your Nutrition Progress — НОВЫЙ БЛОК */}
+                            {/* Nutrition */}
                             <div className="progress-nutrition-card">
                                 <h3 className="progress-card-title">Your Nutrition Progress</h3>
                                 <div className="nutrition-progress-list">
-                                    {/* Proteins */}
-                                    <div className="nutrition-item">
-                                        <div className="nutrition-label">Proteins</div>
-                                        <div className="nutrition-bar">
-                                            <div
-                                                className="nutrition-fill"
-                                                style={{
-                                                    width: `${(progressData.nutritionProgress.proteins.current / progressData.nutritionProgress.proteins.total) * 100}%`,
-                                                    backgroundColor: '#9D2628'
-                                                }}
-                                            ></div>
-                                        </div>
-                                        <div className="nutrition-value">
-                                            {progressData.nutritionProgress.proteins.current}/{progressData.nutritionProgress.proteins.total}g
-                                        </div>
-                                    </div>
-
-                                    {/* Carbohydrates */}
-                                    <div className="nutrition-item">
-                                        <div className="nutrition-label">Carbohydrates</div>
-                                        <div className="nutrition-bar">
-                                            <div
-                                                className="nutrition-fill"
-                                                style={{
-                                                    width: `${(progressData.nutritionProgress.carbohydrates.current / progressData.nutritionProgress.carbohydrates.total) * 100}%`,
-                                                    backgroundColor: '#9D2628'
-                                                }}
-                                            ></div>
-                                        </div>
-                                        <div className="nutrition-value">
-                                            {progressData.nutritionProgress.carbohydrates.current}/{progressData.nutritionProgress.carbohydrates.total}g
-                                        </div>
-                                    </div>
-
-                                    {/* Fats */}
-                                    <div className="nutrition-item">
-                                        <div className="nutrition-label">Fats</div>
-                                        <div className="nutrition-bar">
-                                            <div
-                                                className="nutrition-fill"
-                                                style={{
-                                                    width: `${(progressData.nutritionProgress.fats.current / progressData.nutritionProgress.fats.total) * 100}%`,
-                                                    backgroundColor: '#9D2628'
-                                                }}
-                                            ></div>
-                                        </div>
-                                        <div className="nutrition-value">
-                                            {progressData.nutritionProgress.fats.current}/{progressData.nutritionProgress.fats.total}g
-                                        </div>
-                                    </div>
+                                    {['proteins', 'carbohydrates', 'fats'].map((macro) => {
+                                        const current = progressData.nutritionProgress[macro as keyof ProgressData['nutritionProgress']].current;
+                                        const total = progressData.nutritionProgress[macro as keyof ProgressData['nutritionProgress']].total;
+                                        return (
+                                            <div key={macro} className="nutrition-item">
+                                                <div className="nutrition-label">{macro.charAt(0).toUpperCase() + macro.slice(1)}</div>
+                                                <div className="nutrition-bar">
+                                                    <div
+                                                        className="nutrition-fill"
+                                                        style={{ width: total ? `${(current / total) * 100}%` : '0%', backgroundColor: '#9D2628' }}
+                                                    ></div>
+                                                </div>
+                                                <div className="nutrition-value">{current}/{total}g</div>
+                                            </div>
+                                        );
+                                    })}
                                 </div>
-                                <button className="progress-add-meal-button">
-                                    + Add meal
-                                </button>
+                                <button className="progress-add-meal-button">+ Add meal</button>
                             </div>
                         </div>
                     </div>
