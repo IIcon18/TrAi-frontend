@@ -37,7 +37,7 @@ const Workouts: React.FC = () => {
   const [activeWorkout, setActiveWorkout] = useState<Workout | null>(null);
   // Значение по умолчанию также должно соответствовать enum на бэке
   const [selectedGroup, setSelectedGroup] = useState<MuscleGroup>('lower_body');
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true); // Начальное состояние - загрузка
 
   // Дата
   const today = new Date();
@@ -54,9 +54,13 @@ const Workouts: React.FC = () => {
       } else {
         setActiveWorkout(null);
       }
-    } catch (err) {
-      console.error(err);
+    } catch (err: any) {
+      console.error('Failed to fetch workout:', err);
       setActiveWorkout(null);
+      // Если ошибка 401, apiClient уже перенаправит на логин
+      if (err?.response?.status !== 401) {
+        // Для других ошибок можно показать уведомление
+      }
     } finally {
       setLoading(false);
     }
@@ -69,8 +73,12 @@ const Workouts: React.FC = () => {
         muscle_group: group,
       });
       setActiveWorkout(res.data);
-    } catch (err) {
-      console.error(err);
+    } catch (err: any) {
+      console.error('Failed to generate workout:', err);
+      // Если ошибка 401, apiClient уже перенаправит на логин
+      if (err?.response?.status !== 401) {
+        alert('Не удалось сгенерировать тренировку. Попробуйте еще раз.');
+      }
     } finally {
       setLoading(false);
     }

@@ -134,6 +134,28 @@
     background: #b73e40;
 }
 
+.logout-btn {
+    background: #9D2628;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width: 100%;
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.logout-btn:hover {
+    background: #b73e40;
+}
+
 /* === Правые карточки === */
 .side-cards {
     display: flex;

@@ -1,4 +1,4 @@
-import axios, { InternalAxiosRequestConfig, AxiosHeaders } from 'axios';
+import axios, { InternalAxiosRequestConfig, AxiosHeaders, AxiosError } from 'axios';
 
 const apiClient = axios.create({
   baseURL: 'http://localhost:8000/api/v1',
@@ -15,5 +15,22 @@ apiClient.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   }
   return config;
 });
+
+// Response interceptor для обработки ошибок
+apiClient.interceptors.response.use(
+  (response) => response,
+  (error: AxiosError) => {
+    // Если получили 401 (Unauthorized), значит токен невалидный или истек
+    if (error.response?.status === 401) {
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('refresh_token');
+      // Перенаправляем на логин только если мы не на странице логина/регистрации
+      if (window.location.pathname !== '/login' && window.location.pathname !== '/register') {
+        window.location.href = '/login';
+      }
+    }
+    return Promise.reject(error);
+  }
+);
 
 export default apiClient;

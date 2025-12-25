@@ -18,6 +18,13 @@ export interface NutritionPlan {
     fat: number;
 }
 
+export interface CurrentNutrition {
+    calories: number;
+    protein: number;
+    carbs: number;
+    fat: number;
+}
+
 export interface QuickStats {
     planned_workouts: number;
     total_weight_lifted: number;
@@ -42,9 +49,12 @@ export interface AIRecommendation {
 export interface DashboardResponse {
     user_greeting: string;
     progress_fact: string;
+    last_training_message: string;
+    weekly_progress_message: string;
     energy_chart: EnergyChartData[];
     weekly_progress: WeeklyProgress;
     nutrition_plan: NutritionPlan;
+    current_nutrition: CurrentNutrition;
     quick_stats: QuickStats;
     quick_actions: QuickAction[];
     ai_recommendations: AIRecommendation[];

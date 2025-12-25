@@ -29,7 +29,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   onGoProgress,
 }) => {
   const username = data.user_greeting.replace('Привет, ', '').replace('!', '') || '@user';
-  const lastTraining = '—';
+  const lastTraining = data.last_training_message || '—';
 
   const weeklyProgress = {
     label: 'Trainings',
@@ -38,11 +38,36 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
     color: '#FF3B30',
   };
 
+  // Используем реальные данные из current_nutrition
+  // Проверяем что данные есть, иначе используем 0
+  const currentProtein = data.current_nutrition?.protein ?? 0;
+  const currentCarbs = data.current_nutrition?.carbs ?? 0;
+  const currentFat = data.current_nutrition?.fat ?? 0;
+  
   const aiPlan = [
-    { label: 'Proteins', current: data.nutrition_plan?.protein || 0, total: 120, color: '#FF3B30' },
-    { label: 'Carbohydrates', current: data.nutrition_plan?.carbs || 0, total: 120, color: '#FF9800' },
-    { label: 'Fats', current: data.nutrition_plan?.fat || 0, total: 80, color: '#FFEB3B' },
+    { 
+      label: 'Proteins', 
+      current: Math.round(currentProtein), 
+      total: data.nutrition_plan?.protein || 0, 
+      color: '#FF3B30' 
+    },
+    { 
+      label: 'Carbohydrates', 
+      current: Math.round(currentCarbs), 
+      total: data.nutrition_plan?.carbs || 0, 
+      color: '#FF9800' 
+    },
+    { 
+      label: 'Fats', 
+      current: Math.round(currentFat), 
+      total: data.nutrition_plan?.fat || 0, 
+      color: '#FFEB3B' 
+    },
   ];
+  
+  console.log('AI Plan data:', aiPlan);
+  console.log('Current nutrition:', data.current_nutrition);
+  console.log('Nutrition plan:', data.nutrition_plan);
 
   const quickStats = [
     { label: 'Weekly Volume:', value: `${data.quick_stats?.planned_workouts || 0} trainings` },
@@ -106,7 +131,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                       </div>
                       <p className="workouts-left">{weeklyProgress.total - weeklyProgress.current} workout{weeklyProgress.total - weeklyProgress.current !== 1 ? 's' : ''} left!</p>
                     </div>
-                    <p className="progress-message">{data.progress_fact || ''}</p>
+                    <p className="progress-message">{data.weekly_progress_message || ''}</p>
                   </div>
 
                   <div className="ai-plan-section">
@@ -185,11 +210,17 @@ const Dashboard: React.FC = () => {
     (async () => {
       try {
         const res = await apiClient.get<DashboardResponse>('/dashboard');
+        console.log('Dashboard response:', res.data);
+        console.log('Current nutrition:', res.data.current_nutrition);
+        console.log('Nutrition plan:', res.data.nutrition_plan);
         setData(res.data);
-      } catch (err) {
+      } catch (err: any) {
         console.error('Failed to load dashboard:', err);
-        localStorage.removeItem('access_token');
-        navigate('/login');
+        console.error('Error details:', err?.response?.data);
+        if (err?.response?.status === 401) {
+          localStorage.removeItem('access_token');
+          navigate('/login');
+        }
       } finally {
         setLoading(false);
       }

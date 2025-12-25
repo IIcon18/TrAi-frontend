@@ -58,6 +58,7 @@ const Progress: React.FC = () => {
     const [activeTab, setActiveTab] = useState<'weight' | 'bodyFat' | 'workouts' | 'recovery'>('weight');
     const [progressData, setProgressData] = useState<ProgressData>(emptyProgressData);
     const [aiMessage, setAiMessage] = useState<string>('');
+    const [loading, setLoading] = useState<boolean>(true);
 
     const metricMap: Record<string, string> = {
         'weight': 'weight',
@@ -68,6 +69,7 @@ const Progress: React.FC = () => {
 
     // Загрузка данных прогресса
     const fetchProgressData = async (metric: string) => {
+        setLoading(true);
         try {
             const [progressRes, activityRes] = await Promise.all([
                 apiClient.get(`/progress?metric=${metric}`),
@@ -92,15 +94,15 @@ const Progress: React.FC = () => {
                 },
                 nutritionProgress: {
                     proteins: {
-                        current: 0,
+                        current: progress.current_nutrition?.protein || 0,
                         total: progress.nutrition_plan?.protein || 0
                     },
                     carbohydrates: {
-                        current: 0,
+                        current: progress.current_nutrition?.carbs || 0,
                         total: progress.nutrition_plan?.carbs || 0
                     },
                     fats: {
-                        current: 0,
+                        current: progress.current_nutrition?.fat || 0,
                         total: progress.nutrition_plan?.fat || 0
                     }
                 },
@@ -108,9 +110,15 @@ const Progress: React.FC = () => {
             });
 
             setAiMessage(progress.ai_fact || '');
-        } catch (err) {
+        } catch (err: any) {
             console.error('Failed to load progress:', err);
-            // оставляем пустые данные
+            // Если ошибка 401, apiClient уже перенаправит на логин
+            // Для других ошибок оставляем пустые данные
+            if (err?.response?.status !== 401) {
+                // Можно показать уведомление об ошибке
+            }
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -118,6 +126,20 @@ const Progress: React.FC = () => {
         const metric = metricMap[activeTab] || 'weight';
         fetchProgressData(metric);
     }, [activeTab]);
+
+    if (loading) {
+        return (
+            <div className="progress-page">
+                <Header />
+                <main className="progress-main">
+                    <div className="progress-container">
+                        <p style={{ color: 'white', textAlign: 'center' }}>Загрузка...</p>
+                    </div>
+                </main>
+                <Footer />
+            </div>
+        );
+    }
 
     return (
         <div className="progress-page">

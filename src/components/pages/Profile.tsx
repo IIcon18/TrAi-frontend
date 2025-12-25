@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Profile.css';
 import Header from '../shared/Header/Header';
 import Footer from '../shared/Footer/Footer';
@@ -24,6 +25,7 @@ interface ProfileResponse {
 }
 
 const Profile: React.FC = () => {
+  const navigate = useNavigate();
   const [profile, setProfile] = useState<ProfileResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [refreshingTips, setRefreshingTips] = useState(false);
@@ -32,9 +34,19 @@ const Profile: React.FC = () => {
     const fetchProfile = async () => {
       try {
         const res = await apiClient.get<ProfileResponse>('/profile/profile/');
-        setProfile(res.data);
-      } catch (err) {
+        // Берем только первый tip из массива
+        const profileData = res.data;
+        if (profileData.ai_tips && profileData.ai_tips.length > 0) {
+          profileData.ai_tips = [profileData.ai_tips[0]];
+        }
+        setProfile(profileData);
+      } catch (err: any) {
         console.error('Failed to fetch profile:', err);
+        // Если ошибка 401, apiClient уже перенаправит на логин
+        // Для других ошибок просто показываем сообщение
+        if (err?.response?.status !== 401) {
+          // Можно показать уведомление об ошибке
+        }
       } finally {
         setLoading(false);
       }
@@ -47,12 +59,33 @@ const Profile: React.FC = () => {
     if (!profile) return;
     setRefreshingTips(true);
     try {
-      const res = await apiClient.post('/profile/refresh-ai-tips');
-      setProfile((prev) =>
-        prev ? { ...prev, ai_tips: res.data.ai_tips } : prev
-      );
-    } catch (err) {
+      // Правильный путь: /profile/profile/refresh-ai-tips (роутер имеет prefix="/profile", endpoint тоже)
+      const res = await apiClient.post('/profile/profile/refresh-ai-tips');
+      console.log('Refresh tips response:', res.data);
+      
+      // Проверяем структуру ответа
+      if (res.data && res.data.ai_tips && Array.isArray(res.data.ai_tips) && res.data.ai_tips.length > 0) {
+        // Берем только первый tip из массива
+        const newTip = [res.data.ai_tips[0]];
+        setProfile((prev) =>
+          prev ? { ...prev, ai_tips: newTip } : prev
+        );
+      } else {
+        console.warn('No tips in response:', res.data);
+        // Если tips пустые, оставляем текущий или показываем сообщение
+        alert('Не удалось получить новый совет. Попробуйте еще раз.');
+      }
+    } catch (err: any) {
       console.error('Failed to refresh AI tips:', err);
+      console.error('Error details:', err?.response?.data);
+      console.error('Error status:', err?.response?.status);
+      console.error('Error URL:', err?.config?.url);
+      
+      // Если ошибка 401, apiClient уже перенаправит на логин
+      if (err?.response?.status !== 401) {
+        const errorMessage = err?.response?.data?.detail || err?.message || 'Не удалось обновить совет';
+        alert(`Ошибка: ${errorMessage}. Попробуйте еще раз.`);
+      }
     } finally {
       setRefreshingTips(false);
     }
@@ -70,6 +103,14 @@ const Profile: React.FC = () => {
     } catch (err) {
       console.error('Failed to connect Telegram:', err);
     }
+  };
+
+  const handleLogout = () => {
+    // Очищаем токены
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
+    // Перенаправляем на страницу логина
+    navigate('/login', { replace: true });
   };
 
   return (
@@ -128,6 +169,11 @@ const Profile: React.FC = () => {
               </div>
 
               <button className="change-btn">✏️ Change</button>
+              
+              {/* Logout button */}
+              <button className="logout-btn" onClick={handleLogout}>
+                🚪 Logout
+              </button>
             </div>
 
             {/* Правая колонка: Telegram + AI Tips */}
@@ -150,12 +196,10 @@ const Profile: React.FC = () => {
 
               <div className="ai-tips-card">
                 <h3>
-                  <span className="ai-icon">🤖</span> AI tips
+                  <span className="ai-icon">🤖</span> AI tip
                 </h3>
                 {profile.ai_tips && profile.ai_tips.length > 0 ? (
-                  profile.ai_tips.map((tipObj, i) => (
-                    <p key={i} className="tip-text">{tipObj.tip}</p>
-                  ))
+                  <p className="tip-text">{profile.ai_tips[0].tip}</p>
                 ) : (
                   <p className="tip-text">No tips yet</p>
                 )}
@@ -164,7 +208,7 @@ const Profile: React.FC = () => {
                   onClick={handleRefreshTips}
                   disabled={refreshingTips}
                 >
-                  ↻ {refreshingTips ? 'Refreshing...' : 'Refresh tips'}
+                  ↻ {refreshingTips ? 'Generating...' : 'Generate new'}
                 </button>
               </div>
             </div>
