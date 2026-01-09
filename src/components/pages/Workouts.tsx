@@ -172,9 +172,9 @@ const Workouts: React.FC = () => {
                     🎯 Change goal
                   </button>
                 </div>
-                <div className="wk-bot-status">
-                  <div className="wk-status-dot"></div>
-                  <span>Bot status</span>
+                <div className="bot-status bot-status--dev">
+                  <div className="status-dot"></div>
+                  <span>Бот в разработке</span>
                 </div>
               </div>
 
