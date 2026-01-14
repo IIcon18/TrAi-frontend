@@ -216,27 +216,44 @@
     background: #b73e40;
 }
 
-.wk-bot-status {
+/* Статус бота — общие стили */
+.bot-status {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
     color: #4CAF50;
-    font-size: 14px;
-    justify-content: center;
+    font-size: 13px;
+    margin-top: auto;
+    padding-top: 16px;
 }
 
-.wk-status-dot {
+/* Статус "в разработке" — оранжевый */
+.bot-status--dev {
+    color: #FF9800;
+}
+
+.bot-status--dev .status-dot {
+    background: #FF9800;
+    box-shadow: 0 0 8px rgba(255, 152, 0, 0.6);
+}
+
+.status-dot {
     width: 8px;
     height: 8px;
     background: #4CAF50;
     border-radius: 50%;
-    animation: wk-pulse 2s infinite;
+    animation: pulse 1.5s ease-in-out infinite;
 }
 
-@keyframes wk-pulse {
-    0% { opacity: 1; }
-    50% { opacity: 0.5; }
-    100% { opacity: 1; }
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.5;
+        transform: scale(0.85);
+    }
 }
 
 /* === Карточка "Your Calendar" === */

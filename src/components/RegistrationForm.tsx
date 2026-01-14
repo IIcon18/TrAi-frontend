@@ -9,22 +9,13 @@ import apiClient from "../api/apiClient";
 const RegistrationForm: React.FC = () => {
   const navigate = useNavigate();
 
-  const [formData, setFormData] = useState({
-    email: "",
-    age: "",
-    lifestyle: "",
-    height: "",
-    weight: ""
-  });
+  const [nickname, setNickname] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
-  };
-
-  const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
   };
 
   const getPasswordStrength = (pass: string) => {
@@ -37,28 +28,29 @@ const RegistrationForm: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!formData.email || !password) {
-      alert("Email и пароль обязательны!");
+    if (!nickname || !email || !password) {
+      alert("Все поля обязательны!");
+      return;
+    }
+
+    if (password.length < 6) {
+      alert("Пароль должен быть минимум 6 символов");
       return;
     }
 
     try {
       const response = await apiClient.post("/auth/register", {
-        email: formData.email,
-        password,
-        age: Number(formData.age) || 20,
-        lifestyle: formData.lifestyle || "medium",
-        height: Number(formData.height) || 170,
-        weight: Number(formData.weight) || 70,
-        level: "beginner",
-        weekly_training_goal: 3
+        nickname,
+        email,
+        password
       });
 
       const { access_token, refresh_token } = response.data;
       localStorage.setItem("access_token", access_token);
       localStorage.setItem("refresh_token", refresh_token);
 
-      navigate("/dashboard");
+      // Редирект на профиль для дозаполнения данных
+      navigate("/profile");
     } catch (err: any) {
       alert(err.response?.data?.detail || "Ошибка регистрации");
       console.error(err);
@@ -72,15 +64,27 @@ const RegistrationForm: React.FC = () => {
       <div className="registration-box">
         <h2 className="registration-title">Registration</h2>
         <form onSubmit={handleSubmit}>
+          {/* Nickname */}
+          <div className="form-group">
+            <label className="input-label">Nickname:</label>
+            <input
+              type="text"
+              className="input-field"
+              placeholder="Your nickname"
+              value={nickname}
+              onChange={(e) => setNickname(e.target.value)}
+            />
+          </div>
+
           {/* Email */}
           <div className="form-group">
             <label className="input-label">Email:</label>
             <input
-              type="text"
+              type="email"
               className="input-field"
               placeholder="user@example.com"
-              value={formData.email}
-              onChange={(e) => handleInputChange("email", e.target.value)}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
           </div>
 
@@ -115,57 +119,6 @@ const RegistrationForm: React.FC = () => {
                 </div>
               )}
             </div>
-          </div>
-
-          {/* Age */}
-          <div className="form-group">
-            <label className="input-label">Age:</label>
-            <input
-              type="number"
-              className="input-field"
-              placeholder="20"
-              value={formData.age}
-              onChange={(e) => handleInputChange("age", e.target.value)}
-            />
-          </div>
-
-          {/* Lifestyle */}
-          <div className="form-group">
-            <label className="input-label">Lifestyle:</label>
-            <select
-              className="input-field select-field"
-              value={formData.lifestyle}
-              onChange={(e) => handleInputChange("lifestyle", e.target.value)}
-            >
-              <option value="">Select lifestyle</option>
-              <option value="low">Low</option>
-              <option value="medium">Medium</option>
-              <option value="high">High</option>
-            </select>
-          </div>
-
-          {/* Height */}
-          <div className="form-group">
-            <label className="input-label">Height:</label>
-            <input
-              type="number"
-              className="input-field"
-              placeholder="175"
-              value={formData.height}
-              onChange={(e) => handleInputChange("height", e.target.value)}
-            />
-          </div>
-
-          {/* Weight */}
-          <div className="form-group">
-            <label className="input-label">Weight:</label>
-            <input
-              type="number"
-              className="input-field"
-              placeholder="73"
-              value={formData.weight}
-              onChange={(e) => handleInputChange("weight", e.target.value)}
-            />
           </div>
 
           {/* Submit */}

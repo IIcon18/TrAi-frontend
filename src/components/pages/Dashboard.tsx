@@ -182,9 +182,9 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 <button className="action-btn start-training-btn" onClick={onStartTraining}>
                   <span className="action-icon">▶️</span>Start training
                 </button>
-                <div className="bot-status">
+                <div className="bot-status bot-status--dev">
                   <div className="status-dot"></div>
-                  <span>Bot status</span>
+                  <span>Бот в разработке</span>
                 </div>
               </div>
             </div>

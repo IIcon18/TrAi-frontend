@@ -441,24 +441,40 @@
 .bot-status {
     display: flex;
     align-items: center;
-    gap: 6px;
-    color: #4CAF50; /* ← Зелёный текст */
-    font-size: 14px;
-    transform: translate(-11%,  260%);
+    gap: 8px;
+    color: #4CAF50;
+    font-size: 13px;
+    margin-top: auto;
+    padding-top: 16px;
+}
+
+/* Статус "в разработке" — оранжевый */
+.bot-status--dev {
+    color: #FF9800;
+}
+
+.bot-status--dev .status-dot {
+    background: #FF9800;
+    box-shadow: 0 0 8px rgba(255, 152, 0, 0.6);
 }
 
 .status-dot {
     width: 8px;
     height: 8px;
-    background: #4CAF50; /* ← Зелёная точка */
+    background: #4CAF50;
     border-radius: 50%;
-    animation: pulse 2s infinite;
+    animation: pulse 1.5s ease-in-out infinite;
 }
 
 @keyframes pulse {
-    0% { opacity: 1; }
-    50% { opacity: 0.5; }
-    100% { opacity: 1; }
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.5;
+        transform: scale(0.85);
+    }
 }
 
 /* === Responsive Design === */
