@@ -4,6 +4,7 @@ import './Profile.css';
 import Header from '../shared/Header/Header';
 import Footer from '../shared/Footer/Footer';
 import apiClient from '../../api/apiClient';
+import ProfileSetupModal from '../shared/ProfileSetupModal';
 
 interface AITip {
   tip: string;
@@ -11,11 +12,13 @@ interface AITip {
 
 interface ProfileResponse {
   id: number;
+  nickname: string;
   email: string;
-  age: number;
-  height: number;
-  weight: number;
-  lifestyle: string;
+  profile_completed: boolean;
+  age: number | null;
+  height: number | null;
+  weight: number | null;
+  lifestyle: string | null;
   gender: string | null;
   ai_calorie_plan: string | null;
   avatar: string | null;
@@ -29,29 +32,32 @@ const Profile: React.FC = () => {
   const [profile, setProfile] = useState<ProfileResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [refreshingTips, setRefreshingTips] = useState(false);
+  const [showSetupModal, setShowSetupModal] = useState(false);
+
+  const fetchProfile = async () => {
+    try {
+      const res = await apiClient.get<ProfileResponse>('/profile/profile/');
+      const profileData = res.data;
+      if (profileData.ai_tips && profileData.ai_tips.length > 0) {
+        profileData.ai_tips = [profileData.ai_tips[0]];
+      }
+      setProfile(profileData);
+
+      // Показываем модалку если профиль не заполнен
+      if (!profileData.profile_completed) {
+        setShowSetupModal(true);
+      }
+    } catch (err: any) {
+      console.error('Failed to fetch profile:', err);
+      if (err?.response?.status !== 401) {
+        // Можно показать уведомление об ошибке
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const res = await apiClient.get<ProfileResponse>('/profile/profile/');
-        // Берем только первый tip из массива
-        const profileData = res.data;
-        if (profileData.ai_tips && profileData.ai_tips.length > 0) {
-          profileData.ai_tips = [profileData.ai_tips[0]];
-        }
-        setProfile(profileData);
-      } catch (err: any) {
-        console.error('Failed to fetch profile:', err);
-        // Если ошибка 401, apiClient уже перенаправит на логин
-        // Для других ошибок просто показываем сообщение
-        if (err?.response?.status !== 401) {
-          // Можно показать уведомление об ошибке
-        }
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchProfile();
   }, []);
 
@@ -113,6 +119,11 @@ const Profile: React.FC = () => {
     navigate('/login', { replace: true });
   };
 
+  const handleSetupSuccess = () => {
+    setShowSetupModal(false);
+    fetchProfile(); // Перезагружаем профиль после заполнения
+  };
+
   return (
     <div className="profile-page">
       <Header />
@@ -134,26 +145,38 @@ const Profile: React.FC = () => {
                     </svg>
                   </div>
                 )}
-                <button className="choose-photo-btn">✏️ Choose a photo</button>
+                <button className="choose-photo-btn">Choose a photo</button>
               </div>
 
               <div className="profile-info-grid">
                 <div className="info-row">
-                  <span className="label">Age:</span>
-                  <span className="value">{profile.age} years</span>
+                  <span className="label">Nickname:</span>
+                  <span className="value">{profile.nickname}</span>
                 </div>
-                <div className="info-row">
-                  <span className="label">Height:</span>
-                  <span className="value">{profile.height} cm</span>
-                </div>
-                <div className="info-row">
-                  <span className="label">Weight:</span>
-                  <span className="value">{profile.weight} kg</span>
-                </div>
-                <div className="info-row">
-                  <span className="label">Lifestyle:</span>
-                  <span className="value">{profile.lifestyle}</span>
-                </div>
+                {profile.age && (
+                  <div className="info-row">
+                    <span className="label">Age:</span>
+                    <span className="value">{profile.age} years</span>
+                  </div>
+                )}
+                {profile.height && (
+                  <div className="info-row">
+                    <span className="label">Height:</span>
+                    <span className="value">{profile.height} cm</span>
+                  </div>
+                )}
+                {profile.weight && (
+                  <div className="info-row">
+                    <span className="label">Weight:</span>
+                    <span className="value">{profile.weight} kg</span>
+                  </div>
+                )}
+                {profile.lifestyle && (
+                  <div className="info-row">
+                    <span className="label">Lifestyle:</span>
+                    <span className="value">{profile.lifestyle}</span>
+                  </div>
+                )}
                 {profile.gender && (
                   <div className="info-row">
                     <span className="label">Gender:</span>
@@ -168,11 +191,19 @@ const Profile: React.FC = () => {
                 )}
               </div>
 
-              <button className="change-btn">✏️ Change</button>
-              
-              {/* Logout button */}
+              {!profile.profile_completed && (
+                <button
+                  className="complete-profile-btn"
+                  onClick={() => setShowSetupModal(true)}
+                >
+                  Complete Profile
+                </button>
+              )}
+
+              <button className="change-btn">Change</button>
+
               <button className="logout-btn" onClick={handleLogout}>
-                🚪 Logout
+                Logout
               </button>
             </div>
 
@@ -196,19 +227,19 @@ const Profile: React.FC = () => {
 
               <div className="ai-tips-card">
                 <h3>
-                  <span className="ai-icon">🤖</span> AI tip
+                  <span className="ai-icon">AI</span> tip
                 </h3>
                 {profile.ai_tips && profile.ai_tips.length > 0 ? (
                   <p className="tip-text">{profile.ai_tips[0].tip}</p>
                 ) : (
-                  <p className="tip-text">No tips yet</p>
+                  <p className="tip-text">{profile.profile_completed ? 'No tips yet' : 'Complete your profile to get AI tips'}</p>
                 )}
                 <button
                   className="refresh-tips-btn"
                   onClick={handleRefreshTips}
-                  disabled={refreshingTips}
+                  disabled={refreshingTips || !profile.profile_completed}
                 >
-                  ↻ {refreshingTips ? 'Generating...' : 'Generate new'}
+                  {refreshingTips ? 'Generating...' : 'Generate new'}
                 </button>
               </div>
             </div>
@@ -218,6 +249,13 @@ const Profile: React.FC = () => {
         )}
       </main>
       <Footer />
+
+      {/* Profile Setup Modal */}
+      <ProfileSetupModal
+        isOpen={showSetupModal}
+        onClose={() => setShowSetupModal(false)}
+        onSuccess={handleSetupSuccess}
+      />
     </div>
   );
 };

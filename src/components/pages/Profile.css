@@ -134,6 +134,23 @@
     background: #b73e40;
 }
 
+.complete-profile-btn {
+    background: #2D7D46;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 12px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width: 100%;
+}
+
+.complete-profile-btn:hover {
+    background: #3A9C5A;
+}
+
 .logout-btn {
     background: #9D2628;
     color: white;
