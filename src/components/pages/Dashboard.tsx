@@ -10,6 +10,42 @@ import ChangeGoalModal from '../shared/ChangeGoalModal';
 import apiClient from '../../api/apiClient';
 import type { DashboardResponse } from '../../types/dashboard';
 
+// Функция для создания плавных кривых Безье с учетом соседних точек
+const createSmoothPath = (points: { x: number; y: number }[]): string => {
+  if (points.length < 2) return '';
+  if (points.length === 2) return `M ${points[0].x},${points[0].y} L ${points[1].x},${points[1].y}`;
+
+  let path = `M ${points[0].x},${points[0].y}`;
+
+  // Параметр сглаживания (0-1, где 0 - прямые линии, 1 - максимальное сглаживание)
+  const smoothing = 0.2;
+
+  for (let i = 0; i < points.length - 1; i++) {
+    const current = points[i];
+    const next = points[i + 1];
+    const prev = i > 0 ? points[i - 1] : current;
+    const afterNext = i < points.length - 2 ? points[i + 2] : next;
+
+    // Вычисляем направление для текущей точки
+    const dx1 = next.x - prev.x;
+    const dy1 = next.y - prev.y;
+
+    // Вычисляем направление для следующей точки
+    const dx2 = afterNext.x - current.x;
+    const dy2 = afterNext.y - current.y;
+
+    // Создаем контрольные точки на основе направлений
+    const cp1x = current.x + dx1 * smoothing;
+    const cp1y = current.y + dy1 * smoothing;
+    const cp2x = next.x - dx2 * smoothing;
+    const cp2y = next.y - dy2 * smoothing;
+
+    path += ` C ${cp1x},${cp1y} ${cp2x},${cp2y} ${next.x},${next.y}`;
+  }
+
+  return path;
+};
+
 // -----------------------------
 // Presentational component
 // -----------------------------
@@ -93,19 +129,65 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 <div className="activity-section">
                   <h3>Your activity!</h3>
                   <div className="activity-chart-wrapper">
-                    <svg width="100%" height="160" viewBox="0 0 400 200" className="chart-svg">
+                    <svg width="100%" height="200" viewBox="0 0 700 200" className="chart-svg" preserveAspectRatio="none">
+                      {/* Grid lines */}
                       {[0, 2, 4, 6, 8, 10].map((value) => (
                         <g key={value}>
                           <line
-                            x1={0}
-                            y1={200 - 40 - (value / 10) * 120}
-                            x2={400}
-                            y2={200 - 40 - (value / 10) * 120}
+                            x1={60}
+                            y1={170 - (value / 10) * 150}
+                            x2={660}
+                            y2={170 - (value / 10) * 150}
                             className="grid-line"
                           />
-                          <text x={-10} y={200 - 40 - (value / 10) * 120} className="grid-text">{value}</text>
+                          <text x={35} y={175 - (value / 10) * 150} className="grid-text">{value}</text>
                         </g>
                       ))}
+
+                      {/* X-axis labels (days) */}
+                      {data.energy_chart.map((point, i) => {
+                        const x = 60 + (i / Math.max(data.energy_chart.length - 1, 1)) * 600;
+                        const dayLabel = new Date(point.date).toLocaleDateString('en-US', { weekday: 'short' });
+                        return (
+                          <text key={i} x={x} y={190} className="axis-label">{dayLabel}</text>
+                        );
+                      })}
+
+                      {/* Mood line - плавная кривая */}
+                      {data.energy_chart.length > 1 && (() => {
+                        const moodPoints = data.energy_chart.map((point, i) => ({
+                          x: 60 + (i / Math.max(data.energy_chart.length - 1, 1)) * 600,
+                          y: 170 - (point.mood / 10) * 150
+                        }));
+                        return <path d={createSmoothPath(moodPoints)} className="mood-line" />;
+                      })()}
+
+                      {/* Energy line - плавная кривая */}
+                      {data.energy_chart.length > 1 && (() => {
+                        const energyPoints = data.energy_chart.map((point, i) => ({
+                          x: 60 + (i / Math.max(data.energy_chart.length - 1, 1)) * 600,
+                          y: 170 - (point.energy / 10) * 150
+                        }));
+                        return <path d={createSmoothPath(energyPoints)} className="energy-line" />;
+                      })()}
+
+                      {/* Data points for mood */}
+                      {data.energy_chart.map((point, i) => {
+                        const x = 60 + (i / Math.max(data.energy_chart.length - 1, 1)) * 600;
+                        const y = 170 - (point.mood / 10) * 150;
+                        return (
+                          <circle key={`mood-${i}`} cx={x} cy={y} r="4" className="mood-point" />
+                        );
+                      })}
+
+                      {/* Data points for energy */}
+                      {data.energy_chart.map((point, i) => {
+                        const x = 60 + (i / Math.max(data.energy_chart.length - 1, 1)) * 600;
+                        const y = 170 - (point.energy / 10) * 150;
+                        return (
+                          <circle key={`energy-${i}`} cx={x} cy={y} r="4" className="energy-point" />
+                        );
+                      })}
                     </svg>
                     <div className="chart-legend">
                       <div className="legend-item"><div className="legend-color mood-color"></div><span>Mood</span></div>
@@ -171,17 +253,19 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               {/* Quick Actions */}
               <div className="actions-card">
                 <h3>Actions</h3>
-                <div className="action-buttons">
-                  <button className="action-btn red-btn" onClick={onGoProgress}>
-                    <span className="action-icon">📊</span>Open statistic
-                  </button>
-                  <button className="action-btn red-btn" onClick={onOpenChangeGoal}>
-                    <span className="action-icon">🎯</span>Change goal
+                <div className="actions-content">
+                  <div className="action-buttons">
+                    <button className="action-btn red-btn" onClick={onGoProgress}>
+                      <span className="action-icon">📊</span>Open statistic
+                    </button>
+                    <button className="action-btn red-btn" onClick={onOpenChangeGoal}>
+                      <span className="action-icon">🎯</span>Change goal
+                    </button>
+                  </div>
+                  <button className="action-btn start-training-btn" onClick={onStartTraining}>
+                    <span className="action-icon">▶️</span>Start training
                   </button>
                 </div>
-                <button className="action-btn start-training-btn" onClick={onStartTraining}>
-                  <span className="action-icon">▶️</span>Start training
-                </button>
                 <div className="bot-status bot-status--dev">
                   <div className="status-dot"></div>
                   <span>Бот в разработке</span>

@@ -1,5 +1,7 @@
-/* === Общая структура === */
-.profile-page {
+/* src/components/pages/Progress.css */
+
+/* === Глобальная обертка страницы === */
+.progress-page {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -8,183 +10,176 @@
     font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-.profile-main {
+.progress-main {
     flex: 1;
-    padding: 60px 20px;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    width: 100%;
-    box-sizing: border-box;
+    padding: 25px 20px;
 }
 
-/* === Центрирующий контейнер === */
-.profile-wrapper {
-    width: 100%;
+.progress-container {
     max-width: 1200px;
-    display: flex;
-    gap: 30px;
-    flex-wrap: wrap;
-    justify-content: center;
+    margin: 0 auto;
+    padding: 0 20px;
+    width: 100%;
 }
 
-/* === Левая карточка: Профиль === */
-.profile-card {
+/* === Заголовок === */
+.progress-page-title {
+    font-size: 28px;
+    font-weight: 600;
+    color: white;
+    margin-bottom: 20px;
+}
+
+/* === Вкладки === */
+.progress-tabs-container {
+    display: flex;
     background: #1A1A1A;
     border-radius: 12px;
-    padding: 24px;
-    width: 100%;
-    max-width: 500px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
+    overflow: hidden;
+    margin-bottom: 24px;
 }
 
-.avatar-wrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
+.progress-tab-button {
+    flex: 1;
+    padding: 12px;
+    background: transparent;
+    color: #CCCCCC;
+    border: none;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-align: center;
 }
 
-.avatar-placeholder {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
+.progress-tab-button:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: white;
+}
+
+.progress-tab-button.progress-active {
     background: #2D2D2D;
+    color: white;
+    font-weight: 600;
+}
+
+/* === Основная сетка === */
+.progress-content {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 24px;
+}
+
+.progress-left-column,
+.progress-right-column {
     display: flex;
-    align-items: center;
-    justify-content: center;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* === Карточка с графиком === */
+.progress-card {
+    background: #1A1A1A;
+    border-radius: 12px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.progress-activity-chart-wrapper {
     position: relative;
 }
 
-.avatar-placeholder svg {
-    width: 48px;
-    height: 48px;
-    stroke: #9D2628;
+/* Стили для SVG графика */
+.progress-chart-svg {
+    background: transparent;
+    border-radius: 8px;
+    padding: 10px;
+    display: flex;
 }
 
-.choose-photo-btn {
-    background: none;
-    border: none;
-    color: #9D2628;
-    font-size: 12px;
-    cursor: pointer;
-    margin-top: 4px;
-    transition: opacity 0.2s;
-    text-align: center;
+/* Сообщение от AI */
+.progress-ai-message {
     display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background: #2D2D2D;
+    border-radius: 8px;
+    margin-top: 12px;
+}
+
+.progress-ai-icon {
+    font-size: 24px;
+    color: #4CAF50;
+}
+
+.progress-message-text {
+    color: white;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+/* === Карточка Goal Overview === */
+.progress-goal-overview-card {
+    background: #1A1A1A;
+    border-radius: 12px;
+    padding: 0px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    text-align: center;
+}
+
+.progress-card-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: white;
+    margin-bottom: 12px;
+}
+
+.progress-goal-circle-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 16px;
+}
+
+.progress-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.progress-stat-item {
+    display: flex;
+    flex-direction: column;
     align-items: center;
     gap: 4px;
 }
 
-.choose-photo-btn:hover {
-    opacity: 0.8;
-}
-
-/* === Информация о пользователе в сетке 2x3 === */
-.profile-info-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    width: 100%;
-    text-align: left;
-}
-
-.info-row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.label {
-    font-weight: 500;
+.progress-stat-label {
     color: #CCCCCC;
-    min-width: 70px;
+    font-size: 12px;
+    font-weight: 500;
 }
 
-.value {
-    background: #2D2D2D;
-    padding: 6px 12px;
-    border-radius: 6px;
-    font-weight: 600;
-    font-size: 14px;
-    min-width: 80px;
-    text-align: center;
-}
-
-.change-btn {
-    background: #9D2628;
+.progress-stat-value {
     color: white;
-    border: none;
-    border-radius: 6px;
-    padding: 8px 16px;
-    font-size: 14px;
+    font-size: 20px;
     font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    align-self: flex-end;
-    display: flex;
-    align-items: center;
-    gap: 6px;
+    line-height: 1;
 }
 
-.change-btn:hover {
-    background: #b73e40;
+.progress-stat-sublabel {
+    color: #CCCCCC;
+    font-size: 12px;
+    font-weight: 500;
 }
 
-.complete-profile-btn {
-    background: #2D7D46;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    padding: 12px 20px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    width: 100%;
-}
-
-.complete-profile-btn:hover {
-    background: #3A9C5A;
-}
-
-.logout-btn {
-    background: #9D2628;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    padding: 10px 20px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    width: 100%;
-    margin-top: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-}
-
-.logout-btn:hover {
-    background: #b73e40;
-}
-
-/* === Правые карточки === */
-.side-cards {
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
-    width: 100%;
-    max-width: 350px;
-}
-
-/* Общие стили для карточек */
-.telegram-card,
-.ai-tips-card {
+/* === Карточка Nutrition Progress === */
+.progress-nutrition-card {
     background: #1A1A1A;
     border-radius: 12px;
     padding: 24px;
@@ -193,138 +188,191 @@
     gap: 16px;
 }
 
-/* === Connect Telegram === */
-.telegram-card h3 {
-    font-size: 18px;
-    font-weight: 600;
-    color: white;
-    margin: 0 0 12px 0;
-}
-
-.link-telegram-btn {
-    background: #9D2628;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    padding: 12px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    width: 100%;
-    text-align: center;
-}
-
-.link-telegram-btn:hover {
-    background: #b73e40;
-}
-
-.status-connected {
+.progress-nutrition-progress-list {
     display: flex;
-    align-items: center;
-    gap: 8px;
-    color: #4CAF50;
-    font-size: 12px;
-    margin-top: 8px;
+    flex-direction: column;
+    gap: 12px;
 }
 
-.dot {
-    width: 8px;
-    height: 8px;
-    background: #4CAF50;
-    border-radius: 50%;
-    animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-    0% { opacity: 1; }
-    50% { opacity: 0.5; }
-    100% { opacity: 1; }
-}
-
-/* === AI Tips — с белой рамкой === */
-.ai-tips-card {
-    border: 1px solid #444;
-    padding: 24px;
-}
-
-.ai-tips-card h3 {
-    font-size: 18px;
-    font-weight: 600;
-    color: white;
-    margin: 0 0 12px 0;
+.progress-linear-progress-item {
     display: flex;
-    align-items: center;
+    flex-direction: column;
     gap: 8px;
 }
 
-.ai-icon {
-    font-size: 20px;
-}
-
-.tip-text {
+.progress-progress-label {
     color: #CCCCCC;
-    font-size: 16px;
-    line-height: 1.5;
-    margin: 12px 0 20px 0;
-    text-align: center;
+    font-size: 14px;
+    font-weight: 500;
 }
 
-.refresh-tips-btn {
+.progress-progress-bar-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.progress-progress-bar-background {
+    flex: 1;
+    height: 8px;
+    background: #2D2D2D;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progress-progress-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+.progress-progress-value {
+    color: white;
+    font-size: 13px;
+    font-weight: 600;
+    min-width: 45px;
+    text-align: right;
+}
+
+.progress-add-meal-button {
+    width: 100%;
+    padding: 10px;
     background: #9D2628;
     color: white;
     border: none;
     border-radius: 6px;
-    padding: 12px;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 600;
     cursor: pointer;
     transition: background-color 0.3s;
-    width: 100%;
-    text-align: center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
+    margin-top: 12px;
 }
 
-.refresh-tips-btn:hover {
-    background: #b73e40;
+.progress-add-meal-button:hover {
+    background: #9D2628;
 }
 
 /* === Адаптивность === */
 @media (max-width: 1024px) {
-    .profile-main {
-        padding: 50px 50px;
+    .progress-main {
+        padding: 30px 20px;
     }
-    .profile-wrapper {
-        flex-direction: column;
-        align-items: stretch;
+    .progress-content {
+        grid-template-columns: 1fr;
+        gap: 20px;
     }
-    .profile-card,
-    .side-cards {
-        max-width: 100%;
+    .progress-tabs-container {
+        flex-wrap: wrap;
+    }
+    .progress-tab-button {
+        flex: 1 1 50%;
     }
 }
 
 @media (max-width: 768px) {
-    .profile-main {
-        padding: 40px 20px;
+    .progress-main {
+        padding: 20px 16px;
     }
-    .profile-info-grid {
+    .progress-page-title {
+        font-size: 24px;
+    }
+    .progress-tabs-container {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    .progress-tab-button {
+        flex: 0 0 auto;
+        min-width: 100px;
+    }
+    .progress-content {
         grid-template-columns: 1fr;
     }
-    .info-row {
-        justify-content: space-between;
+    .progress-stats-grid {
+        grid-template-columns: 1fr;
     }
-    .change-btn {
-        align-self: center;
+    .progress-goal-circle-wrapper {
+        margin-bottom: 8px;
     }
-    .side-cards {
-        max-width: 100%;
-    }
-    .ai-tips-card,
-    .telegram-card {
-        padding: 20px;
-    }
+}
+
+/* === Новый блок: Your Nutrition Progress === */
+
+.progress-nutrition-card {
+    background: #1A1A1A;
+    border-radius: 12px;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 0px;
+}
+
+.progress-nutrition-card h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: white;
+    margin-bottom: 12px;
+}
+
+.nutrition-progress-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.nutrition-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #2D2D2D;
+    border-radius: 8px;
+    padding: 8px 12px;
+    width: 100%;
+}
+
+.nutrition-label {
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+    min-width: 120px;
+}
+
+.nutrition-bar {
+    flex: 1;
+    height: 12px;
+    background: #1A1A1A;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.nutrition-fill {
+    height: 100%;
+    border-radius: 6px;
+    transition: width 0.3s ease;
+}
+
+.nutrition-value {
+    color: white;
+    font-size: 13px;
+    font-weight: 600;
+    min-width: 60px;
+    text-align: right;
+}
+
+.progress-add-meal-button {
+    width: 100%;
+    padding: 10px;
+    background: #9D2628;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 12px;
+}
+
+.progress-add-meal-button:hover {
+    background: #9D2628;
 }
