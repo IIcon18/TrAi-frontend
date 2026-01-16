@@ -7,6 +7,7 @@ import apiClient from '../../api/apiClient';
 // Значения должны совпадать с backend enum MuscleGroup:
 // upper_body_push | upper_body_pull | core_stability | lower_body
 type MuscleGroup = 'upper_body_push' | 'upper_body_pull' | 'core_stability' | 'lower_body';
+type DayName = 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday' | 'Sunday';
 
 interface Exercise {
   id: number;
@@ -33,11 +34,16 @@ const muscleGroups: { [key in MuscleGroup]: string } = {
   lower_body: 'Lower body',
 };
 
+const dayNames: DayName[] = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
 const Workouts: React.FC = () => {
   const [activeWorkout, setActiveWorkout] = useState<Workout | null>(null);
   // Значение по умолчанию также должно соответствовать enum на бэке
   const [selectedGroup, setSelectedGroup] = useState<MuscleGroup>('lower_body');
   const [loading, setLoading] = useState(true); // Начальное состояние - загрузка
+  const [trainingDays, setTrainingDays] = useState<DayName[]>([]);
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+  const [currentMonth, setCurrentMonth] = useState(new Date());
 
   // Дата
   const today = new Date();
@@ -48,7 +54,7 @@ const Workouts: React.FC = () => {
   const fetchWorkout = async () => {
     setLoading(true);
     try {
-      const res = await apiClient.get('/workouts/workouts/page');
+      const res = await apiClient.get('/workouts/page');
       if (res.data.workout) {
         setActiveWorkout(res.data.workout);
       } else {
@@ -66,10 +72,81 @@ const Workouts: React.FC = () => {
     }
   };
 
+  const fetchTrainingDays = async () => {
+    try {
+      const res = await apiClient.get('/goals/current');
+      if (res.data.training_days) {
+        setTrainingDays(res.data.training_days);
+      }
+    } catch (err: any) {
+      console.error('Failed to fetch training days:', err);
+    }
+  };
+
+  // Получить день недели для даты (0 = Monday, 6 = Sunday)
+  const getDayOfWeek = (date: Date): number => {
+    const day = date.getDay();
+    return day === 0 ? 6 : day - 1; // Преобразуем: Вс=6, Пн=0, Вт=1...
+  };
+
+  // Проверить является ли дата тренировочным днём
+  const isTrainingDay = (date: Date): boolean => {
+    const dayIndex = getDayOfWeek(date);
+    const dayName = dayNames[dayIndex];
+    return trainingDays.includes(dayName);
+  };
+
+  // Получить дни месяца для отображения в календаре
+  const getMonthDays = (date: Date) => {
+    const year = date.getFullYear();
+    const month = date.getMonth();
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+    const startDayOfWeek = getDayOfWeek(firstDay);
+
+    const days: (Date | null)[] = [];
+
+    // Добавляем пустые ячейки для дней до начала месяца
+    for (let i = 0; i < startDayOfWeek; i++) {
+      days.push(null);
+    }
+
+    // Добавляем дни месяца
+    for (let d = 1; d <= lastDay.getDate(); d++) {
+      days.push(new Date(year, month, d));
+    }
+
+    return days;
+  };
+
+  // Навигация по месяцам
+  const prevMonth = () => {
+    setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1));
+  };
+
+  const nextMonth = () => {
+    setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1));
+  };
+
+  // Проверить является ли дата сегодняшней
+  const isToday = (date: Date): boolean => {
+    const today = new Date();
+    return date.getDate() === today.getDate() &&
+           date.getMonth() === today.getMonth() &&
+           date.getFullYear() === today.getFullYear();
+  };
+
+  // Получить сообщение о завтрашнем дне
+  const getTomorrowMessage = (): string => {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    return isTrainingDay(tomorrow) ? 'Tomorrow is training day!' : 'Tomorrow you have rest!';
+  };
+
   const generateWorkout = async (group: MuscleGroup) => {
     setLoading(true);
     try {
-      const res = await apiClient.post('/workouts/workouts/generate-ai', {
+      const res = await apiClient.post('/workouts/generate-ai', {
         muscle_group: group,
       });
       setActiveWorkout(res.data);
@@ -86,6 +163,7 @@ const Workouts: React.FC = () => {
 
   useEffect(() => {
     fetchWorkout();
+    fetchTrainingDays();
   }, []);
 
   return (
@@ -178,25 +256,82 @@ const Workouts: React.FC = () => {
                 </div>
               </div>
 
-              <div className="wk-calendar-card">
+              <div
+                className={`wk-calendar-card wk-calendar-clickable ${isTrainingDay(today) ? 'wk-training-day' : 'wk-rest-day'}`}
+                onClick={() => setIsCalendarOpen(true)}
+              >
                 <h3 className="wk-calendar-title">Your Calendar</h3>
                 <div className="wk-calendar-wrapper">
-                  <div className="wk-calendar-navigation">
-                    <button className="wk-nav-button">&lt;</button>
-                    <div className="wk-calendar-date-display">
-                      <div className="wk-date-day">{dayName}</div>
-                      <div className="wk-date-number">{day}</div>
-                      <div className="wk-date-month">{month}</div>
-                    </div>
-                    <button className="wk-nav-button">&gt;</button>
+                  <div className="wk-calendar-date-display">
+                    <div className="wk-date-day">{dayName}</div>
+                    <div className="wk-date-number">{day}</div>
+                    <div className="wk-date-month">{month}</div>
                   </div>
-                  <div className="wk-calendar-message">Tomorrow you have rest!</div>
+                  <div className="wk-calendar-message">{getTomorrowMessage()}</div>
+                  <div className="wk-calendar-hint">Click to view full calendar</div>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </main>
+
+      {/* Calendar Modal */}
+      {isCalendarOpen && (
+        <div className="wk-calendar-modal-backdrop" onClick={() => setIsCalendarOpen(false)}>
+          <div className="wk-calendar-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="wk-calendar-modal-header">
+              <h2>Training Calendar</h2>
+              <button className="wk-calendar-close" onClick={() => setIsCalendarOpen(false)}>
+                &times;
+              </button>
+            </div>
+
+            <div className="wk-calendar-modal-nav">
+              <button className="wk-nav-button" onClick={prevMonth}>&lt;</button>
+              <span className="wk-calendar-month-title">
+                {currentMonth.toLocaleString('default', { month: 'long', year: 'numeric' })}
+              </span>
+              <button className="wk-nav-button" onClick={nextMonth}>&gt;</button>
+            </div>
+
+            <div className="wk-calendar-grid">
+              {/* Заголовки дней недели */}
+              {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((d) => (
+                <div key={d} className="wk-calendar-day-header">{d}</div>
+              ))}
+
+              {/* Дни месяца */}
+              {getMonthDays(currentMonth).map((date, idx) => (
+                <div
+                  key={idx}
+                  className={`wk-calendar-day ${
+                    date === null
+                      ? 'wk-calendar-day-empty'
+                      : isTrainingDay(date)
+                        ? 'wk-calendar-day-training'
+                        : 'wk-calendar-day-rest'
+                  } ${date && isToday(date) ? 'wk-calendar-day-today' : ''}`}
+                >
+                  {date ? date.getDate() : ''}
+                </div>
+              ))}
+            </div>
+
+            <div className="wk-calendar-legend">
+              <div className="wk-legend-item">
+                <div className="wk-legend-color wk-legend-training"></div>
+                <span>Training day</span>
+              </div>
+              <div className="wk-legend-item">
+                <div className="wk-legend-color wk-legend-rest"></div>
+                <span>Rest day</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       <Footer />
     </div>
   );

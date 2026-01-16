@@ -1,26 +1,35 @@
 // src/components/shared/ChangeGoalModal.tsx
 import React, { useState } from 'react';
-import './ChangeGoalModal.css'; // ← теперь без конфликтов
+import './ChangeGoalModal.css';
+import apiClient from '../../api/apiClient';
 
 interface ChangeGoalModalProps {
     isOpen: boolean;
     onClose: () => void;
+    onSuccess?: () => void;
 }
 
-const ChangeGoalModal: React.FC<ChangeGoalModalProps> = ({ isOpen, onClose }) => {
+type DayName = 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday' | 'Sunday';
+
+const goalTypeMap: Record<string, string> = {
+    'lose weight': 'weight_loss',
+    'gain muscle': 'muscle_gain',
+    'maintain weight': 'maintenance',
+};
+
+const levelMap: Record<string, string> = {
+    'beginner': 'beginner',
+    'intermediate': 'amateur',
+    'advanced': 'professional',
+};
+
+const ChangeGoalModal: React.FC<ChangeGoalModalProps> = ({ isOpen, onClose, onSuccess }) => {
     const [step, setStep] = useState<'goal' | 'days' | 'success'>('goal');
     const [goal, setGoal] = useState<string>('lose weight');
     const [level, setLevel] = useState<string>('beginner');
     const [daysCount, setDaysCount] = useState<number>(3);
-    const [selectedDays, setSelectedDays] = useState<{
-        Monday: boolean;
-        Tuesday: boolean;
-        Wednesday: boolean;
-        Thursday: boolean;
-        Friday: boolean;
-        Saturday: boolean;
-        Sunday: boolean;
-    }>({
+    const [saving, setSaving] = useState<boolean>(false);
+    const [selectedDays, setSelectedDays] = useState<Record<DayName, boolean>>({
         Monday: true,
         Tuesday: false,
         Wednesday: true,
@@ -33,19 +42,39 @@ const ChangeGoalModal: React.FC<ChangeGoalModalProps> = ({ isOpen, onClose }) =>
     if (!isOpen) return null;
 
     const handleConfirmGoal = () => {
-        const selectedDaysCount = Object.values(selectedDays).filter(Boolean).length;
-        if (selectedDaysCount < daysCount) {
-            alert(`Please select at least ${daysCount} days.`);
-            return;
-        }
         setStep('days');
     };
 
-    const handleConfirmDays = () => {
-        setStep('success');
-        setTimeout(() => {
-            onClose();
-        }, 2000);
+    const handleConfirmDays = async () => {
+        const selectedDaysList = (Object.keys(selectedDays) as DayName[])
+            .filter(day => selectedDays[day]);
+
+        if (selectedDaysList.length !== daysCount) {
+            alert(`Please select exactly ${daysCount} days.`);
+            return;
+        }
+
+        setSaving(true);
+        try {
+            await apiClient.put('/goals/complete', {
+                goal_type: goalTypeMap[goal] || 'weight_loss',
+                level: levelMap[level] || 'beginner',
+                training_days_per_week: daysCount,
+                training_days: selectedDaysList,
+            });
+
+            setStep('success');
+            setTimeout(() => {
+                onClose();
+                onSuccess?.();
+            }, 2000);
+        } catch (error: any) {
+            console.error('Failed to save goal:', error);
+            const errorMessage = error?.response?.data?.detail || error?.message || 'Unknown error';
+            alert(`Failed to save goal: ${errorMessage}`);
+        } finally {
+            setSaving(false);
+        }
     };
 
     const toggleDay = (day: keyof typeof selectedDays) => {
@@ -150,8 +179,9 @@ const ChangeGoalModal: React.FC<ChangeGoalModalProps> = ({ isOpen, onClose }) =>
                             <button
                                 className="change-goal-button confirm"
                                 onClick={handleConfirmDays}
+                                disabled={saving}
                             >
-                                ✓ Confirm
+                                {saving ? 'Saving...' : '✓ Confirm'}
                             </button>
                         </div>
                     </>

@@ -36,7 +36,7 @@ const Profile: React.FC = () => {
 
   const fetchProfile = async () => {
     try {
-      const res = await apiClient.get<ProfileResponse>('/profile/profile/');
+      const res = await apiClient.get<ProfileResponse>('/profile/');
       const profileData = res.data;
       if (profileData.ai_tips && profileData.ai_tips.length > 0) {
         profileData.ai_tips = [profileData.ai_tips[0]];
@@ -65,8 +65,7 @@ const Profile: React.FC = () => {
     if (!profile) return;
     setRefreshingTips(true);
     try {
-      // Правильный путь: /profile/profile/refresh-ai-tips (роутер имеет prefix="/profile", endpoint тоже)
-      const res = await apiClient.post('/profile/profile/refresh-ai-tips');
+      const res = await apiClient.post('/profile/refresh-ai-tips');
       console.log('Refresh tips response:', res.data);
       
       // Проверяем структуру ответа

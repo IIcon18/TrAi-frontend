@@ -48,7 +48,7 @@ const ProfileSetupModal: React.FC<ProfileSetupModalProps> = ({ isOpen, onClose, 
 
         setLoading(true);
         try {
-            await apiClient.post('/profile/profile/setup', {
+            await apiClient.post('/profile/setup', {
                 age: Number(formData.age),
                 gender: formData.gender,
                 lifestyle: formData.lifestyle,
