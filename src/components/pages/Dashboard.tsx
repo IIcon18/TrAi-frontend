@@ -9,6 +9,9 @@ import AddMealModal from '../shared/AddMealModal';
 import ChangeGoalModal from '../shared/ChangeGoalModal';
 import apiClient from '../../api/apiClient';
 import type { DashboardResponse } from '../../types/dashboard';
+import { ReactComponent as GraphIcon } from '../../assets/icons/free-icon-graph-2567990.svg';
+import { ReactComponent as DartboardIcon } from '../../assets/icons/free-icon-dartboard-1654809.svg';
+import { ReactComponent as PlayIcon } from '../../assets/icons/free-icon-play-button-153770_1.svg';
 
 // Функция для создания плавных кривых Безье с учетом соседних точек
 const createSmoothPath = (points: { x: number; y: number }[]): string => {
@@ -256,14 +259,14 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 <div className="actions-content">
                   <div className="action-buttons">
                     <button className="action-btn red-btn" onClick={onGoProgress}>
-                      <span className="action-icon">📊</span>Open statistic
+                      <GraphIcon className="action-icon-svg" />Open statistic
                     </button>
                     <button className="action-btn red-btn" onClick={onOpenChangeGoal}>
-                      <span className="action-icon">🎯</span>Change goal
+                      <DartboardIcon className="action-icon-svg" />Change goal
                     </button>
                   </div>
                   <button className="action-btn start-training-btn" onClick={onStartTraining}>
-                    <span className="action-icon">▶️</span>Start training
+                    <PlayIcon className="action-icon-svg" />Start training
                   </button>
                 </div>
                 <div className="bot-status bot-status--dev">

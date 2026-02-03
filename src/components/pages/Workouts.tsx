@@ -44,12 +44,14 @@ const Workouts: React.FC = () => {
   const [trainingDays, setTrainingDays] = useState<DayName[]>([]);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [currentMonth, setCurrentMonth] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState(new Date());
 
-  // Дата
+  // Дата для отображения (выбранная дата)
   const today = new Date();
-  const day = today.getDate();
-  const month = today.toLocaleString('default', { month: 'long' });
-  const dayName = today.toLocaleString('default', { weekday: 'long' });
+  const displayDate = selectedDate;
+  const day = displayDate.getDate();
+  const month = displayDate.toLocaleString('default', { month: 'long' });
+  const dayName = displayDate.toLocaleString('default', { weekday: 'long' });
 
   const fetchWorkout = async () => {
     setLoading(true);
@@ -136,11 +138,24 @@ const Workouts: React.FC = () => {
            date.getFullYear() === today.getFullYear();
   };
 
-  // Получить сообщение о завтрашнем дне
+  // Получить сообщение о завтрашнем дне относительно выбранной даты
   const getTomorrowMessage = (): string => {
-    const tomorrow = new Date();
+    const tomorrow = new Date(selectedDate);
     tomorrow.setDate(tomorrow.getDate() + 1);
-    return isTrainingDay(tomorrow) ? 'Tomorrow is training day!' : 'Tomorrow you have rest!';
+    return isTrainingDay(tomorrow) ? 'Tomorrow you have workout!' : 'Tomorrow you have rest!';
+  };
+
+  // Навигация по дням (для свайпа)
+  const prevDay = () => {
+    const newDate = new Date(selectedDate);
+    newDate.setDate(newDate.getDate() - 1);
+    setSelectedDate(newDate);
+  };
+
+  const nextDay = () => {
+    const newDate = new Date(selectedDate);
+    newDate.setDate(newDate.getDate() + 1);
+    setSelectedDate(newDate);
   };
 
   const generateWorkout = async (group: MuscleGroup) => {
@@ -256,20 +271,25 @@ const Workouts: React.FC = () => {
                 </div>
               </div>
 
-              <div
-                className={`wk-calendar-card wk-calendar-clickable ${isTrainingDay(today) ? 'wk-training-day' : 'wk-rest-day'}`}
-                onClick={() => setIsCalendarOpen(true)}
-              >
+              <div className="wk-calendar-card">
                 <h3 className="wk-calendar-title">Your Calendar</h3>
-                <div className="wk-calendar-wrapper">
-                  <div className="wk-calendar-date-display">
+                <div className="wk-calendar-swipe-container">
+                  <button className="wk-calendar-arrow wk-calendar-arrow-left" onClick={prevDay}>
+                    &#8249;
+                  </button>
+                  <div
+                    className={`wk-calendar-date-card ${isTrainingDay(selectedDate) ? 'wk-training-day' : 'wk-rest-day'}`}
+                    onClick={() => setIsCalendarOpen(true)}
+                  >
                     <div className="wk-date-day">{dayName}</div>
                     <div className="wk-date-number">{day}</div>
                     <div className="wk-date-month">{month}</div>
                   </div>
-                  <div className="wk-calendar-message">{getTomorrowMessage()}</div>
-                  <div className="wk-calendar-hint">Click to view full calendar</div>
+                  <button className="wk-calendar-arrow wk-calendar-arrow-right" onClick={nextDay}>
+                    &#8250;
+                  </button>
                 </div>
+                <div className="wk-calendar-message">{getTomorrowMessage()}</div>
               </div>
             </div>
           </div>

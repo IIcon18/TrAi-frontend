@@ -272,22 +272,84 @@
     font-size: 18px;
     font-weight: 600;
     color: white;
-    margin-bottom: 16px;
+    margin-bottom: 8px;
 }
 
-.wk-calendar-wrapper {
+.wk-calendar-swipe-container {
     display: flex;
-    flex-direction: column;
     align-items: center;
+    justify-content: center;
     gap: 16px;
 }
 
-.wk-calendar-navigation {
+.wk-calendar-arrow {
+    background: none;
+    border: none;
+    color: #666;
+    font-size: 48px;
+    cursor: pointer;
+    padding: 8px;
+    transition: color 0.3s, transform 0.2s;
+    line-height: 1;
+}
+
+.wk-calendar-arrow:hover {
+    color: #999;
+    transform: scale(1.1);
+}
+
+.wk-calendar-date-card {
+    border-radius: 16px;
+    padding: 20px 32px;
+    min-width: 160px;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    gap: 12px;
+    gap: 4px;
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.wk-calendar-date-card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+/* Training day card - red */
+.wk-calendar-date-card.wk-training-day {
+    background: #9D2628;
+}
+
+/* Rest day card - dark gray */
+.wk-calendar-date-card.wk-rest-day {
+    background: #2D2D2D;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.wk-date-day {
+    color: white;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.wk-date-number {
+    font-size: 64px;
+    font-weight: 600;
+    color: white;
+    line-height: 1;
+}
+
+.wk-date-month {
+    color: white;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.wk-calendar-message {
+    color: #CCCCCC;
+    font-size: 14px;
+    font-weight: 500;
+    margin-top: 8px;
 }
 
 .wk-nav-button {
@@ -302,42 +364,6 @@
 
 .wk-nav-button:hover {
     color: white;
-}
-
-.wk-calendar-date-display {
-    background: #2D2D2D;
-    border-radius: 12px;
-    padding: 16px;
-    min-width: 150px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-}
-
-.wk-date-day {
-    color: #CCCCCC;
-    font-size: 16px;
-    font-weight: 500;
-}
-
-.wk-date-number {
-    font-size: 48px;
-    font-weight: 600;
-    color: white;
-}
-
-.wk-date-month {
-    color: #CCCCCC;
-    font-size: 16px;
-    font-weight: 500;
-}
-
-.wk-calendar-message {
-    color: #CCCCCC;
-    font-size: 14px;
-    font-weight: 500;
-    margin-top: 8px;
 }
 
 /* === Адаптивность === */
@@ -394,43 +420,6 @@
         padding: 12px;
         gap: 6px;
     }
-}
-
-/* === Clickable Calendar Card === */
-.wk-calendar-clickable {
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.wk-calendar-clickable:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-}
-
-/* Training day card */
-.wk-calendar-card.wk-training-day {
-    background: linear-gradient(135deg, #9D2628 0%, #7a1e20 100%);
-    border-color: #9D2628;
-}
-
-.wk-calendar-card.wk-training-day .wk-calendar-date-display {
-    background: rgba(0, 0, 0, 0.3);
-}
-
-/* Rest day card */
-.wk-calendar-card.wk-rest-day {
-    background: linear-gradient(135deg, #2D2D2D 0%, #1A1A1A 100%);
-    border-color: #3D3D3D;
-}
-
-.wk-calendar-card.wk-rest-day .wk-calendar-date-display {
-    background: #1A1A1A;
-}
-
-.wk-calendar-hint {
-    color: rgba(255, 255, 255, 0.5);
-    font-size: 12px;
-    margin-top: 8px;
 }
 
 /* === Calendar Modal === */
