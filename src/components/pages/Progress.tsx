@@ -4,6 +4,7 @@ import './Progress.css';
 import Header from '../shared/Header/Header';
 import Footer from '../shared/Footer/Footer';
 import GoalOverviewCircle from '../shared/GoalOverviewCircle';
+import AddMealModal from '../shared/AddMealModal';
 import apiClient from '../../api/apiClient';
 
 // Интерфейс для данных страницы
@@ -59,6 +60,7 @@ const Progress: React.FC = () => {
     const [progressData, setProgressData] = useState<ProgressData>(emptyProgressData);
     const [aiMessage, setAiMessage] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(true);
+    const [isAddMealOpen, setIsAddMealOpen] = useState(false);
 
     const metricMap: Record<string, string> = {
         'weight': 'weight',
@@ -284,13 +286,21 @@ const Progress: React.FC = () => {
                                         );
                                     })}
                                 </div>
-                                <button className="progress-add-meal-button">+ Add meal</button>
+                                <button className="progress-add-meal-button" onClick={() => setIsAddMealOpen(true)}>+ Add meal</button>
                             </div>
                         </div>
                     </div>
                 </div>
             </main>
             <Footer />
+            <AddMealModal
+                isOpen={isAddMealOpen}
+                onClose={() => setIsAddMealOpen(false)}
+                onMealAdded={() => {
+                    const metric = metricMap[activeTab] || 'weight';
+                    fetchProgressData(metric);
+                }}
+            />
         </div>
     );
 };

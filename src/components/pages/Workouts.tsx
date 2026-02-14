@@ -4,14 +4,14 @@ import Header from '../shared/Header/Header';
 import Footer from '../shared/Footer/Footer';
 import apiClient from '../../api/apiClient';
 
-// Значения должны совпадать с backend enum MuscleGroup:
-// upper_body_push | upper_body_pull | core_stability | lower_body
 type MuscleGroup = 'upper_body_push' | 'upper_body_pull' | 'core_stability' | 'lower_body';
 type DayName = 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday' | 'Sunday';
 
 interface Exercise {
   id: number;
   name: string;
+  description: string;
+  equipment: string;
   sets: number;
   reps: number;
   weight: number;
@@ -37,40 +37,40 @@ const muscleGroups: { [key in MuscleGroup]: string } = {
 const dayNames: DayName[] = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
 const Workouts: React.FC = () => {
-  const [activeWorkout, setActiveWorkout] = useState<Workout | null>(null);
-  // Значение по умолчанию также должно соответствовать enum на бэке
-  const [selectedGroup, setSelectedGroup] = useState<MuscleGroup>('lower_body');
-  const [loading, setLoading] = useState(true); // Начальное состояние - загрузка
+  // Кеш тренировок по группам мышц
+  const [workoutsByGroup, setWorkoutsByGroup] = useState<Partial<Record<MuscleGroup, Workout>>>({});
+  const [selectedGroup, setSelectedGroup] = useState<MuscleGroup>('upper_body_push');
+  const [loading, setLoading] = useState(false);
+  const [generating, setGenerating] = useState(false);
   const [trainingDays, setTrainingDays] = useState<DayName[]>([]);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date());
 
-  // Дата для отображения (выбранная дата)
-  const today = new Date();
+  // Exercise technique popup
+  const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(null);
+
   const displayDate = selectedDate;
   const day = displayDate.getDate();
   const month = displayDate.toLocaleString('default', { month: 'long' });
   const dayName = displayDate.toLocaleString('default', { weekday: 'long' });
 
-  const fetchWorkout = async () => {
-    setLoading(true);
+  const activeWorkout = workoutsByGroup[selectedGroup] || null;
+
+  const generateWorkout = async (group: MuscleGroup) => {
+    setGenerating(true);
     try {
-      const res = await apiClient.get('/workouts/page');
-      if (res.data.workout) {
-        setActiveWorkout(res.data.workout);
-      } else {
-        setActiveWorkout(null);
-      }
+      const res = await apiClient.post('/workouts/generate-ai', {
+        muscle_group: group,
+      });
+      setWorkoutsByGroup(prev => ({ ...prev, [group]: res.data }));
     } catch (err: any) {
-      console.error('Failed to fetch workout:', err);
-      setActiveWorkout(null);
-      // Если ошибка 401, apiClient уже перенаправит на логин
+      console.error('Failed to generate workout:', err);
       if (err?.response?.status !== 401) {
-        // Для других ошибок можно показать уведомление
+        alert('Failed to generate workout. Try again.');
       }
     } finally {
-      setLoading(false);
+      setGenerating(false);
     }
   };
 
@@ -85,101 +85,66 @@ const Workouts: React.FC = () => {
     }
   };
 
-  // Получить день недели для даты (0 = Monday, 6 = Sunday)
-  const getDayOfWeek = (date: Date): number => {
-    const day = date.getDay();
-    return day === 0 ? 6 : day - 1; // Преобразуем: Вс=6, Пн=0, Вт=1...
+  // При выборе таба — генерируем тренировку если для этой группы ещё нет
+  const handleSelectGroup = async (group: MuscleGroup) => {
+    setSelectedGroup(group);
+    if (!workoutsByGroup[group]) {
+      await generateWorkout(group);
+    }
   };
 
-  // Проверить является ли дата тренировочным днём
+  // Начальная загрузка — генерируем для первого таба
+  useEffect(() => {
+    const init = async () => {
+      setLoading(true);
+      await fetchTrainingDays();
+      await generateWorkout('upper_body_push');
+      setLoading(false);
+    };
+    init();
+  }, []);
+
+  // Calendar helpers
+  const getDayOfWeek = (date: Date): number => {
+    const d = date.getDay();
+    return d === 0 ? 6 : d - 1;
+  };
+
   const isTrainingDay = (date: Date): boolean => {
     const dayIndex = getDayOfWeek(date);
-    const dayName = dayNames[dayIndex];
-    return trainingDays.includes(dayName);
+    return trainingDays.includes(dayNames[dayIndex]);
   };
 
-  // Получить дни месяца для отображения в календаре
   const getMonthDays = (date: Date) => {
     const year = date.getFullYear();
-    const month = date.getMonth();
-    const firstDay = new Date(year, month, 1);
-    const lastDay = new Date(year, month + 1, 0);
+    const m = date.getMonth();
+    const firstDay = new Date(year, m, 1);
+    const lastDay = new Date(year, m + 1, 0);
     const startDayOfWeek = getDayOfWeek(firstDay);
-
     const days: (Date | null)[] = [];
-
-    // Добавляем пустые ячейки для дней до начала месяца
-    for (let i = 0; i < startDayOfWeek; i++) {
-      days.push(null);
-    }
-
-    // Добавляем дни месяца
-    for (let d = 1; d <= lastDay.getDate(); d++) {
-      days.push(new Date(year, month, d));
-    }
-
+    for (let i = 0; i < startDayOfWeek; i++) days.push(null);
+    for (let d = 1; d <= lastDay.getDate(); d++) days.push(new Date(year, m, d));
     return days;
   };
 
-  // Навигация по месяцам
-  const prevMonth = () => {
-    setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1));
-  };
+  const prevMonth = () => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1));
+  const nextMonth = () => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1));
 
-  const nextMonth = () => {
-    setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1));
-  };
-
-  // Проверить является ли дата сегодняшней
   const isToday = (date: Date): boolean => {
-    const today = new Date();
-    return date.getDate() === today.getDate() &&
-           date.getMonth() === today.getMonth() &&
-           date.getFullYear() === today.getFullYear();
+    const t = new Date();
+    return date.getDate() === t.getDate() && date.getMonth() === t.getMonth() && date.getFullYear() === t.getFullYear();
   };
 
-  // Получить сообщение о завтрашнем дне относительно выбранной даты
   const getTomorrowMessage = (): string => {
     const tomorrow = new Date(selectedDate);
     tomorrow.setDate(tomorrow.getDate() + 1);
     return isTrainingDay(tomorrow) ? 'Tomorrow you have workout!' : 'Tomorrow you have rest!';
   };
 
-  // Навигация по дням (для свайпа)
-  const prevDay = () => {
-    const newDate = new Date(selectedDate);
-    newDate.setDate(newDate.getDate() - 1);
-    setSelectedDate(newDate);
-  };
+  const prevDay = () => { const d = new Date(selectedDate); d.setDate(d.getDate() - 1); setSelectedDate(d); };
+  const nextDay = () => { const d = new Date(selectedDate); d.setDate(d.getDate() + 1); setSelectedDate(d); };
 
-  const nextDay = () => {
-    const newDate = new Date(selectedDate);
-    newDate.setDate(newDate.getDate() + 1);
-    setSelectedDate(newDate);
-  };
-
-  const generateWorkout = async (group: MuscleGroup) => {
-    setLoading(true);
-    try {
-      const res = await apiClient.post('/workouts/generate-ai', {
-        muscle_group: group,
-      });
-      setActiveWorkout(res.data);
-    } catch (err: any) {
-      console.error('Failed to generate workout:', err);
-      // Если ошибка 401, apiClient уже перенаправит на логин
-      if (err?.response?.status !== 401) {
-        alert('Не удалось сгенерировать тренировку. Попробуйте еще раз.');
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchWorkout();
-    fetchTrainingDays();
-  }, []);
+  const isLoading = loading || generating;
 
   return (
     <div className="wk-page">
@@ -195,7 +160,8 @@ const Workouts: React.FC = () => {
                   <button
                     key={group}
                     className={`wk-plan-tab ${selectedGroup === group ? 'wk-active' : ''}`}
-                    onClick={() => setSelectedGroup(group)}
+                    onClick={() => handleSelectGroup(group)}
+                    disabled={isLoading}
                   >
                     {muscleGroups[group]}
                   </button>
@@ -204,79 +170,89 @@ const Workouts: React.FC = () => {
 
               <div className="wk-plan-table">
                 <div className="wk-table-header">
-                  <div className="wk-header-cell">Number</div>
-                  <div className="wk-header-cell">Exercises</div>
-                  <div className="wk-header-cell">Your work weight</div>
+                  <div className="wk-header-cell">#</div>
+                  <div className="wk-header-cell">Exercise</div>
+                  <div className="wk-header-cell">Sets x Reps</div>
+                  <div className="wk-header-cell">Weight</div>
                   <div className="wk-header-cell">Load</div>
                 </div>
 
-                {loading ? (
+                {isLoading ? (
                   <div className="wk-table-row">
-                    <div className="wk-cell wk-cell-full">Loading...</div>
+                    <div className="wk-cell wk-cell-full">Generating workout...</div>
                   </div>
                 ) : activeWorkout && activeWorkout.exercises.length > 0 ? (
                   activeWorkout.exercises.map((ex, idx) => (
                     <div key={ex.id} className="wk-table-row">
-                      <div className="wk-cell">{idx + 1}:</div>
-                      <div className="wk-cell">{ex.name}</div>
+                      <div className="wk-cell">{idx + 1}</div>
                       <div className="wk-cell">
-                        <div className="wk-weight-badge">{ex.weight}kg</div>
+                        <span
+                          className="wk-exercise-name"
+                          onClick={() => setSelectedExercise(ex)}
+                          title="Click for technique"
+                        >
+                          {ex.name}
+                          <span className="wk-info-icon">i</span>
+                        </span>
+                      </div>
+                      <div className="wk-cell">
+                        <span className="wk-sets-reps">{ex.sets} x {ex.reps}</span>
+                      </div>
+                      <div className="wk-cell">
+                        <div className="wk-weight-badge">{ex.weight > 0 ? `${ex.weight} kg` : 'BW'}</div>
                       </div>
                       <div className="wk-cell">
                         <div
                           className="wk-load-dot"
-                          style={{ backgroundColor: ex.intensity === 'high' ? '#FF4500' : '#32CD32' }}
+                          style={{
+                            backgroundColor:
+                              ex.intensity === 'high' ? '#FF4500' :
+                              ex.intensity === 'medium' ? '#FFA500' : '#32CD32'
+                          }}
                         ></div>
                       </div>
                     </div>
                   ))
                 ) : (
                   <div className="wk-table-row">
-                    <div className="wk-cell wk-cell-full">No active workout</div>
+                    <div className="wk-cell wk-cell-full">No workout yet. Click "Generate new" below.</div>
                   </div>
                 )}
               </div>
 
               <div className="wk-plan-actions">
-                <button className="wk-action-button wk-end-workout" onClick={() => alert('End workout')}>
-                  ✓ End workout
-                </button>
                 <button
                   className="wk-action-button wk-generate-new"
                   onClick={() => generateWorkout(selectedGroup)}
+                  disabled={isLoading}
                 >
-                  🔄 Generate new
-                </button>
-                <button className="wk-action-button wk-add-workout" onClick={() => alert('Add your workout')}>
-                  + Add your workout
+                  {generating ? 'Generating...' : 'Generate new'}
                 </button>
               </div>
             </div>
 
-            {/* Right Column: Calendar + Actions */}
+            {/* Right Column */}
             <div className="wk-right-column">
               <div className="wk-actions-card">
                 <h3 className="wk-actions-title">Actions</h3>
                 <div className="wk-actions-buttons">
-                  <button className="wk-action-button wk-open-statistic" onClick={() => alert('Open statistics')}>
-                    📊 Open statistic
+                  <button className="wk-action-button wk-open-statistic" onClick={() => window.location.href = '/progress'}>
+                    Open statistic
                   </button>
-                  <button className="wk-action-button wk-change-goal" onClick={() => alert('Change goal')}>
-                    🎯 Change goal
+                  <button className="wk-action-button wk-change-goal" onClick={() => window.location.href = '/dashboard'}>
+                    Change goal
                   </button>
                 </div>
                 <div className="bot-status bot-status--dev">
                   <div className="status-dot"></div>
-                  <span>Бот в разработке</span>
+                  <span>Bot in development</span>
                 </div>
               </div>
 
               <div className="wk-calendar-card">
                 <h3 className="wk-calendar-title">Your Calendar</h3>
                 <div className="wk-calendar-swipe-container">
-                  <button className="wk-calendar-arrow wk-calendar-arrow-left" onClick={prevDay}>
-                    &#8249;
-                  </button>
+                  <button className="wk-calendar-arrow wk-calendar-arrow-left" onClick={prevDay}>&#8249;</button>
                   <div
                     className={`wk-calendar-date-card ${isTrainingDay(selectedDate) ? 'wk-training-day' : 'wk-rest-day'}`}
                     onClick={() => setIsCalendarOpen(true)}
@@ -285,9 +261,7 @@ const Workouts: React.FC = () => {
                     <div className="wk-date-number">{day}</div>
                     <div className="wk-date-month">{month}</div>
                   </div>
-                  <button className="wk-calendar-arrow wk-calendar-arrow-right" onClick={nextDay}>
-                    &#8250;
-                  </button>
+                  <button className="wk-calendar-arrow wk-calendar-arrow-right" onClick={nextDay}>&#8250;</button>
                 </div>
                 <div className="wk-calendar-message">{getTomorrowMessage()}</div>
               </div>
@@ -296,17 +270,59 @@ const Workouts: React.FC = () => {
         </div>
       </main>
 
+      {/* Exercise Technique Popup */}
+      {selectedExercise && (
+        <div className="wk-technique-backdrop" onClick={() => setSelectedExercise(null)}>
+          <div className="wk-technique-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="wk-technique-header">
+              <h3>{selectedExercise.name}</h3>
+              <button className="wk-technique-close" onClick={() => setSelectedExercise(null)}>&times;</button>
+            </div>
+            <div className="wk-technique-body">
+              <div className="wk-technique-section">
+                <h4>Technique</h4>
+                <p>{selectedExercise.description || 'No description available.'}</p>
+              </div>
+              <div className="wk-technique-details">
+                <div className="wk-technique-detail">
+                  <span className="wk-detail-label">Equipment</span>
+                  <span className="wk-detail-value">
+                    {selectedExercise.equipment === 'bodyweight' ? 'Bodyweight' :
+                     selectedExercise.equipment === 'dumbbells' ? 'Dumbbells' :
+                     selectedExercise.equipment === 'barbell' ? 'Barbell' :
+                     selectedExercise.equipment === 'resistance_band' ? 'Resistance band' :
+                     'None'}
+                  </span>
+                </div>
+                <div className="wk-technique-detail">
+                  <span className="wk-detail-label">Sets x Reps</span>
+                  <span className="wk-detail-value">{selectedExercise.sets} x {selectedExercise.reps}</span>
+                </div>
+                <div className="wk-technique-detail">
+                  <span className="wk-detail-label">Weight</span>
+                  <span className="wk-detail-value">{selectedExercise.weight > 0 ? `${selectedExercise.weight} kg` : 'Bodyweight'}</span>
+                </div>
+                <div className="wk-technique-detail">
+                  <span className="wk-detail-label">Intensity</span>
+                  <span className={`wk-detail-value wk-intensity-${selectedExercise.intensity}`}>
+                    {selectedExercise.intensity === 'high' ? 'High' :
+                     selectedExercise.intensity === 'medium' ? 'Medium' : 'Low'}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Calendar Modal */}
       {isCalendarOpen && (
         <div className="wk-calendar-modal-backdrop" onClick={() => setIsCalendarOpen(false)}>
           <div className="wk-calendar-modal" onClick={(e) => e.stopPropagation()}>
             <div className="wk-calendar-modal-header">
               <h2>Training Calendar</h2>
-              <button className="wk-calendar-close" onClick={() => setIsCalendarOpen(false)}>
-                &times;
-              </button>
+              <button className="wk-calendar-close" onClick={() => setIsCalendarOpen(false)}>&times;</button>
             </div>
-
             <div className="wk-calendar-modal-nav">
               <button className="wk-nav-button" onClick={prevMonth}>&lt;</button>
               <span className="wk-calendar-month-title">
@@ -314,30 +330,22 @@ const Workouts: React.FC = () => {
               </span>
               <button className="wk-nav-button" onClick={nextMonth}>&gt;</button>
             </div>
-
             <div className="wk-calendar-grid">
-              {/* Заголовки дней недели */}
               {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((d) => (
                 <div key={d} className="wk-calendar-day-header">{d}</div>
               ))}
-
-              {/* Дни месяца */}
               {getMonthDays(currentMonth).map((date, idx) => (
                 <div
                   key={idx}
                   className={`wk-calendar-day ${
-                    date === null
-                      ? 'wk-calendar-day-empty'
-                      : isTrainingDay(date)
-                        ? 'wk-calendar-day-training'
-                        : 'wk-calendar-day-rest'
+                    date === null ? 'wk-calendar-day-empty'
+                      : isTrainingDay(date) ? 'wk-calendar-day-training' : 'wk-calendar-day-rest'
                   } ${date && isToday(date) ? 'wk-calendar-day-today' : ''}`}
                 >
                   {date ? date.getDate() : ''}
                 </div>
               ))}
             </div>
-
             <div className="wk-calendar-legend">
               <div className="wk-legend-item">
                 <div className="wk-legend-color wk-legend-training"></div>

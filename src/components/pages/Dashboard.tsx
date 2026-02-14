@@ -293,26 +293,29 @@ const Dashboard: React.FC = () => {
   const [isAddMealOpen, setIsAddMealOpen] = useState(false);
   const [isChangeGoalOpen, setIsChangeGoalOpen] = useState(false);
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const res = await apiClient.get<DashboardResponse>('/dashboard');
-        console.log('Dashboard response:', res.data);
-        console.log('Current nutrition:', res.data.current_nutrition);
-        console.log('Nutrition plan:', res.data.nutrition_plan);
-        setData(res.data);
-      } catch (err: any) {
-        console.error('Failed to load dashboard:', err);
-        console.error('Error details:', err?.response?.data);
-        if (err?.response?.status === 401) {
-          localStorage.removeItem('access_token');
-          navigate('/login');
-        }
-      } finally {
-        setLoading(false);
+  const fetchDashboard = async () => {
+    try {
+      const res = await apiClient.get<DashboardResponse>('/dashboard');
+      setData(res.data);
+    } catch (err: any) {
+      console.error('Failed to load dashboard:', err);
+      if (err?.response?.status === 401) {
+        localStorage.removeItem('access_token');
+        navigate('/login');
       }
-    })();
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchDashboard();
   }, [navigate]);
+
+  const handleMealAdded = () => {
+    // Обновляем данные дашборда после добавления еды
+    fetchDashboard();
+  };
 
   if (loading) {
     return (
@@ -320,7 +323,7 @@ const Dashboard: React.FC = () => {
         <Header />
         <main className="dashboard-main">
           <div className="dashboard-container">
-            <p style={{ color: 'white', textAlign: 'center' }}>Загрузка...</p>
+            <p style={{ color: 'white', textAlign: 'center' }}>Loading...</p>
           </div>
         </main>
         <Footer />
@@ -336,10 +339,14 @@ const Dashboard: React.FC = () => {
         data={data}
         onOpenAddMeal={() => setIsAddMealOpen(true)}
         onOpenChangeGoal={() => setIsChangeGoalOpen(true)}
-        onStartTraining={() => alert('Запуск тренировки...')}
+        onStartTraining={() => navigate('/workouts')}
         onGoProgress={() => navigate('/progress')}
       />
-      <AddMealModal isOpen={isAddMealOpen} onClose={() => setIsAddMealOpen(false)} />
+      <AddMealModal
+        isOpen={isAddMealOpen}
+        onClose={() => setIsAddMealOpen(false)}
+        onMealAdded={handleMealAdded}
+      />
       <ChangeGoalModal isOpen={isChangeGoalOpen} onClose={() => setIsChangeGoalOpen(false)} />
     </>
   );

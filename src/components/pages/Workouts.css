@@ -90,10 +90,11 @@
 .wk-table-header,
 .wk-table-row {
     display: grid;
-    grid-template-columns: 0.5fr 2fr 1fr 0.5fr;
+    grid-template-columns: 0.4fr 2fr 0.8fr 0.8fr 0.4fr;
     gap: 12px;
     padding: 8px 0;
     border-bottom: 1px solid #333;
+    align-items: center;
 }
 
 .wk-table-header {
@@ -612,3 +613,147 @@
         font-size: 10px;
     }
 }
+
+/* === Clickable exercise name === */
+.wk-exercise-name {
+    cursor: pointer;
+    transition: color 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.wk-exercise-name:hover {
+    color: #FF6B6B;
+}
+
+.wk-info-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: rgba(157, 38, 40, 0.4);
+    color: #FF6B6B;
+    font-size: 10px;
+    font-weight: 700;
+    font-style: italic;
+    flex-shrink: 0;
+}
+
+.wk-sets-reps {
+    font-weight: 500;
+    font-size: 13px;
+}
+
+/* === Exercise Technique Popup === */
+.wk-technique-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    animation: fadeIn 0.15s ease;
+}
+
+.wk-technique-modal {
+    background: #1A1A1A;
+    border-radius: 16px;
+    padding: 24px;
+    width: 90%;
+    max-width: 420px;
+    animation: slideUp 0.2s ease;
+    border: 1px solid #333;
+}
+
+.wk-technique-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+.wk-technique-header h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: white;
+    margin: 0;
+    line-height: 1.3;
+    padding-right: 16px;
+}
+
+.wk-technique-close {
+    background: none;
+    border: none;
+    color: #888;
+    font-size: 28px;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+    flex-shrink: 0;
+    transition: color 0.2s;
+}
+
+.wk-technique-close:hover {
+    color: white;
+}
+
+.wk-technique-body {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.wk-technique-section h4 {
+    font-size: 13px;
+    font-weight: 600;
+    color: #9D2628;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 0 0 8px 0;
+}
+
+.wk-technique-section p {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #DDD;
+    margin: 0;
+}
+
+.wk-technique-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.wk-technique-detail {
+    background: #2D2D2D;
+    border-radius: 8px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.wk-detail-label {
+    font-size: 11px;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.wk-detail-value {
+    font-size: 15px;
+    font-weight: 600;
+    color: white;
+}
+
+.wk-intensity-high { color: #FF4500; }
+.wk-intensity-medium { color: #FFA500; }
+.wk-intensity-low { color: #32CD32; }
