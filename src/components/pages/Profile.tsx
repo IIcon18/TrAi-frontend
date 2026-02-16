@@ -66,27 +66,16 @@ const Profile: React.FC = () => {
     setRefreshingTips(true);
     try {
       const res = await apiClient.post('/profile/refresh-ai-tips');
-      console.log('Refresh tips response:', res.data);
-      
-      // Проверяем структуру ответа
+
       if (res.data && res.data.ai_tips && Array.isArray(res.data.ai_tips) && res.data.ai_tips.length > 0) {
-        // Берем только первый tip из массива
         const newTip = [res.data.ai_tips[0]];
         setProfile((prev) =>
           prev ? { ...prev, ai_tips: newTip } : prev
         );
       } else {
-        console.warn('No tips in response:', res.data);
-        // Если tips пустые, оставляем текущий или показываем сообщение
         alert('Не удалось получить новый совет. Попробуйте еще раз.');
       }
     } catch (err: any) {
-      console.error('Failed to refresh AI tips:', err);
-      console.error('Error details:', err?.response?.data);
-      console.error('Error status:', err?.response?.status);
-      console.error('Error URL:', err?.config?.url);
-      
-      // Если ошибка 401, apiClient уже перенаправит на логин
       if (err?.response?.status !== 401) {
         const errorMessage = err?.response?.data?.detail || err?.message || 'Не удалось обновить совет';
         alert(`Ошибка: ${errorMessage}. Попробуйте еще раз.`);
@@ -131,7 +120,7 @@ const Profile: React.FC = () => {
           <p style={{ color: 'white', textAlign: 'center' }}>Loading profile...</p>
         ) : profile ? (
           <div className="profile-wrapper">
-            {/* Левая карточка */}
+            {/* Левая колонка: Профиль */}
             <div className="profile-card">
               <div className="avatar-wrapper">
                 {profile.avatar ? (

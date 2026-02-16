@@ -2,7 +2,13 @@ import React, { useEffect, useState } from 'react';
 import './Workouts.css';
 import Header from '../shared/Header/Header';
 import Footer from '../shared/Footer/Footer';
+import AddWorkoutModal from '../shared/AddWorkoutModal';
 import apiClient from '../../api/apiClient';
+import { ReactComponent as ConfirmIcon } from '../../assets/icons/confirm.svg';
+import { ReactComponent as RedoIcon } from '../../assets/icons/free-icon-redo-3185862.svg';
+import { ReactComponent as PlusIcon } from '../../assets/icons/free-icon-plus-2549959.svg';
+import { ReactComponent as GraphIcon } from '../../assets/icons/free-icon-graph-2567990.svg';
+import { ReactComponent as DartboardIcon } from '../../assets/icons/free-icon-dartboard-1654809.svg';
 
 type MuscleGroup = 'upper_body_push' | 'upper_body_pull' | 'core_stability' | 'lower_body';
 type DayName = 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday' | 'Sunday';
@@ -46,6 +52,8 @@ const Workouts: React.FC = () => {
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [isAddWorkoutOpen, setIsAddWorkoutOpen] = useState(false);
+  const [completing, setCompleting] = useState(false);
 
   // Exercise technique popup
   const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(null);
@@ -82,6 +90,33 @@ const Workouts: React.FC = () => {
       }
     } catch (err: any) {
       console.error('Failed to fetch training days:', err);
+    }
+  };
+
+  const completeWorkout = async () => {
+    if (!activeWorkout || activeWorkout.completed) return;
+
+    setCompleting(true);
+    try {
+      await apiClient.post(`/workouts/${activeWorkout.id}/complete`);
+
+      // Update the workout in state
+      setWorkoutsByGroup(prev => ({
+        ...prev,
+        [selectedGroup]: {
+          ...activeWorkout,
+          completed: true
+        }
+      }));
+
+      alert('🎉 Workout completed! Great job!');
+    } catch (err: any) {
+      console.error('Failed to complete workout:', err);
+      if (err?.response?.status !== 401) {
+        alert('Failed to complete workout. Try again.');
+      }
+    } finally {
+      setCompleting(false);
     }
   };
 
@@ -221,11 +256,36 @@ const Workouts: React.FC = () => {
               </div>
 
               <div className="wk-plan-actions">
+                {activeWorkout && !activeWorkout.completed && (
+                  <button
+                    className="wk-action-button wk-complete-workout"
+                    onClick={completeWorkout}
+                    disabled={isLoading || completing}
+                  >
+                    <ConfirmIcon className="wk-btn-icon" />
+                    {completing ? 'Completing...' : 'Complete Workout'}
+                  </button>
+                )}
+                {activeWorkout && activeWorkout.completed && (
+                  <div className="wk-completed-badge">
+                    <ConfirmIcon className="wk-btn-icon" />
+                    Workout Completed!
+                  </div>
+                )}
+                <button
+                  className="wk-action-button wk-add-workout"
+                  onClick={() => setIsAddWorkoutOpen(true)}
+                  disabled={isLoading}
+                >
+                  <PlusIcon className="wk-btn-icon" />
+                  Add Workout
+                </button>
                 <button
                   className="wk-action-button wk-generate-new"
                   onClick={() => generateWorkout(selectedGroup)}
                   disabled={isLoading}
                 >
+                  <RedoIcon className="wk-btn-icon" />
                   {generating ? 'Generating...' : 'Generate new'}
                 </button>
               </div>
@@ -237,9 +297,11 @@ const Workouts: React.FC = () => {
                 <h3 className="wk-actions-title">Actions</h3>
                 <div className="wk-actions-buttons">
                   <button className="wk-action-button wk-open-statistic" onClick={() => window.location.href = '/progress'}>
+                    <GraphIcon className="wk-btn-icon" />
                     Open statistic
                   </button>
                   <button className="wk-action-button wk-change-goal" onClick={() => window.location.href = '/dashboard'}>
+                    <DartboardIcon className="wk-btn-icon" />
                     Change goal
                   </button>
                 </div>
@@ -359,6 +421,15 @@ const Workouts: React.FC = () => {
           </div>
         </div>
       )}
+
+      <AddWorkoutModal
+        isOpen={isAddWorkoutOpen}
+        onClose={() => setIsAddWorkoutOpen(false)}
+        onWorkoutAdded={() => {
+          // Обновляем тренировку для текущей группы
+          generateWorkout(selectedGroup);
+        }}
+      />
 
       <Footer />
     </div>

@@ -89,14 +89,228 @@
 
 .progress-activity-chart-wrapper {
     position: relative;
+    background: linear-gradient(180deg, #1A1A1A 0%, #0D0D0D 100%);
+    border-radius: 10px;
+    padding: 16px 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    border: 1px solid #2D2D2D;
 }
 
 /* Стили для SVG графика */
 .progress-chart-svg {
-    background: transparent;
-    border-radius: 8px;
-    padding: 10px;
+    width: 100%;
+    height: 200px;
+    display: block;
+}
+
+/* Grid lines */
+.progress-grid-line {
+    stroke: #2D2D2D;
+    stroke-width: 0.5;
+    stroke-dasharray: 4, 4;
+    opacity: 0.5;
+}
+
+.progress-grid-text {
+    fill: #666;
+    font-size: 10px;
+    font-family: 'SF Pro Display', sans-serif;
+    font-weight: 500;
+}
+
+.progress-axis-label {
+    fill: #999;
+    font-size: 11px;
+    text-anchor: middle;
+    letter-spacing: 0.3px;
+    font-family: 'SF Pro Display', sans-serif;
+    font-weight: 500;
+}
+
+/* Workout line (красная) */
+.progress-workout-line {
+    fill: none;
+    stroke: #FF3B30;
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    filter: drop-shadow(0 0 6px rgba(255, 59, 48, 0.5));
+    transition: all 0.3s ease;
+}
+
+.progress-workout-line:hover {
+    stroke-width: 3.5;
+    filter: drop-shadow(0 0 8px rgba(255, 59, 48, 0.7));
+}
+
+/* Weight line (оранжевая) */
+.progress-weight-line {
+    fill: none;
+    stroke: #FFA500;
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    filter: drop-shadow(0 0 6px rgba(255, 165, 0, 0.5));
+    transition: all 0.3s ease;
+}
+
+.progress-weight-line:hover {
+    stroke-width: 3.5;
+    filter: drop-shadow(0 0 8px rgba(255, 165, 0, 0.7));
+}
+
+/* Workout points */
+.progress-workout-point {
+    fill: #FF3B30;
+    stroke: #fff;
+    stroke-width: 2;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    filter: drop-shadow(0 2px 4px rgba(255, 59, 48, 0.4));
+}
+
+.progress-workout-point:hover {
+    r: 7;
+    filter: drop-shadow(0 3px 8px rgba(255, 59, 48, 0.7));
+    stroke-width: 2.5;
+}
+
+/* Weight points */
+.progress-weight-point {
+    fill: #FFA500;
+    stroke: #fff;
+    stroke-width: 2;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    filter: drop-shadow(0 2px 4px rgba(255, 165, 0, 0.4));
+}
+
+.progress-weight-point:hover {
+    r: 7;
+    filter: drop-shadow(0 3px 8px rgba(255, 165, 0, 0.7));
+    stroke-width: 2.5;
+}
+
+/* Chart legend */
+.progress-chart-legend {
     display: flex;
+    justify-content: center;
+    gap: 24px;
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid #2D2D2D;
+}
+
+.progress-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #999;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.progress-legend-item:hover {
+    color: #fff;
+}
+
+.progress-legend-color {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    transition: all 0.2s ease;
+}
+
+.progress-legend-item:hover .progress-legend-color {
+    transform: scale(1.15);
+}
+
+.progress-workout-color {
+    background: #FF3B30;
+    box-shadow: 0 2px 8px rgba(255, 59, 48, 0.4);
+}
+
+.progress-weight-color {
+    background: #FFA500;
+    box-shadow: 0 2px 8px rgba(255, 165, 0, 0.4);
+}
+
+/* Mood/Energy colors для других вкладок */
+.progress-mood-color {
+    background: #4CAF50;
+    box-shadow: 0 2px 8px rgba(76, 175, 80, 0.4);
+}
+
+.progress-energy-color {
+    background: #DC3545;
+    box-shadow: 0 2px 8px rgba(220, 53, 69, 0.4);
+}
+
+/* Mood line (зеленая) */
+.progress-mood-line {
+    fill: none;
+    stroke: #4CAF50;
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    filter: drop-shadow(0 0 6px rgba(76, 175, 80, 0.5));
+    transition: all 0.3s ease;
+}
+
+.progress-mood-line:hover {
+    stroke-width: 3.5;
+    filter: drop-shadow(0 0 8px rgba(76, 175, 80, 0.7));
+}
+
+/* Energy line (красная) */
+.progress-energy-line {
+    fill: none;
+    stroke: #DC3545;
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    filter: drop-shadow(0 0 6px rgba(220, 53, 69, 0.5));
+    transition: all 0.3s ease;
+}
+
+.progress-energy-line:hover {
+    stroke-width: 3.5;
+    filter: drop-shadow(0 0 8px rgba(220, 53, 69, 0.7));
+}
+
+/* Mood points */
+.progress-mood-point {
+    fill: #4CAF50;
+    stroke: #fff;
+    stroke-width: 2;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    filter: drop-shadow(0 2px 4px rgba(76, 175, 80, 0.4));
+}
+
+.progress-mood-point:hover {
+    r: 7;
+    filter: drop-shadow(0 3px 8px rgba(76, 175, 80, 0.7));
+    stroke-width: 2.5;
+}
+
+/* Energy points */
+.progress-energy-point {
+    fill: #DC3545;
+    stroke: #fff;
+    stroke-width: 2;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    filter: drop-shadow(0 2px 4px rgba(220, 53, 69, 0.4));
+}
+
+.progress-energy-point:hover {
+    r: 7;
+    filter: drop-shadow(0 3px 8px rgba(220, 53, 69, 0.7));
+    stroke-width: 2.5;
 }
 
 /* Сообщение от AI */
@@ -176,80 +390,6 @@
     color: #CCCCCC;
     font-size: 12px;
     font-weight: 500;
-}
-
-/* === Карточка Nutrition Progress === */
-.progress-nutrition-card {
-    background: #1A1A1A;
-    border-radius: 12px;
-    padding: 24px;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-}
-
-.progress-nutrition-progress-list {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.progress-linear-progress-item {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.progress-progress-label {
-    color: #CCCCCC;
-    font-size: 14px;
-    font-weight: 500;
-}
-
-.progress-progress-bar-container {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.progress-progress-bar-background {
-    flex: 1;
-    height: 8px;
-    background: #2D2D2D;
-    border-radius: 4px;
-    overflow: hidden;
-}
-
-.progress-progress-bar-fill {
-    height: 100%;
-    border-radius: 4px;
-    transition: width 0.3s ease;
-}
-
-.progress-progress-value {
-    color: white;
-    font-size: 13px;
-    font-weight: 600;
-    min-width: 45px;
-    text-align: right;
-}
-
-.progress-add-meal-button {
-    width: 100%;
-    padding: 10px;
-    background: #9D2628;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    margin-top: 12px;
-}
-
-.progress-add-meal-button:hover {
-    background: #9D2628;
 }
 
 /* === Адаптивность === */

@@ -359,18 +359,6 @@
 .stats-card {
     background: #1A1A1A;
     border-radius: 12px;
-    padding: 16px;
-}
-
-.stats-card h3 {
-    font-size: 16px;
-    margin-bottom: 12px;
-}
-
-/* === Quick Stats === */
-.stats-card {
-    background: #1A1A1A;
-    border-radius: 12px;
     padding: 18px;
     width: 90%;
 }
@@ -382,55 +370,28 @@
     margin-bottom: 16px;
 }
 
-/* Контейнер списка — теперь НЕ центрируем содержимое */
 .quick-stats-list {
     display: flex;
     flex-direction: column;
     gap: 12px;
-    width: 100%; /* ← Занимает всю ширину карточки */
+    width: 100%;
 }
 
-/* Каждая строка — выравнивание по всей ширине */
 .quick-stat-item {
     display: flex;
-    justify-content: space-between; /* ← Метка слева, значение справа */
+    justify-content: space-between;
     align-items: center;
     width: 100%;
 }
 
-/* Лейбл (название) — фиксированная ширина для выравнивания */
 .stat-label {
     color: #CCCCCC;
     font-size: 14px;
     font-weight: 500;
     text-align: right;
-    width: 180px; /* ← Фиксированная ширина */
+    width: 180px;
     padding-right: 12px;
     white-space: nowrap;
-}
-
-/* Значение — фиксированная ширина, одинаковая для всех */
-.stat-value {
-    color: white;
-    font-size: 14px;
-    font-weight: 600;
-    background: #2D2D2D;
-    padding: 8px 16px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-    text-align: center;
-    width: 120px; /* ← Фиксированная ширина */
-}
-
-.stat-value {
-    color: white;
-    font-size: 14px;
-    font-weight: 600;
-    background: #2D2D2D;
-    padding: 8px 16px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-    width: 120px; /* ← Фиксированная ширина */
 }
 
 .stat-value {

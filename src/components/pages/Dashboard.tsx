@@ -104,10 +104,6 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
     },
   ];
   
-  console.log('AI Plan data:', aiPlan);
-  console.log('Current nutrition:', data.current_nutrition);
-  console.log('Nutrition plan:', data.nutrition_plan);
-
   const quickStats = [
     { label: 'Weekly Volume:', value: `${data.quick_stats?.planned_workouts || 0} trainings` },
     { label: 'Average Weight:', value: `${data.quick_stats?.total_weight_lifted || 0} kg` },
