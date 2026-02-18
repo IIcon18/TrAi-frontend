@@ -6,6 +6,7 @@ import Footer from '../shared/Footer/Footer';
 import GoalOverviewCircle from '../shared/GoalOverviewCircle';
 import AddMealModal from '../shared/AddMealModal';
 import apiClient from '../../api/apiClient';
+import { isPro } from '../../utils/auth';
 
 // Интерфейс для данных страницы
 interface ProgressData {
@@ -425,9 +426,9 @@ const Progress: React.FC = () => {
                             </div>
 
                             {/* Nutrition */}
-                            <div className="progress-nutrition-card">
+                            <div className={`progress-nutrition-card ${!isPro() ? 'nutrition-locked-wrapper' : ''}`}>
                                 <h3 className="progress-card-title">Your Nutrition Progress</h3>
-                                <div className="nutrition-progress-list">
+                                <div className={`nutrition-progress-list ${!isPro() ? 'nutrition-blurred' : ''}`}>
                                     {['proteins', 'carbohydrates', 'fats'].map((macro) => {
                                         const current = progressData.nutritionProgress[macro as keyof ProgressData['nutritionProgress']].current;
                                         const total = progressData.nutritionProgress[macro as keyof ProgressData['nutritionProgress']].total;
@@ -445,7 +446,19 @@ const Progress: React.FC = () => {
                                         );
                                     })}
                                 </div>
-                                <button className="progress-add-meal-button" onClick={() => setIsAddMealOpen(true)}>+ Add meal</button>
+                                {isPro() ? (
+                                    <button className="progress-add-meal-button" onClick={() => setIsAddMealOpen(true)}>+ Add meal</button>
+                                ) : (
+                                    <div className="nutrition-locked-overlay">
+                                        <div className="nutrition-lock-icon">
+                                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                                                <path d="M7 11V7a5 5 0 0110 0v4"/>
+                                            </svg>
+                                        </div>
+                                        <span className="nutrition-lock-text">Nutrition tracking available in Pro</span>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>

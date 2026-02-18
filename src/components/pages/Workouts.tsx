@@ -4,6 +4,7 @@ import Header from '../shared/Header/Header';
 import Footer from '../shared/Footer/Footer';
 import AddWorkoutModal from '../shared/AddWorkoutModal';
 import apiClient from '../../api/apiClient';
+import { isPro } from '../../utils/auth';
 import { ReactComponent as ConfirmIcon } from '../../assets/icons/confirm.svg';
 import { ReactComponent as RedoIcon } from '../../assets/icons/free-icon-redo-3185862.svg';
 import { ReactComponent as PlusIcon } from '../../assets/icons/free-icon-plus-2549959.svg';
@@ -54,6 +55,8 @@ const Workouts: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [isAddWorkoutOpen, setIsAddWorkoutOpen] = useState(false);
   const [completing, setCompleting] = useState(false);
+  const [aiRemaining, setAiRemaining] = useState<number | null>(null);
+  const [aiUnlimited, setAiUnlimited] = useState(false);
 
   // Exercise technique popup
   const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(null);
@@ -65,6 +68,18 @@ const Workouts: React.FC = () => {
 
   const activeWorkout = workoutsByGroup[selectedGroup] || null;
 
+  const fetchAiUsage = async () => {
+    try {
+      const res = await apiClient.get('/workouts/ai-usage');
+      setAiUnlimited(res.data.unlimited);
+      if (!res.data.unlimited) {
+        setAiRemaining(res.data.remaining);
+      }
+    } catch (err: any) {
+      console.error('Failed to fetch AI usage:', err);
+    }
+  };
+
   const generateWorkout = async (group: MuscleGroup) => {
     setGenerating(true);
     try {
@@ -72,9 +87,16 @@ const Workouts: React.FC = () => {
         muscle_group: group,
       });
       setWorkoutsByGroup(prev => ({ ...prev, [group]: res.data }));
+      // Обновляем счётчик AI-использований после генерации
+      if (!aiUnlimited) {
+        fetchAiUsage();
+      }
     } catch (err: any) {
       console.error('Failed to generate workout:', err);
-      if (err?.response?.status !== 401) {
+      if (err?.response?.status === 403) {
+        const detail = err.response?.data?.detail || 'AI generation limit reached. Upgrade to Pro!';
+        alert(detail);
+      } else if (err?.response?.status !== 401) {
         alert('Failed to generate workout. Try again.');
       }
     } finally {
@@ -120,20 +142,17 @@ const Workouts: React.FC = () => {
     }
   };
 
-  // При выборе таба — генерируем тренировку если для этой группы ещё нет
-  const handleSelectGroup = async (group: MuscleGroup) => {
+  // При выборе таба — просто переключаем (без авто-генерации)
+  const handleSelectGroup = (group: MuscleGroup) => {
     setSelectedGroup(group);
-    if (!workoutsByGroup[group]) {
-      await generateWorkout(group);
-    }
   };
 
-  // Начальная загрузка — генерируем для первого таба
+  // Начальная загрузка — только календарь и AI usage, без авто-генерации
   useEffect(() => {
     const init = async () => {
       setLoading(true);
       await fetchTrainingDays();
-      await generateWorkout('upper_body_push');
+      await fetchAiUsage();
       setLoading(false);
     };
     init();
@@ -212,7 +231,7 @@ const Workouts: React.FC = () => {
                   <div className="wk-header-cell">Load</div>
                 </div>
 
-                {isLoading ? (
+                {generating ? (
                   <div className="wk-table-row">
                     <div className="wk-cell wk-cell-full">Generating workout...</div>
                   </div>
@@ -249,8 +268,18 @@ const Workouts: React.FC = () => {
                     </div>
                   ))
                 ) : (
-                  <div className="wk-table-row">
-                    <div className="wk-cell wk-cell-full">No workout yet. Click "Generate new" below.</div>
+                  <div className="wk-empty-state">
+                    <div className="wk-empty-icon">&#9889;</div>
+                    <p className="wk-empty-text">
+                      Click <strong>"Generate AI Workout"</strong> to create a personalized workout for this muscle group
+                    </p>
+                    {!aiUnlimited && aiRemaining !== null && (
+                      <span className="wk-ai-counter-hint">
+                        {aiRemaining > 0
+                          ? `${aiRemaining}/3 free AI generations left this month`
+                          : 'Free AI generations used up. Upgrade to Pro!'}
+                      </span>
+                    )}
                   </div>
                 )}
               </div>
@@ -281,12 +310,15 @@ const Workouts: React.FC = () => {
                   Add Workout
                 </button>
                 <button
-                  className="wk-action-button wk-generate-new"
+                  className={`wk-action-button wk-generate-new ${!aiUnlimited && aiRemaining !== null && aiRemaining <= 0 ? 'wk-btn-disabled' : ''}`}
                   onClick={() => generateWorkout(selectedGroup)}
-                  disabled={isLoading}
+                  disabled={generating || (!aiUnlimited && aiRemaining !== null && aiRemaining <= 0)}
                 >
                   <RedoIcon className="wk-btn-icon" />
-                  {generating ? 'Generating...' : 'Generate new'}
+                  {generating ? 'Generating...' : 'Generate AI Workout'}
+                  {!aiUnlimited && aiRemaining !== null && (
+                    <span className="wk-ai-counter">{aiRemaining}/3</span>
+                  )}
                 </button>
               </div>
             </div>
@@ -426,8 +458,7 @@ const Workouts: React.FC = () => {
         isOpen={isAddWorkoutOpen}
         onClose={() => setIsAddWorkoutOpen(false)}
         onWorkoutAdded={() => {
-          // Обновляем тренировку для текущей группы
-          generateWorkout(selectedGroup);
+          // Ручная тренировка добавлена — не генерируем AI
         }}
       />
 

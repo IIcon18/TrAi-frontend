@@ -516,3 +516,47 @@
 .progress-add-meal-button:hover {
     background: #9D2628;
 }
+
+/* === Nutrition Lock Overlay (for free users) === */
+.nutrition-locked-wrapper {
+    position: relative;
+    overflow: hidden;
+}
+
+.nutrition-blurred {
+    filter: blur(4px) brightness(0.5);
+    pointer-events: none;
+    user-select: none;
+}
+
+.nutrition-locked-overlay {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 16px;
+    margin-top: 8px;
+    background: rgba(26, 26, 26, 0.85);
+    border: 1px solid rgba(255, 215, 0, 0.2);
+    border-radius: 8px;
+}
+
+.nutrition-lock-icon {
+    color: #FFD700;
+    opacity: 0.9;
+    animation: lockPulse 2s ease-in-out infinite;
+}
+
+@keyframes lockPulse {
+    0%, 100% { opacity: 0.7; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.05); }
+}
+
+.nutrition-lock-text {
+    color: #FFD700;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+    letter-spacing: 0.3px;
+}

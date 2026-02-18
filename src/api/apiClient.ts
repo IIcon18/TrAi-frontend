@@ -24,10 +24,16 @@ apiClient.interceptors.response.use(
     if (error.response?.status === 401) {
       localStorage.removeItem('access_token');
       localStorage.removeItem('refresh_token');
+      localStorage.removeItem('user_role');
       // Перенаправляем на логин только если мы не на странице логина/регистрации
       if (window.location.pathname !== '/login' && window.location.pathname !== '/register') {
         window.location.href = '/login';
       }
+    }
+    // Обработка 403 — недостаточно прав
+    if (error.response?.status === 403) {
+      const detail = (error.response?.data as any)?.detail || 'Недостаточно прав для выполнения этого действия';
+      alert(detail);
     }
     return Promise.reject(error);
   }

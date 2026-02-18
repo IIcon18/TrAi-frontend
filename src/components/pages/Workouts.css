@@ -772,3 +772,48 @@
 .wk-intensity-high { color: #FF4500; }
 .wk-intensity-medium { color: #FFA500; }
 .wk-intensity-low { color: #32CD32; }
+
+/* === Empty State (no workout generated yet) === */
+.wk-empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    text-align: center;
+    gap: 12px;
+}
+
+.wk-empty-icon {
+    font-size: 48px;
+    opacity: 0.6;
+}
+
+.wk-empty-text {
+    color: #CCCCCC;
+    font-size: 15px;
+    line-height: 1.5;
+    max-width: 320px;
+    margin: 0;
+}
+
+.wk-ai-counter-hint {
+    font-size: 13px;
+    color: #FF9800;
+    font-weight: 500;
+}
+
+/* === AI Counter Badge on Button === */
+.wk-ai-counter {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 700;
+    margin-left: 4px;
+}
+
+.wk-btn-disabled {
+    opacity: 0.4;
+    cursor: not-allowed !important;
+}

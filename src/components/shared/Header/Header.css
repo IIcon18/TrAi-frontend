@@ -85,6 +85,34 @@
     text-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
 }
 
+.pro-badge {
+    font-size: 14px;
+    color: #000;
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+    padding: 2px 8px;
+    border-radius: 6px;
+    margin-left: 8px;
+    vertical-align: super;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.nav-button-admin {
+    color: #FFD700 !important;
+}
+
+.nav-button-admin:hover {
+    color: #FFA500 !important;
+}
+
+.nav-button-logout {
+    color: #9D2628 !important;
+}
+
+.nav-button-logout:hover {
+    color: #FF4444 !important;
+}
+
 @media (max-width: 768px) {
     .header {
         flex-direction: column;

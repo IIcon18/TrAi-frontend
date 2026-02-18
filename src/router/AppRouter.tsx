@@ -7,6 +7,7 @@ import Dashboard from "../components/pages/Dashboard";
 import Profile from "../components/pages/Profile";
 import Progress from "../components/pages/Progress";
 import Workouts from "../components/pages/Workouts";
+import AdminPanel from "../components/pages/AdminPanel";
 import PrivateRoute from "../components/shared/PrivateRoute";
 
 const AppRouter: React.FC = () => {
@@ -16,39 +17,49 @@ const AppRouter: React.FC = () => {
                 <Route path="/" element={<Navigate to="/login" replace />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
-                
+
                 {/* Protected routes */}
-                <Route 
-                    path="/dashboard" 
+                <Route
+                    path="/dashboard"
                     element={
                         <PrivateRoute>
                             <Dashboard />
                         </PrivateRoute>
-                    } 
+                    }
                 />
-                <Route 
-                    path="/profile" 
+                <Route
+                    path="/profile"
                     element={
                         <PrivateRoute>
                             <Profile />
                         </PrivateRoute>
-                    } 
+                    }
                 />
-                <Route 
-                    path="/progress" 
+                <Route
+                    path="/progress"
                     element={
                         <PrivateRoute>
                             <Progress />
                         </PrivateRoute>
-                    } 
+                    }
                 />
-                <Route 
-                    path="/workouts" 
+                <Route
+                    path="/workouts"
                     element={
                         <PrivateRoute>
                             <Workouts />
                         </PrivateRoute>
-                    } 
+                    }
+                />
+
+                {/* Admin-only route */}
+                <Route
+                    path="/admin"
+                    element={
+                        <PrivateRoute requiredRoles={["admin"]}>
+                            <AdminPanel />
+                        </PrivateRoute>
+                    }
                 />
             </Routes>
         </BrowserRouter>

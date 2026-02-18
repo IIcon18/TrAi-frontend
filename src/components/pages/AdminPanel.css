@@ -1,0 +1,129 @@
+.admin-page {
+    min-height: 100vh;
+    background-color: #000000;
+    color: #fff;
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.admin-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+.admin-title {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.admin-subtitle {
+    font-size: 16px;
+    color: #B9B9B9;
+    margin-bottom: 32px;
+}
+
+.admin-loading {
+    text-align: center;
+    color: #B9B9B9;
+    padding: 40px;
+    font-size: 18px;
+}
+
+.admin-table-wrapper {
+    overflow-x: auto;
+    border-radius: 12px;
+    background: #1A1A1A;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.admin-table th,
+.admin-table td {
+    padding: 14px 16px;
+    text-align: left;
+    border-bottom: 1px solid #2A2A2A;
+}
+
+.admin-table th {
+    background: #111;
+    color: #B9B9B9;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.admin-table td {
+    font-size: 14px;
+}
+
+.admin-table tbody tr:hover {
+    background: #222;
+}
+
+.role-select {
+    background: #2A2A2A;
+    color: #fff;
+    border: 1px solid #444;
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.role-select.role-admin {
+    border-color: #FFD700;
+    color: #FFD700;
+}
+
+.role-select.role-pro {
+    border-color: #FFA500;
+    color: #FFA500;
+}
+
+.role-select.role-user {
+    border-color: #666;
+    color: #B9B9B9;
+}
+
+.status-ok {
+    color: #4CAF50;
+    font-weight: 500;
+}
+
+.status-pending {
+    color: #FF9800;
+    font-weight: 500;
+}
+
+.delete-btn {
+    background: transparent;
+    color: #9D2628;
+    border: 1px solid #9D2628;
+    border-radius: 6px;
+    padding: 6px 14px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.delete-btn:hover {
+    background: #9D2628;
+    color: #fff;
+}
+
+@media (max-width: 768px) {
+    .admin-container {
+        padding: 20px 10px;
+    }
+
+    .admin-table th,
+    .admin-table td {
+        padding: 10px 8px;
+        font-size: 12px;
+    }
+}

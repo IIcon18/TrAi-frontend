@@ -1,14 +1,23 @@
 // src/components/shared/Header/Header.tsx
 
 import React from "react";
-import { useNavigate } from "react-router-dom"; // ← добавляем
+import { useNavigate } from "react-router-dom";
+import { getUserRole, isPro, isAdmin } from "../../../utils/auth";
 import "./Header.css";
 
 const Header: React.FC = () => {
     const navigate = useNavigate();
+    const role = getUserRole();
 
     const handleNavClick = (path: string) => {
         navigate(path);
+    };
+
+    const handleLogout = () => {
+        localStorage.removeItem("access_token");
+        localStorage.removeItem("refresh_token");
+        localStorage.removeItem("user_role");
+        navigate("/login");
     };
 
     return (
@@ -17,6 +26,7 @@ const Header: React.FC = () => {
                 <div className="logo">
                     <span className="logo-white">Tr</span>
                     <span className="logo-red">Ai</span>
+                    {isPro() && <span className="pro-badge">PRO</span>}
                 </div>
                 <div className="tagline">
                     your personal training intelligence
@@ -47,6 +57,22 @@ const Header: React.FC = () => {
                     onClick={() => handleNavClick("/profile")}
                 >
                     Profile
+                </button>
+
+                {isAdmin() && (
+                    <button
+                        className="nav-button nav-button-admin"
+                        onClick={() => handleNavClick("/admin")}
+                    >
+                        Admin
+                    </button>
+                )}
+
+                <button
+                    className="nav-button nav-button-logout"
+                    onClick={handleLogout}
+                >
+                    Logout
                 </button>
             </nav>
         </header>

@@ -8,6 +8,7 @@ import CircularProgress from '../shared/CircularProgress';
 import AddMealModal from '../shared/AddMealModal';
 import ChangeGoalModal from '../shared/ChangeGoalModal';
 import apiClient from '../../api/apiClient';
+import { isPro } from '../../utils/auth';
 import type { DashboardResponse } from '../../types/dashboard';
 import { ReactComponent as GraphIcon } from '../../assets/icons/free-icon-graph-2567990.svg';
 import { ReactComponent as DartboardIcon } from '../../assets/icons/free-icon-dartboard-1654809.svg';
@@ -215,9 +216,9 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                     <p className="progress-message">{data.weekly_progress_message || ''}</p>
                   </div>
 
-                  <div className="ai-plan-section">
+                  <div className={`ai-plan-section ${!isPro() ? 'nutrition-locked-wrapper' : ''}`}>
                     <h3>AI Plan</h3>
-                    <div className="ai-plan-grid">
+                    <div className={`ai-plan-grid ${!isPro() ? 'nutrition-blurred' : ''}`}>
                       {aiPlan.map((item, i) => (
                         <CircularProgress
                           key={i}
@@ -229,7 +230,19 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                         />
                       ))}
                     </div>
-                    <button className="add-meal-button" onClick={onOpenAddMeal}>+ Add meal</button>
+                    {isPro() ? (
+                      <button className="add-meal-button" onClick={onOpenAddMeal}>+ Add meal</button>
+                    ) : (
+                      <div className="nutrition-locked-overlay">
+                        <div className="nutrition-lock-icon">
+                          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                            <path d="M7 11V7a5 5 0 0110 0v4"/>
+                          </svg>
+                        </div>
+                        <span className="nutrition-lock-text">Nutrition tracking available in Pro</span>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
