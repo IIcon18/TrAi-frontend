@@ -85,17 +85,6 @@
     text-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
 }
 
-.pro-badge {
-    font-size: 14px;
-    color: #000;
-    background: linear-gradient(135deg, #FFD700, #FFA500);
-    padding: 2px 8px;
-    border-radius: 6px;
-    margin-left: 8px;
-    vertical-align: super;
-    font-weight: 700;
-    letter-spacing: 1px;
-}
 
 .nav-button-admin {
     color: #FFD700 !important;
@@ -105,12 +94,52 @@
     color: #FFA500 !important;
 }
 
-.nav-button-logout {
-    color: #9D2628 !important;
+/* === Subscription button === */
+.nav-button-subscription {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    padding: 8px 16px;
+    margin-left: 8px;
+    transition: opacity 0.2s, transform 0.15s;
 }
 
-.nav-button-logout:hover {
-    color: #FF4444 !important;
+.nav-button-subscription:hover {
+    opacity: 0.85;
+    transform: scale(1.04);
+}
+
+.nav-button-subscription:active {
+    transform: scale(0.98);
+}
+
+/* PRO active state — gold solid */
+.nav-button-subscription--active {
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+    color: #000;
+}
+
+/* Free user — outline style */
+.nav-button-subscription--upgrade {
+    background: transparent;
+    color: #FFD700;
+    border: 1.5px solid #FFD700;
+}
+
+.nav-button-subscription--upgrade:hover {
+    background: rgba(255, 215, 0, 0.08);
+}
+
+.nav-button-subscription__icon {
+    font-size: 12px;
+    line-height: 1;
 }
 
 @media (max-width: 768px) {

@@ -216,32 +216,46 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                     <p className="progress-message">{data.weekly_progress_message || ''}</p>
                   </div>
 
-                  <div className={`ai-plan-section ${!isPro() ? 'nutrition-locked-wrapper' : ''}`}>
+                  <div className="ai-plan-section">
                     <h3>AI Plan</h3>
-                    <div className={`ai-plan-grid ${!isPro() ? 'nutrition-blurred' : ''}`}>
-                      {aiPlan.map((item, i) => (
-                        <CircularProgress
-                          key={i}
-                          progress={item.total ? (item.current / item.total) * 100 : 0}
-                          color={item.color}
-                          label={item.label}
-                          current={item.current}
-                          total={item.total}
-                        />
-                      ))}
-                    </div>
-                    {isPro() ? (
-                      <button className="add-meal-button" onClick={onOpenAddMeal}>+ Add meal</button>
-                    ) : (
-                      <div className="nutrition-locked-overlay">
-                        <div className="nutrition-lock-icon">
-                          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <div className="ai-plan-grid-container">
+                      <div className={`ai-plan-grid ${!isPro() ? 'nutrition-blurred' : ''}`}>
+                        {aiPlan.map((item, i) => (
+                          <CircularProgress
+                            key={i}
+                            progress={item.total ? (item.current / item.total) * 100 : 0}
+                            color={item.color}
+                            label={item.label}
+                            current={item.current}
+                            total={item.total}
+                          />
+                        ))}
+                      </div>
+                      {!isPro() && (
+                        <div style={{
+                          position: 'absolute',
+                          inset: 0,
+                          display: 'flex',
+                          flexDirection: 'column',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          gap: '8px',
+                          borderRadius: '8px',
+                          border: '1px solid #9D2628',
+                          background: 'rgba(10,10,10,0.55)',
+                        }}>
+                          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#9D2628" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                             <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
                             <path d="M7 11V7a5 5 0 0110 0v4"/>
                           </svg>
+                          <span style={{ color: '#9D2628', fontSize: '13px', fontWeight: 600, textAlign: 'center', letterSpacing: '0.3px' }}>
+                            Nutrition tracking available in Pro
+                          </span>
                         </div>
-                        <span className="nutrition-lock-text">Nutrition tracking available in Pro</span>
-                      </div>
+                      )}
+                    </div>
+                    {isPro() && (
+                      <button className="add-meal-button" onClick={onOpenAddMeal}>+ Add meal</button>
                     )}
                   </div>
                 </div>
