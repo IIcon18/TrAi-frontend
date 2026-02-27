@@ -5,6 +5,7 @@ import Header from '../shared/Header/Header';
 import Footer from '../shared/Footer/Footer';
 import apiClient from '../../api/apiClient';
 import ProfileSetupModal from '../shared/ProfileSetupModal';
+import { useAuth } from '../../hooks/useAuth';
 
 interface AITip {
   tip: string;
@@ -29,6 +30,7 @@ interface ProfileResponse {
 
 const Profile: React.FC = () => {
   const navigate = useNavigate();
+  const { logout } = useAuth();
   const [profile, setProfile] = useState<ProfileResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [refreshingTips, setRefreshingTips] = useState(false);
@@ -99,11 +101,8 @@ const Profile: React.FC = () => {
     }
   };
 
-  const handleLogout = () => {
-    // Очищаем токены
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('refresh_token');
-    // Перенаправляем на страницу логина
+  const handleLogout = async () => {
+    await logout();
     navigate('/login', { replace: true });
   };
 

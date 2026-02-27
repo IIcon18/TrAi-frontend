@@ -1,6 +1,7 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
-import { getUserRole, UserRole } from '../../utils/auth';
+import { UserRole } from '../../utils/auth';
+import { useAuth } from '../../hooks/useAuth';
 
 interface PrivateRouteProps {
   children: React.ReactElement;
@@ -8,14 +9,19 @@ interface PrivateRouteProps {
 }
 
 const PrivateRoute: React.FC<PrivateRouteProps> = ({ children, requiredRoles }) => {
-  const token = localStorage.getItem('access_token');
+  const { isAuthenticated, isLoading, role } = useAuth();
 
-  if (!token) {
+  // Ждём завершения гидратации из localStorage —
+  // без этого пользователь получит ложный редирект на /login при перезагрузке
+  if (isLoading) {
+    return null;
+  }
+
+  if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
   }
 
   if (requiredRoles && requiredRoles.length > 0) {
-    const role = getUserRole();
     if (!requiredRoles.includes(role)) {
       return <Navigate to="/dashboard" replace />;
     }

@@ -5,9 +5,11 @@ import "./RegistrationForm.css";
 import EyeOpen from "../assets/icons/eye.svg";
 import EyeClosed from "../assets/icons/hide_eye.svg";
 import apiClient from "../api/apiClient";
+import { useAuth } from "../hooks/useAuth";
 
 const RegistrationForm: React.FC = () => {
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const [nickname, setNickname] = useState("");
   const [email, setEmail] = useState("");
@@ -46,9 +48,7 @@ const RegistrationForm: React.FC = () => {
       });
 
       const { access_token, refresh_token, role } = response.data;
-      localStorage.setItem("access_token", access_token);
-      localStorage.setItem("refresh_token", refresh_token);
-      localStorage.setItem("user_role", role || "user");
+      login(access_token, refresh_token, role || "user");
 
       // Редирект на профиль для дозаполнения данных
       navigate("/profile");

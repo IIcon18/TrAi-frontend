@@ -7,9 +7,11 @@ import EyeClosed from "../assets/icons/hide_eye.svg";
 import NewAccountButton from "./shared/Buttons/NewAccountButton";
 import ConfirmButton from "./shared/Buttons/ConfirmButton";
 import apiClient from "../api/apiClient";
+import { useAuth } from "../hooks/useAuth";
 
 const LoginForm: React.FC = () => {
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const [formData, setFormData] = useState({
     email: "",
@@ -36,9 +38,7 @@ const LoginForm: React.FC = () => {
       });
 
       const { access_token, refresh_token, role } = response.data;
-      localStorage.setItem("access_token", access_token);
-      localStorage.setItem("refresh_token", refresh_token);
-      localStorage.setItem("user_role", role || "user");
+      login(access_token, refresh_token, role || "user");
 
       navigate("/dashboard");
     } catch (err) {

@@ -4,17 +4,17 @@ import "./Register.css"
 import Header from "../shared/Header/Header";
 import Footer from "../shared/Footer/Footer";
 import RegistrationForm from "../RegistrationForm";
+import { useAuth } from "../../hooks/useAuth";
 
 const Register: React.FC = () => {
     const navigate = useNavigate();
+    const { isAuthenticated, isLoading } = useAuth();
 
     useEffect(() => {
-        // Если пользователь уже авторизован, перенаправляем на dashboard
-        const token = localStorage.getItem('access_token');
-        if (token) {
+        if (!isLoading && isAuthenticated) {
             navigate('/dashboard', { replace: true });
         }
-    }, [navigate]);
+    }, [isAuthenticated, isLoading, navigate]);
 
     return (
         <div  className="register-page">

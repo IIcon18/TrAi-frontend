@@ -2,24 +2,17 @@
 
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getUserRole, isPro, isAdmin } from "../../../utils/auth";
 import SubscriptionSidebar from "../SubscriptionSidebar/SubscriptionSidebar";
+import { useAuth } from "../../../hooks/useAuth";
 import "./Header.css";
 
 const Header: React.FC = () => {
     const navigate = useNavigate();
-    const role = getUserRole();
+    const { isAdmin, isPro } = useAuth();
     const [subscriptionOpen, setSubscriptionOpen] = useState(false);
 
     const handleNavClick = (path: string) => {
         navigate(path);
-    };
-
-    const handleLogout = () => {
-        localStorage.removeItem("access_token");
-        localStorage.removeItem("refresh_token");
-        localStorage.removeItem("user_role");
-        navigate("/login");
     };
 
     return (
