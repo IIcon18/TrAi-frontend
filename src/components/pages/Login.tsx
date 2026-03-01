@@ -5,6 +5,7 @@ import Header from "../shared/Header/Header";
 import Footer from "../shared/Footer/Footer";
 import LoginForm from "../LoginForm";
 import { useAuth } from "../../hooks/useAuth";
+import SEOHead from "../SEOHead";
 
 const Login: React.FC = () => {
     const navigate = useNavigate();
@@ -18,6 +19,13 @@ const Login: React.FC = () => {
 
     return (
         <div className="login-page">
+            <SEOHead
+                title="Вход"
+                description="Войдите в TrAi — персональный фитнес-трекер с ИИ-тренировками и трекингом питания"
+                canonical="http://localhost:3000/login"
+                ogTitle="TrAi — Вход в аккаунт"
+                ogDescription="Персональный тренер с ИИ-рекомендациями по тренировкам и питанию"
+            />
             <Header />
 
             <main className="main-content">

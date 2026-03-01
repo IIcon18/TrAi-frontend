@@ -6,6 +6,7 @@ import Footer from '../shared/Footer/Footer';
 import apiClient from '../../api/apiClient';
 import ProfileSetupModal from '../shared/ProfileSetupModal';
 import { useAuth } from '../../hooks/useAuth';
+import SEOHead from '../SEOHead';
 
 interface AITip {
   tip: string;
@@ -113,6 +114,11 @@ const Profile: React.FC = () => {
 
   return (
     <div className="profile-page">
+      <SEOHead
+        title="Профиль"
+        description="Управление профилем и настройками TrAi"
+        noIndex={true}
+      />
       <Header />
       <main className="profile-main">
         {loading ? (

@@ -13,6 +13,7 @@ import type { DashboardResponse } from '../../types/dashboard';
 import { ReactComponent as GraphIcon } from '../../assets/icons/free-icon-graph-2567990.svg';
 import { ReactComponent as DartboardIcon } from '../../assets/icons/free-icon-dartboard-1654809.svg';
 import { ReactComponent as PlayIcon } from '../../assets/icons/free-icon-play-button-153770_1.svg';
+import SEOHead from '../SEOHead';
 
 // Функция для создания плавных кривых Безье с учетом соседних точек
 const createSmoothPath = (points: { x: number; y: number }[]): string => {
@@ -358,6 +359,11 @@ const Dashboard: React.FC = () => {
 
   return (
     <>
+      <SEOHead
+        title="Дашборд"
+        description="Ваш персональный фитнес-дашборд в TrAi"
+        noIndex={true}
+      />
       <DashboardView
         data={data}
         onOpenAddMeal={() => setIsAddMealOpen(true)}

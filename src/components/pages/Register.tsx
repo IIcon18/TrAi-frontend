@@ -5,6 +5,7 @@ import Header from "../shared/Header/Header";
 import Footer from "../shared/Footer/Footer";
 import RegistrationForm from "../RegistrationForm";
 import { useAuth } from "../../hooks/useAuth";
+import SEOHead from "../SEOHead";
 
 const Register: React.FC = () => {
     const navigate = useNavigate();
@@ -18,6 +19,13 @@ const Register: React.FC = () => {
 
     return (
         <div  className="register-page">
+            <SEOHead
+                title="Регистрация"
+                description="Создайте аккаунт TrAi и начните тренироваться умнее с ИИ-поддержкой и трекингом прогресса"
+                canonical="http://localhost:3000/register"
+                ogTitle="TrAi — Регистрация"
+                ogDescription="Персональный фитнес-трекер с ИИ-рекомендациями"
+            />
             <Header />
 
             <main className="main-content">

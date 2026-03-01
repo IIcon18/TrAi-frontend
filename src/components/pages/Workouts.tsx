@@ -5,6 +5,7 @@ import Footer from '../shared/Footer/Footer';
 import AddWorkoutModal from '../shared/AddWorkoutModal';
 import WorkoutHistoryList from '../WorkoutHistoryList';
 import apiClient from '../../api/apiClient';
+import SEOHead from '../SEOHead';
 import { ReactComponent as ConfirmIcon } from '../../assets/icons/confirm.svg';
 import { ReactComponent as RedoIcon } from '../../assets/icons/free-icon-redo-3185862.svg';
 import { ReactComponent as PlusIcon } from '../../assets/icons/free-icon-plus-2549959.svg';
@@ -202,6 +203,11 @@ const Workouts: React.FC = () => {
 
   return (
     <div className="wk-page">
+      <SEOHead
+        title="Тренировки"
+        description="Управляйте тренировками и упражнениями в TrAi"
+        noIndex={true}
+      />
       <Header />
       <main className="wk-main">
         <div className="wk-container">

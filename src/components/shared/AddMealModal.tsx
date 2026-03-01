@@ -28,6 +28,7 @@ const AddMealModal: React.FC<AddMealModalProps> = ({ isOpen, onClose, onMealAdde
     const [loading, setLoading] = useState(false);
     const [mealId, setMealId] = useState<number | null>(null);
     const [error, setError] = useState<string>('');
+    const [searchSource, setSearchSource] = useState<string>('');
 
     const resetState = useCallback(() => {
         setStep('select');
@@ -37,6 +38,7 @@ const AddMealModal: React.FC<AddMealModalProps> = ({ isOpen, onClose, onMealAdde
         setSelectedDish(null);
         setQuantity(100);
         setMealId(null);
+        setSearchSource('');
         setError('');
         setLoading(false);
     }, []);
@@ -75,6 +77,7 @@ const AddMealModal: React.FC<AddMealModalProps> = ({ isOpen, onClose, onMealAdde
         try {
             const res = await apiClient.post('/dishes/search', { query: searchQuery });
             setSearchResults(res.data.results || []);
+            setSearchSource(res.data.source || '');
             if ((res.data.results || []).length === 0) {
                 // Если в базе не нашли — пробуем analyze через AI
                 try {
@@ -235,6 +238,13 @@ const AddMealModal: React.FC<AddMealModalProps> = ({ isOpen, onClose, onMealAdde
                             {!loading && searchQuery && searchResults.length === 0 && (
                                 <p style={{ color: '#999', textAlign: 'center', fontSize: 13 }}>
                                     No results. Try a different query.
+                                </p>
+                            )}
+                            {!loading && searchResults.length > 0 && searchSource && (
+                                <p style={{ color: '#666', textAlign: 'center', fontSize: 11, marginTop: 8 }}>
+                                    {searchSource === 'openfoodfacts' && 'Источник: OpenFoodFacts'}
+                                    {searchSource === 'ai' && 'Источник: ИИ-анализ'}
+                                    {searchSource === 'database' && 'Источник: база данных TrAi'}
                                 </p>
                             )}
                         </div>

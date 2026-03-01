@@ -6,6 +6,7 @@ import Footer from '../shared/Footer/Footer';
 import GoalOverviewCircle from '../shared/GoalOverviewCircle';
 import ProgressPhotos from '../ProgressPhotos';
 import apiClient from '../../api/apiClient';
+import SEOHead from '../SEOHead';
 
 // Интерфейс для данных страницы
 interface ProgressData {
@@ -189,6 +190,11 @@ const Progress: React.FC = () => {
     if (loading) {
         return (
             <div className="progress-page">
+                <SEOHead
+                    title="Прогресс"
+                    description="Отслеживание прогресса и физических показателей в TrAi"
+                    noIndex={true}
+                />
                 <Header />
                 <main className="progress-main">
                     <div className="progress-container">

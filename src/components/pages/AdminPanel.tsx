@@ -5,6 +5,7 @@ import Header from '../shared/Header/Header';
 import Footer from '../shared/Footer/Footer';
 import apiClient from '../../api/apiClient';
 import './AdminPanel.css';
+import SEOHead from '../SEOHead';
 
 interface AdminUser {
     id: number;
@@ -92,6 +93,11 @@ const AdminPanel: React.FC = () => {
 
     return (
         <div className="admin-page">
+            <SEOHead
+                title="Панель администратора"
+                description="Административная панель TrAi"
+                noIndex={true}
+            />
             <Header />
             <div className="admin-container">
                 <h1 className="admin-title">Admin Panel</h1>
