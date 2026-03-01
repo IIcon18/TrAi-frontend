@@ -3,13 +3,11 @@ import './Workouts.css';
 import Header from '../shared/Header/Header';
 import Footer from '../shared/Footer/Footer';
 import AddWorkoutModal from '../shared/AddWorkoutModal';
+import WorkoutHistoryList from '../WorkoutHistoryList';
 import apiClient from '../../api/apiClient';
-import { isPro } from '../../utils/auth';
 import { ReactComponent as ConfirmIcon } from '../../assets/icons/confirm.svg';
 import { ReactComponent as RedoIcon } from '../../assets/icons/free-icon-redo-3185862.svg';
 import { ReactComponent as PlusIcon } from '../../assets/icons/free-icon-plus-2549959.svg';
-import { ReactComponent as GraphIcon } from '../../assets/icons/free-icon-graph-2567990.svg';
-import { ReactComponent as DartboardIcon } from '../../assets/icons/free-icon-dartboard-1654809.svg';
 
 type MuscleGroup = 'upper_body_push' | 'upper_body_pull' | 'core_stability' | 'lower_body';
 type DayName = 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday' | 'Sunday';
@@ -57,6 +55,8 @@ const Workouts: React.FC = () => {
   const [completing, setCompleting] = useState(false);
   const [aiRemaining, setAiRemaining] = useState<number | null>(null);
   const [aiUnlimited, setAiUnlimited] = useState(false);
+  const [viewMode, setViewMode] = useState<'current' | 'history'>('current');
+  const [editingWorkout, setEditingWorkout] = useState<any | null>(null);
 
   // Exercise technique popup
   const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(null);
@@ -206,8 +206,14 @@ const Workouts: React.FC = () => {
       <main className="wk-main">
         <div className="wk-container">
           <div className="wk-content">
-            {/* Left Column: Plan */}
+            {/* Left Column: Plan or History */}
             <div className="wk-plan-card">
+            {viewMode === 'history' ? (
+              <WorkoutHistoryList
+                onBack={() => setViewMode('current')}
+                onEdit={(w) => { setEditingWorkout(w); setViewMode('current'); }}
+              />
+            ) : (<>
               <h2 className="wk-plan-title">Your Plan!</h2>
               <div className="wk-plan-tabs">
                 {(Object.keys(muscleGroups) as MuscleGroup[]).map((group) => (
@@ -321,20 +327,20 @@ const Workouts: React.FC = () => {
                   )}
                 </button>
               </div>
+            </>)}
             </div>
 
             {/* Right Column */}
             <div className="wk-right-column">
               <div className="wk-actions-card">
-                <h3 className="wk-actions-title">Actions</h3>
+                <h3 className="wk-actions-title">Workout History</h3>
                 <div className="wk-actions-buttons">
-                  <button className="wk-action-button wk-open-statistic" onClick={() => window.location.href = '/progress'}>
-                    <GraphIcon className="wk-btn-icon" />
-                    Open statistic
-                  </button>
-                  <button className="wk-action-button wk-change-goal" onClick={() => window.location.href = '/dashboard'}>
-                    <DartboardIcon className="wk-btn-icon" />
-                    Change goal
+                  <button
+                    className="wk-action-button wk-open-statistic"
+                    onClick={() => setViewMode(viewMode === 'history' ? 'current' : 'history')}
+                  >
+                    <PlusIcon className="wk-btn-icon" />
+                    {viewMode === 'history' ? '← Back to Plan' : 'View History →'}
                   </button>
                 </div>
                 <div className="bot-status bot-status--dev">
@@ -455,8 +461,9 @@ const Workouts: React.FC = () => {
       )}
 
       <AddWorkoutModal
-        isOpen={isAddWorkoutOpen}
-        onClose={() => setIsAddWorkoutOpen(false)}
+        isOpen={isAddWorkoutOpen || !!editingWorkout}
+        onClose={() => { setIsAddWorkoutOpen(false); setEditingWorkout(null); }}
+        editWorkout={editingWorkout}
         onWorkoutAdded={() => {
           // Ручная тренировка добавлена — не генерируем AI
         }}

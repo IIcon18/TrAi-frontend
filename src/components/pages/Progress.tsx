@@ -4,9 +4,8 @@ import './Progress.css';
 import Header from '../shared/Header/Header';
 import Footer from '../shared/Footer/Footer';
 import GoalOverviewCircle from '../shared/GoalOverviewCircle';
-import AddMealModal from '../shared/AddMealModal';
+import ProgressPhotos from '../ProgressPhotos';
 import apiClient from '../../api/apiClient';
-import { isPro } from '../../utils/auth';
 
 // Интерфейс для данных страницы
 interface ProgressData {
@@ -104,7 +103,6 @@ const Progress: React.FC = () => {
     const [progressData, setProgressData] = useState<ProgressData>(emptyProgressData);
     const [aiMessage, setAiMessage] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(true);
-    const [isAddMealOpen, setIsAddMealOpen] = useState(false);
     const [workoutStats, setWorkoutStats] = useState<WorkoutStatsResponse | null>(null);
 
     const metricMap: Record<string, string> = {
@@ -425,54 +423,13 @@ const Progress: React.FC = () => {
                                 </div>
                             </div>
 
-                            {/* Nutrition */}
-                            <div className={`progress-nutrition-card ${!isPro() ? 'nutrition-locked-wrapper' : ''}`}>
-                                <h3 className="progress-card-title">Your Nutrition Progress</h3>
-                                <div className={`nutrition-progress-list ${!isPro() ? 'nutrition-blurred' : ''}`}>
-                                    {['proteins', 'carbohydrates', 'fats'].map((macro) => {
-                                        const current = progressData.nutritionProgress[macro as keyof ProgressData['nutritionProgress']].current;
-                                        const total = progressData.nutritionProgress[macro as keyof ProgressData['nutritionProgress']].total;
-                                        return (
-                                            <div key={macro} className="nutrition-item">
-                                                <div className="nutrition-label">{macro.charAt(0).toUpperCase() + macro.slice(1)}</div>
-                                                <div className="nutrition-bar">
-                                                    <div
-                                                        className="nutrition-fill"
-                                                        style={{ width: total ? `${(current / total) * 100}%` : '0%', backgroundColor: '#9D2628' }}
-                                                    ></div>
-                                                </div>
-                                                <div className="nutrition-value">{current}/{total}g</div>
-                                            </div>
-                                        );
-                                    })}
-                                </div>
-                                {isPro() ? (
-                                    <button className="progress-add-meal-button" onClick={() => setIsAddMealOpen(true)}>+ Add meal</button>
-                                ) : (
-                                    <div className="nutrition-locked-overlay">
-                                        <div className="nutrition-lock-icon">
-                                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-                                                <path d="M7 11V7a5 5 0 0110 0v4"/>
-                                            </svg>
-                                        </div>
-                                        <span className="nutrition-lock-text">Nutrition tracking available in Pro</span>
-                                    </div>
-                                )}
-                            </div>
+                            {/* Progress Photos */}
+                            <ProgressPhotos />
                         </div>
                     </div>
                 </div>
             </main>
             <Footer />
-            <AddMealModal
-                isOpen={isAddMealOpen}
-                onClose={() => setIsAddMealOpen(false)}
-                onMealAdded={() => {
-                    const metric = metricMap[activeTab] || 'weight';
-                    fetchProgressData(metric);
-                }}
-            />
         </div>
     );
 };

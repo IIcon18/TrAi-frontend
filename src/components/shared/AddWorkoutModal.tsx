@@ -16,10 +16,18 @@ interface Exercise {
     intensity: Intensity;
 }
 
+interface WorkoutToEdit {
+    id: number;
+    name: string;
+    muscle_group: string | null;
+    difficulty: string | null;
+}
+
 interface AddWorkoutModalProps {
     isOpen: boolean;
     onClose: () => void;
     onWorkoutAdded?: () => void;
+    editWorkout?: WorkoutToEdit | null;
 }
 
 const muscleGroups: { value: MuscleGroup; label: string }[] = [
@@ -38,9 +46,11 @@ const equipmentOptions = [
     { value: 'none', label: 'No Equipment' },
 ];
 
-const AddWorkoutModal: React.FC<AddWorkoutModalProps> = ({ isOpen, onClose, onWorkoutAdded }) => {
-    const [step, setStep] = useState<'select' | 'add-exercises' | 'success'>('select');
+const AddWorkoutModal: React.FC<AddWorkoutModalProps> = ({ isOpen, onClose, onWorkoutAdded, editWorkout }) => {
+    const isEditMode = !!editWorkout;
+    const [step, setStep] = useState<'select' | 'add-exercises' | 'edit' | 'success'>('select');
     const [workoutName, setWorkoutName] = useState<string>('');
+    const [workoutDifficulty, setWorkoutDifficulty] = useState<'easy' | 'medium' | 'hard'>('medium');
     const [selectedMuscleGroup, setSelectedMuscleGroup] = useState<MuscleGroup>('upper_body_push');
     const [exercises, setExercises] = useState<Exercise[]>([]);
     const [currentExercise, setCurrentExercise] = useState<Exercise>({
@@ -55,9 +65,16 @@ const AddWorkoutModal: React.FC<AddWorkoutModalProps> = ({ isOpen, onClose, onWo
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string>('');
 
+    // Edit mode fields
+    const [editName, setEditName] = useState(editWorkout?.name || '');
+    const [editMuscleGroup, setEditMuscleGroup] = useState(editWorkout?.muscle_group || 'upper_body_push');
+    const [editDifficulty, setEditDifficulty] = useState(editWorkout?.difficulty || 'medium');
+    const [editNameError, setEditNameError] = useState('');
+
     const resetState = useCallback(() => {
         setStep('select');
         setWorkoutName('');
+        setWorkoutDifficulty('medium');
         setSelectedMuscleGroup('upper_body_push');
         setExercises([]);
         setCurrentExercise({
@@ -115,6 +132,7 @@ const AddWorkoutModal: React.FC<AddWorkoutModalProps> = ({ isOpen, onClose, onWo
             await apiClient.post('/workouts/create-manual', {
                 name: workoutName,
                 muscle_group: selectedMuscleGroup,
+                difficulty: workoutDifficulty,
                 exercises: exercises,
             });
 
@@ -143,13 +161,76 @@ const AddWorkoutModal: React.FC<AddWorkoutModalProps> = ({ isOpen, onClose, onWo
         }
     };
 
+    const handleSaveEdit = async () => {
+        if (!editName.trim() || editName.trim().length < 3) {
+            setEditNameError('Name must be at least 3 characters');
+            return;
+        }
+        setEditNameError('');
+        setLoading(true);
+        try {
+            await apiClient.put(`/workouts/${editWorkout!.id}`, {
+                name: editName.trim(),
+                muscle_group: editMuscleGroup,
+                difficulty: editDifficulty,
+            });
+            setStep('success');
+            if (onWorkoutAdded) onWorkoutAdded();
+            setTimeout(() => { resetState(); onClose(); }, 1500);
+        } catch (err: any) {
+            setEditNameError(err?.response?.data?.detail || 'Failed to update workout');
+        } finally {
+            setLoading(false);
+        }
+    };
+
     // Проверка видимости модалки (ПОСЛЕ всех хуков!)
     if (!isOpen) return null;
 
     return (
         <div className="add-workout-backdrop" onClick={handleClickBackdrop}>
             <div className="add-workout-modal">
-                {step === 'select' && (
+                {/* Edit mode */}
+                {isEditMode && step !== 'success' && (
+                    <>
+                        <h3>Edit Workout</h3>
+                        {editNameError && <div className="error-message">{editNameError}</div>}
+                        <div className="form-group">
+                            <label>Name</label>
+                            <input
+                                type="text"
+                                className="exercise-input"
+                                value={editName}
+                                onChange={(e) => setEditName(e.target.value)}
+                                placeholder="Workout name (min 3 chars)"
+                                minLength={3}
+                                maxLength={100}
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label>Muscle Group</label>
+                            <select className="exercise-select" value={editMuscleGroup} onChange={(e) => setEditMuscleGroup(e.target.value)}>
+                                {muscleGroups.map(g => <option key={g.value} value={g.value}>{g.label}</option>)}
+                            </select>
+                        </div>
+                        <div className="form-group">
+                            <label>Difficulty</label>
+                            <select className="exercise-select" value={editDifficulty} onChange={(e) => setEditDifficulty(e.target.value)}>
+                                <option value="easy">Easy</option>
+                                <option value="medium">Medium</option>
+                                <option value="hard">Hard</option>
+                            </select>
+                        </div>
+                        <div className="modal-actions">
+                            <button className="btn-secondary" onClick={() => { resetState(); onClose(); }}>Cancel</button>
+                            <button className="btn-primary" onClick={handleSaveEdit} disabled={loading}>
+                                {loading ? 'Saving...' : 'Save Changes'}
+                            </button>
+                        </div>
+                    </>
+                )}
+
+                {!isEditMode && step === 'select' && (
                     <>
                         <h3>Create Workout</h3>
                         {error && <div className="error-message">{error}</div>}
@@ -169,10 +250,36 @@ const AddWorkoutModal: React.FC<AddWorkoutModalProps> = ({ isOpen, onClose, onWo
                     </>
                 )}
 
-                {step === 'add-exercises' && (
+                {!isEditMode && step === 'add-exercises' && (
                     <>
-                        <h3>{workoutName}</h3>
+                        <h3>Create Workout</h3>
                         {error && <div className="error-message">{error}</div>}
+
+                        <div className="form-row">
+                            <div className="form-group" style={{ flex: 2 }}>
+                                <label>Workout Name</label>
+                                <input
+                                    type="text"
+                                    className="exercise-input"
+                                    value={workoutName}
+                                    onChange={(e) => setWorkoutName(e.target.value)}
+                                    placeholder="Workout name"
+                                    maxLength={100}
+                                />
+                            </div>
+                            <div className="form-group" style={{ flex: 1 }}>
+                                <label>Difficulty</label>
+                                <select
+                                    className="exercise-select"
+                                    value={workoutDifficulty}
+                                    onChange={(e) => setWorkoutDifficulty(e.target.value as 'easy' | 'medium' | 'hard')}
+                                >
+                                    <option value="easy">Easy</option>
+                                    <option value="medium">Medium</option>
+                                    <option value="hard">Hard</option>
+                                </select>
+                            </div>
+                        </div>
 
                         {/* Список добавленных упражнений */}
                         {exercises.length > 0 && (

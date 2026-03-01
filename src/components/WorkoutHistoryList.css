@@ -1,0 +1,230 @@
+/* WorkoutHistoryList.css */
+
+.wh-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.wh-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.wh-back-btn {
+  background: transparent;
+  border: 1px solid #444;
+  color: #ccc;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.wh-back-btn:hover { border-color: #9D2628; color: white; }
+
+.wh-title {
+  font-size: 22px;
+  font-weight: 600;
+  color: white;
+  margin: 0;
+}
+
+/* Filters */
+.wh-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.wh-search {
+  flex: 1;
+  min-width: 160px;
+  background: #2D2D2D;
+  border: 1px solid #444;
+  border-radius: 8px;
+  color: white;
+  padding: 8px 12px;
+  font-size: 14px;
+  outline: none;
+}
+.wh-search:focus { border-color: #9D2628; }
+
+.wh-select {
+  background: #2D2D2D;
+  border: 1px solid #444;
+  border-radius: 8px;
+  color: white;
+  padding: 8px 10px;
+  font-size: 14px;
+  cursor: pointer;
+  outline: none;
+}
+.wh-select:focus { border-color: #9D2628; }
+
+.wh-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  color: #ccc;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.wh-checkbox-label input { accent-color: #9D2628; cursor: pointer; }
+
+.wh-reset-btn {
+  background: transparent;
+  border: 1px solid #9D2628;
+  color: #9D2628;
+  padding: 7px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: all 0.2s;
+}
+.wh-reset-btn:hover { background: #9D2628; color: white; }
+
+/* Table */
+.wh-table {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #2D2D2D;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.wh-table-head {
+  display: grid;
+  grid-template-columns: 2fr 1.5fr 1fr 1fr 1fr 1fr;
+  background: #2D2D2D;
+  padding: 10px 16px;
+  gap: 8px;
+}
+
+.wh-th {
+  font-size: 12px;
+  font-weight: 600;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.wh-th.wh-sortable {
+  cursor: pointer;
+  user-select: none;
+  transition: color 0.2s;
+}
+.wh-th.wh-sortable:hover { color: white; }
+
+.wh-sort-arrow { margin-left: 4px; }
+.wh-sort-neutral { color: #555; }
+.wh-sort-active { color: #9D2628; }
+
+.wh-table-row {
+  display: grid;
+  grid-template-columns: 2fr 1.5fr 1fr 1fr 1fr 1fr;
+  padding: 12px 16px;
+  gap: 8px;
+  border-top: 1px solid #1F1F1F;
+  align-items: center;
+  transition: background 0.15s;
+}
+.wh-table-row:hover { background: rgba(255,255,255,0.02); }
+
+.wh-td {
+  font-size: 14px;
+  color: #ddd;
+}
+
+.wh-td-name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+  color: white;
+}
+
+.wh-ai-badge {
+  background: #9D2628;
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 5px;
+  border-radius: 4px;
+}
+
+.wh-status-done { color: #4CAF50; font-size: 13px; }
+.wh-status-pending { color: #888; font-size: 13px; }
+
+.wh-actions-cell {
+  display: flex;
+  gap: 6px;
+}
+
+.wh-btn-edit {
+  background: transparent;
+  border: 1px solid #555;
+  color: #ccc;
+  padding: 5px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.2s;
+}
+.wh-btn-edit:hover { border-color: white; color: white; }
+
+.wh-btn-delete {
+  background: transparent;
+  border: 1px solid #5c1a1a;
+  color: #c44;
+  padding: 5px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.2s;
+}
+.wh-btn-delete:hover { background: #9D2628; border-color: #9D2628; color: white; }
+.wh-btn-delete:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.wh-btn-done {
+  background: transparent;
+  border: 1px solid #2e6b2e;
+  color: #4CAF50;
+  padding: 5px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.2s;
+}
+.wh-btn-done:hover { background: #2e6b2e; color: white; }
+.wh-btn-done:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* Pagination */
+.wh-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.wh-page-btn {
+  background: #2D2D2D;
+  border: 1px solid #444;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+.wh-page-btn:hover:not(:disabled) { border-color: #9D2628; }
+.wh-page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.wh-page-info { color: #888; font-size: 14px; }
+
+.wh-loading { color: #888; text-align: center; padding: 24px 0; }
+.wh-empty { color: #666; text-align: center; padding: 32px 0; font-size: 15px; }

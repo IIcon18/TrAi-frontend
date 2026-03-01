@@ -116,6 +116,90 @@
     color: #fff;
 }
 
+.admin-filters {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+}
+
+.admin-search {
+    flex: 1;
+    min-width: 200px;
+    background: #1A1A1A;
+    border: 1px solid #333;
+    border-radius: 8px;
+    color: #fff;
+    padding: 10px 14px;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.admin-search::placeholder {
+    color: #555;
+}
+
+.admin-search:focus {
+    border-color: #9D2628;
+}
+
+.admin-role-filter {
+    background: #1A1A1A;
+    border: 1px solid #333;
+    border-radius: 8px;
+    color: #fff;
+    padding: 10px 14px;
+    font-size: 14px;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.admin-role-filter:focus {
+    border-color: #9D2628;
+}
+
+.admin-empty {
+    text-align: center;
+    color: #555;
+    padding: 32px !important;
+}
+
+.admin-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 24px;
+}
+
+.admin-page-btn {
+    background: #1A1A1A;
+    border: 1px solid #333;
+    border-radius: 8px;
+    color: #fff;
+    padding: 8px 18px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.admin-page-btn:hover:not(:disabled) {
+    border-color: #9D2628;
+    color: #9D2628;
+}
+
+.admin-page-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.admin-page-info {
+    font-size: 14px;
+    color: #B9B9B9;
+}
+
 @media (max-width: 768px) {
     .admin-container {
         padding: 20px 10px;
