@@ -31,6 +31,11 @@ jobs:
         run: npx tsc --noEmit || echo "Type errors found (non-blocking)"
         continue-on-error: true
 
+      - name: Run tests
+        run: npm test -- --watchAll=false --passWithNoTests
+        env:
+          CI: true
+
       - name: Build
         run: CI=false npm run build
 
@@ -53,3 +58,25 @@ jobs:
 
       - name: Verify image
         run: docker images trai-frontend
+
+  publish:
+    runs-on: ubuntu-latest
+    needs: docker-build
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        run: |
+          IMAGE=ghcr.io/${{ github.repository }}/trai-frontend
+          docker build -t $IMAGE:${{ github.sha }} -t $IMAGE:latest .
+          docker push $IMAGE:${{ github.sha }}
+          docker push $IMAGE:latest
