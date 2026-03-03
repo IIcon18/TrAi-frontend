@@ -76,7 +76,7 @@ jobs:
 
       - name: Build and push Docker image
         run: |
-          IMAGE=ghcr.io/${{ github.repository }}/trai-frontend
+          IMAGE=ghcr.io/$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')/trai-frontend
           docker build -t $IMAGE:${{ github.sha }} -t $IMAGE:latest .
           docker push $IMAGE:${{ github.sha }}
           docker push $IMAGE:latest
