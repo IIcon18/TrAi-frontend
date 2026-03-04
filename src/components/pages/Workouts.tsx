@@ -34,10 +34,10 @@ interface Workout {
 }
 
 const muscleGroups: { [key in MuscleGroup]: string } = {
-  upper_body_push: 'Upper body push',
-  upper_body_pull: 'Upper body pull',
-  core_stability: 'Core & stability',
-  lower_body: 'Lower body',
+  upper_body_push: 'Верхняя часть (толчок)',
+  upper_body_pull: 'Верхняя часть (тяга)',
+  core_stability: 'Корпус и стабильность',
+  lower_body: 'Нижняя часть тела',
 };
 
 const dayNames: DayName[] = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
@@ -64,8 +64,8 @@ const Workouts: React.FC = () => {
 
   const displayDate = selectedDate;
   const day = displayDate.getDate();
-  const month = displayDate.toLocaleString('default', { month: 'long' });
-  const dayName = displayDate.toLocaleString('default', { weekday: 'long' });
+  const month = displayDate.toLocaleString('ru-RU', { month: 'long' });
+  const dayName = displayDate.toLocaleString('ru-RU', { weekday: 'long' });
 
   const activeWorkout = workoutsByGroup[selectedGroup] || null;
 
@@ -98,7 +98,7 @@ const Workouts: React.FC = () => {
         const detail = err.response?.data?.detail || 'AI generation limit reached. Upgrade to Pro!';
         alert(detail);
       } else if (err?.response?.status !== 401) {
-        alert('Failed to generate workout. Try again.');
+        alert('Не удалось сгенерировать тренировку. Попробуйте снова.');
       }
     } finally {
       setGenerating(false);
@@ -132,11 +132,11 @@ const Workouts: React.FC = () => {
         }
       }));
 
-      alert('🎉 Workout completed! Great job!');
+      alert('🎉 Тренировка завершена! Отличная работа!');
     } catch (err: any) {
       console.error('Failed to complete workout:', err);
       if (err?.response?.status !== 401) {
-        alert('Failed to complete workout. Try again.');
+        alert('Не удалось завершить тренировку. Попробуйте снова.');
       }
     } finally {
       setCompleting(false);
@@ -193,7 +193,7 @@ const Workouts: React.FC = () => {
   const getTomorrowMessage = (): string => {
     const tomorrow = new Date(selectedDate);
     tomorrow.setDate(tomorrow.getDate() + 1);
-    return isTrainingDay(tomorrow) ? 'Tomorrow you have workout!' : 'Tomorrow you have rest!';
+    return isTrainingDay(tomorrow) ? 'Завтра у вас тренировка!' : 'Завтра у вас отдых!';
   };
 
   const prevDay = () => { const d = new Date(selectedDate); d.setDate(d.getDate() - 1); setSelectedDate(d); };
@@ -220,7 +220,7 @@ const Workouts: React.FC = () => {
                 onEdit={(w) => { setEditingWorkout(w); setViewMode('current'); }}
               />
             ) : (<>
-              <h2 className="wk-plan-title">Your Plan!</h2>
+              <h2 className="wk-plan-title">Ваш план!</h2>
               <div className="wk-plan-tabs">
                 {(Object.keys(muscleGroups) as MuscleGroup[]).map((group) => (
                   <button
@@ -237,15 +237,15 @@ const Workouts: React.FC = () => {
               <div className="wk-plan-table">
                 <div className="wk-table-header">
                   <div className="wk-header-cell">#</div>
-                  <div className="wk-header-cell">Exercise</div>
-                  <div className="wk-header-cell">Sets x Reps</div>
-                  <div className="wk-header-cell">Weight</div>
-                  <div className="wk-header-cell">Load</div>
+                  <div className="wk-header-cell">Упражнение</div>
+                  <div className="wk-header-cell">Подх. x Повт.</div>
+                  <div className="wk-header-cell">Вес</div>
+                  <div className="wk-header-cell">Нагрузка</div>
                 </div>
 
                 {generating ? (
                   <div className="wk-table-row">
-                    <div className="wk-cell wk-cell-full">Generating workout...</div>
+                    <div className="wk-cell wk-cell-full">Генерация тренировки...</div>
                   </div>
                 ) : activeWorkout && activeWorkout.exercises.length > 0 ? (
                   activeWorkout.exercises.map((ex, idx) => (
@@ -283,13 +283,13 @@ const Workouts: React.FC = () => {
                   <div className="wk-empty-state">
                     <div className="wk-empty-icon">&#9889;</div>
                     <p className="wk-empty-text">
-                      Click <strong>"Generate AI Workout"</strong> to create a personalized workout for this muscle group
+                      Нажмите <strong>«Сгенерировать тренировку»</strong> для создания персональной тренировки для этой группы мышц
                     </p>
                     {!aiUnlimited && aiRemaining !== null && (
                       <span className="wk-ai-counter-hint">
                         {aiRemaining > 0
-                          ? `${aiRemaining}/3 free AI generations left this month`
-                          : 'Free AI generations used up. Upgrade to Pro!'}
+                          ? `${aiRemaining}/3 бесплатных ИИ-генераций осталось в этом месяце`
+                          : 'Бесплатные ИИ-генерации исчерпаны. Перейдите на Pro!'}
                       </span>
                     )}
                   </div>
@@ -304,13 +304,13 @@ const Workouts: React.FC = () => {
                     disabled={isLoading || completing}
                   >
                     <ConfirmIcon className="wk-btn-icon" />
-                    {completing ? 'Completing...' : 'Complete Workout'}
+                    {completing ? 'Завершение...' : 'Завершить тренировку'}
                   </button>
                 )}
                 {activeWorkout && activeWorkout.completed && (
                   <div className="wk-completed-badge">
                     <ConfirmIcon className="wk-btn-icon" />
-                    Workout Completed!
+                    Тренировка завершена!
                   </div>
                 )}
                 <button
@@ -319,7 +319,7 @@ const Workouts: React.FC = () => {
                   disabled={isLoading}
                 >
                   <PlusIcon className="wk-btn-icon" />
-                  Add Workout
+                  Добавить тренировку
                 </button>
                 <button
                   className={`wk-action-button wk-generate-new ${!aiUnlimited && aiRemaining !== null && aiRemaining <= 0 ? 'wk-btn-disabled' : ''}`}
@@ -327,7 +327,7 @@ const Workouts: React.FC = () => {
                   disabled={generating || (!aiUnlimited && aiRemaining !== null && aiRemaining <= 0)}
                 >
                   <RedoIcon className="wk-btn-icon" />
-                  {generating ? 'Generating...' : 'Generate AI Workout'}
+                  {generating ? 'Генерация...' : 'Сгенерировать тренировку'}
                   {!aiUnlimited && aiRemaining !== null && (
                     <span className="wk-ai-counter">{aiRemaining}/3</span>
                   )}
@@ -339,24 +339,24 @@ const Workouts: React.FC = () => {
             {/* Right Column */}
             <div className="wk-right-column">
               <div className="wk-actions-card">
-                <h3 className="wk-actions-title">Workout History</h3>
+                <h3 className="wk-actions-title">История тренировок</h3>
                 <div className="wk-actions-buttons">
                   <button
                     className="wk-action-button wk-open-statistic"
                     onClick={() => setViewMode(viewMode === 'history' ? 'current' : 'history')}
                   >
                     <PlusIcon className="wk-btn-icon" />
-                    {viewMode === 'history' ? '← Back to Plan' : 'View History →'}
+                    {viewMode === 'history' ? '← К плану' : 'История →'}
                   </button>
                 </div>
                 <div className="bot-status bot-status--dev">
                   <div className="status-dot"></div>
-                  <span>Bot in development</span>
+                  <span>Бот в разработке</span>
                 </div>
               </div>
 
               <div className="wk-calendar-card">
-                <h3 className="wk-calendar-title">Your Calendar</h3>
+                <h3 className="wk-calendar-title">Ваш календарь</h3>
                 <div className="wk-calendar-swipe-container">
                   <button className="wk-calendar-arrow wk-calendar-arrow-left" onClick={prevDay}>&#8249;</button>
                   <div
@@ -386,33 +386,33 @@ const Workouts: React.FC = () => {
             </div>
             <div className="wk-technique-body">
               <div className="wk-technique-section">
-                <h4>Technique</h4>
-                <p>{selectedExercise.description || 'No description available.'}</p>
+                <h4>Техника</h4>
+                <p>{selectedExercise.description || 'Описание отсутствует.'}</p>
               </div>
               <div className="wk-technique-details">
                 <div className="wk-technique-detail">
-                  <span className="wk-detail-label">Equipment</span>
+                  <span className="wk-detail-label">Инвентарь</span>
                   <span className="wk-detail-value">
-                    {selectedExercise.equipment === 'bodyweight' ? 'Bodyweight' :
-                     selectedExercise.equipment === 'dumbbells' ? 'Dumbbells' :
-                     selectedExercise.equipment === 'barbell' ? 'Barbell' :
-                     selectedExercise.equipment === 'resistance_band' ? 'Resistance band' :
-                     'None'}
+                    {selectedExercise.equipment === 'bodyweight' ? 'Без инвентаря' :
+                     selectedExercise.equipment === 'dumbbells' ? 'Гантели' :
+                     selectedExercise.equipment === 'barbell' ? 'Штанга' :
+                     selectedExercise.equipment === 'resistance_band' ? 'Резинка' :
+                     'Без оборудования'}
                   </span>
                 </div>
                 <div className="wk-technique-detail">
-                  <span className="wk-detail-label">Sets x Reps</span>
+                  <span className="wk-detail-label">Подх. x Повт.</span>
                   <span className="wk-detail-value">{selectedExercise.sets} x {selectedExercise.reps}</span>
                 </div>
                 <div className="wk-technique-detail">
-                  <span className="wk-detail-label">Weight</span>
-                  <span className="wk-detail-value">{selectedExercise.weight > 0 ? `${selectedExercise.weight} kg` : 'Bodyweight'}</span>
+                  <span className="wk-detail-label">Вес</span>
+                  <span className="wk-detail-value">{selectedExercise.weight > 0 ? `${selectedExercise.weight} кг` : 'Без инвентаря'}</span>
                 </div>
                 <div className="wk-technique-detail">
-                  <span className="wk-detail-label">Intensity</span>
+                  <span className="wk-detail-label">Интенсивность</span>
                   <span className={`wk-detail-value wk-intensity-${selectedExercise.intensity}`}>
-                    {selectedExercise.intensity === 'high' ? 'High' :
-                     selectedExercise.intensity === 'medium' ? 'Medium' : 'Low'}
+                    {selectedExercise.intensity === 'high' ? 'Высокая' :
+                     selectedExercise.intensity === 'medium' ? 'Средняя' : 'Низкая'}
                   </span>
                 </div>
               </div>
@@ -426,18 +426,18 @@ const Workouts: React.FC = () => {
         <div className="wk-calendar-modal-backdrop" onClick={() => setIsCalendarOpen(false)}>
           <div className="wk-calendar-modal" onClick={(e) => e.stopPropagation()}>
             <div className="wk-calendar-modal-header">
-              <h2>Training Calendar</h2>
+              <h2>Календарь тренировок</h2>
               <button className="wk-calendar-close" onClick={() => setIsCalendarOpen(false)}>&times;</button>
             </div>
             <div className="wk-calendar-modal-nav">
               <button className="wk-nav-button" onClick={prevMonth}>&lt;</button>
               <span className="wk-calendar-month-title">
-                {currentMonth.toLocaleString('default', { month: 'long', year: 'numeric' })}
+                {currentMonth.toLocaleString('ru-RU', { month: 'long', year: 'numeric' })}
               </span>
               <button className="wk-nav-button" onClick={nextMonth}>&gt;</button>
             </div>
             <div className="wk-calendar-grid">
-              {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((d) => (
+              {['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'].map((d) => (
                 <div key={d} className="wk-calendar-day-header">{d}</div>
               ))}
               {getMonthDays(currentMonth).map((date, idx) => (
@@ -455,11 +455,11 @@ const Workouts: React.FC = () => {
             <div className="wk-calendar-legend">
               <div className="wk-legend-item">
                 <div className="wk-legend-color wk-legend-training"></div>
-                <span>Training day</span>
+                <span>День тренировки</span>
               </div>
               <div className="wk-legend-item">
                 <div className="wk-legend-color wk-legend-rest"></div>
-                <span>Rest day</span>
+                <span>День отдыха</span>
               </div>
             </div>
           </div>

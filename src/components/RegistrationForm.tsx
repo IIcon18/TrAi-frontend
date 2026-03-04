@@ -63,15 +63,15 @@ const RegistrationForm: React.FC = () => {
   return (
     <div className="registration-container">
       <div className="registration-box">
-        <h2 className="registration-title">Registration</h2>
+        <h2 className="registration-title">Регистрация</h2>
         <form onSubmit={handleSubmit}>
           {/* Nickname */}
           <div className="form-group">
-            <label className="input-label">Nickname:</label>
+            <label className="input-label">Никнейм:</label>
             <input
               type="text"
               className="input-field"
-              placeholder="Your nickname"
+              placeholder="Ваш никнейм"
               value={nickname}
               onChange={(e) => setNickname(e.target.value)}
             />
@@ -79,7 +79,7 @@ const RegistrationForm: React.FC = () => {
 
           {/* Email */}
           <div className="form-group">
-            <label className="input-label">Email:</label>
+            <label className="input-label">Почта:</label>
             <input
               type="email"
               className="input-field"
@@ -91,12 +91,12 @@ const RegistrationForm: React.FC = () => {
 
           {/* Password */}
           <div className="form-group">
-            <label className="input-label">Password:</label>
+            <label className="input-label">Пароль:</label>
             <div className="password-input-container">
               <input
                 type={showPassword ? "text" : "password"}
                 className="input-field password-field"
-                placeholder="Password"
+                placeholder="Пароль"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
@@ -107,7 +107,7 @@ const RegistrationForm: React.FC = () => {
               >
                 <img
                   src={showPassword ? EyeClosed : EyeOpen}
-                  alt={showPassword ? "Hide password" : "Show password"}
+                  alt={showPassword ? "Скрыть пароль" : "Показать пароль"}
                   width="20"
                   height="20"
                 />
@@ -124,7 +124,7 @@ const RegistrationForm: React.FC = () => {
 
           {/* Submit */}
           <button type="submit" className="confirm-button">
-            Confirm
+            Зарегистрироваться
           </button>
         </form>
       </div>

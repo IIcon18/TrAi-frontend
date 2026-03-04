@@ -53,15 +53,15 @@ const LoginForm: React.FC = () => {
   return (
     <div className="login-form-container">
       <div className="login-form-box">
-        <h2 className="login-form-title">Authorization</h2>
+        <h2 className="login-form-title">Авторизация</h2>
         <div className="login-form">
           {/* Email Section */}
           <div className="login-form-group">
-            <label className="login-input-label">Email:</label>
+            <label className="login-input-label">Почта:</label>
             <input
               type="text"
               className="login-input-field"
-              placeholder="Email"
+              placeholder="Эл. почта"
               value={formData.email}
               onChange={(e) => handleInputChange("email", e.target.value)}
             />
@@ -69,12 +69,12 @@ const LoginForm: React.FC = () => {
 
           {/* Password Section */}
           <div className="login-form-group">
-            <label className="login-input-label">Password:</label>
+            <label className="login-input-label">Пароль:</label>
             <div className="login-password-input-container">
               <input
                 type={showPassword ? "text" : "password"}
                 className="login-password-field"
-                placeholder="Password"
+                placeholder="Пароль"
                 value={formData.password}
                 onChange={(e) => handleInputChange("password", e.target.value)}
               />
@@ -85,7 +85,7 @@ const LoginForm: React.FC = () => {
               >
                 <img
                   src={showPassword ? EyeClosed : EyeOpen}
-                  alt={showPassword ? "Hide password" : "Show password"}
+                  alt={showPassword ? "Скрыть пароль" : "Показать пароль"}
                   width="20"
                   height="20"
                 />
@@ -95,7 +95,7 @@ const LoginForm: React.FC = () => {
 
           {/* Buttons Section */}
           <div className="login-buttons-container">
-              <button className="login-confirm-button" onClick={handleLogin}>Confirm</button>
+              <button className="login-confirm-button" onClick={handleLogin}>Войти</button>
             <div className="login-divider"></div>
             <NewAccountButton onClick={handleCreateAccount} />
           </div>

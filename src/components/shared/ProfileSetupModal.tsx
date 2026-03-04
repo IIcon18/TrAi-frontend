@@ -82,9 +82,9 @@ const ProfileSetupModal: React.FC<ProfileSetupModalProps> = ({ isOpen, onClose, 
             <div className="profile-setup-modal">
                 {step === 'form' && (
                     <>
-                        <h3>Complete Your Profile</h3>
+                        <h3>Заполните профиль</h3>
                         <p className="profile-setup-subtitle">
-                            Please fill in your details to personalize your experience
+                            Заполните данные для персонализации опыта
                         </p>
 
                         <div className="profile-setup-form">
@@ -92,25 +92,25 @@ const ProfileSetupModal: React.FC<ProfileSetupModalProps> = ({ isOpen, onClose, 
                             <div className="form-section">
                                 <div className="form-row">
                                     <div className="form-field">
-                                        <label>Age *</label>
+                                        <label>Возраст *</label>
                                         <input
                                             ref={ageInputRef}
                                             type="number"
-                                            placeholder="e.g. 25"
+                                            placeholder="напр. 25"
                                             value={formData.age}
                                             onChange={(e) => handleInputChange('age', e.target.value)}
                                         />
                                     </div>
                                     <div className="form-field">
-                                        <label>Gender *</label>
+                                        <label>Пол *</label>
                                         <select
                                             value={formData.gender}
                                             onChange={(e) => handleInputChange('gender', e.target.value)}
                                         >
-                                            <option value="">Select gender</option>
-                                            <option value="male">Male</option>
-                                            <option value="female">Female</option>
-                                            <option value="other">Prefer not to say</option>
+                                            <option value="">Выберите пол</option>
+                                            <option value="male">Мужской</option>
+                                            <option value="female">Женский</option>
+                                            <option value="other">Не указывать</option>
                                         </select>
                                     </div>
                                 </div>
@@ -120,19 +120,19 @@ const ProfileSetupModal: React.FC<ProfileSetupModalProps> = ({ isOpen, onClose, 
                             <div className="form-section">
                                 <div className="form-row">
                                     <div className="form-field">
-                                        <label>Height *</label>
+                                        <label>Рост *</label>
                                         <input
                                             type="number"
-                                            placeholder="e.g. 175 cm"
+                                            placeholder="напр. 175 см"
                                             value={formData.height}
                                             onChange={(e) => handleInputChange('height', e.target.value)}
                                         />
                                     </div>
                                     <div className="form-field">
-                                        <label>Weight *</label>
+                                        <label>Вес *</label>
                                         <input
                                             type="number"
-                                            placeholder="e.g. 70 kg"
+                                            placeholder="напр. 70 кг"
                                             value={formData.weight}
                                             onChange={(e) => handleInputChange('weight', e.target.value)}
                                         />
@@ -143,28 +143,28 @@ const ProfileSetupModal: React.FC<ProfileSetupModalProps> = ({ isOpen, onClose, 
                             {/* Block 3: Activity & Experience */}
                             <div className="form-section">
                                 <div className="form-field full-width">
-                                    <label>Activity Level *</label>
+                                    <label>Уровень активности *</label>
                                     <select
                                         value={formData.lifestyle}
                                         onChange={(e) => handleInputChange('lifestyle', e.target.value)}
                                     >
-                                        <option value="">Select activity level</option>
-                                        <option value="low">Sedentary (low activity)</option>
-                                        <option value="medium">Lightly active</option>
-                                        <option value="high">Very active</option>
+                                        <option value="">Выберите уровень активности</option>
+                                        <option value="low">Малоподвижный</option>
+                                        <option value="medium">Умеренно активный</option>
+                                        <option value="high">Очень активный</option>
                                     </select>
                                 </div>
 
                                 <div className="form-field full-width">
-                                    <label>Fitness Level</label>
+                                    <label>Уровень физподготовки</label>
                                     <select
                                         value={formData.level}
                                         onChange={(e) => handleInputChange('level', e.target.value)}
                                     >
-                                        <option value="">Select fitness level</option>
-                                        <option value="beginner">Beginner</option>
-                                        <option value="amateur">Intermediate</option>
-                                        <option value="professional">Advanced</option>
+                                        <option value="">Выберите уровень</option>
+                                        <option value="beginner">Начинающий</option>
+                                        <option value="amateur">Средний</option>
+                                        <option value="professional">Продвинутый</option>
                                     </select>
                                 </div>
                             </div>
@@ -172,27 +172,27 @@ const ProfileSetupModal: React.FC<ProfileSetupModalProps> = ({ isOpen, onClose, 
                             {/* Block 4: Goals */}
                             <div className="form-section">
                                 <div className="form-field full-width">
-                                    <label>Target Weight</label>
+                                    <label>Целевой вес</label>
                                     <input
                                         type="number"
-                                        placeholder="e.g. 65 kg"
+                                        placeholder="напр. 65 кг"
                                         value={formData.target_weight}
                                         onChange={(e) => handleInputChange('target_weight', e.target.value)}
                                     />
-                                    <span className="form-field-helper">Optional. Helps us personalize your plan</span>
+                                    <span className="form-field-helper">Необязательно. Помогает персонализировать план</span>
                                 </div>
 
                                 <div className="form-field full-width">
-                                    <label>Weekly Training Goal</label>
+                                    <label>Цель тренировок в неделю</label>
                                     <select
                                         value={formData.weekly_training_goal}
                                         onChange={(e) => handleInputChange('weekly_training_goal', e.target.value)}
                                     >
-                                        <option value="">Choose workouts per week</option>
-                                        <option value="2">2 workouts / week</option>
-                                        <option value="3">3 workouts / week</option>
-                                        <option value="4">4 workouts / week</option>
-                                        <option value="5">5+ workouts / week</option>
+                                        <option value="">Выберите количество тренировок</option>
+                                        <option value="2">2 тренировки в неделю</option>
+                                        <option value="3">3 тренировки в неделю</option>
+                                        <option value="4">4 тренировки в неделю</option>
+                                        <option value="5">5+ тренировок в неделю</option>
                                     </select>
                                 </div>
                             </div>
@@ -203,16 +203,16 @@ const ProfileSetupModal: React.FC<ProfileSetupModalProps> = ({ isOpen, onClose, 
                             onClick={handleSubmit}
                             disabled={loading}
                         >
-                            {loading ? 'Saving...' : 'Save Profile'}
+                            {loading ? 'Сохранение...' : 'Сохранить профиль'}
                         </button>
-                        <p className="button-helper-text">You can update these details anytime in settings</p>
+                        <p className="button-helper-text">Вы можете изменить данные в настройках</p>
                     </>
                 )}
 
                 {step === 'success' && (
                     <div className="success-message">
                         <div className="success-icon">✓</div>
-                        <div className="success-text">Profile completed!</div>
+                        <div className="success-text">Профиль заполнен!</div>
                     </div>
                 )}
             </div>

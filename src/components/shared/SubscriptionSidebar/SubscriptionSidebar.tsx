@@ -10,33 +10,33 @@ interface SubscriptionSidebarProps {
 const PRO_BENEFITS = [
     {
         icon: "🥗",
-        title: "Nutrition Tracking",
-        description: "Full access to meal logging and calorie tracking",
+        title: "Трекинг питания",
+        description: "Полный доступ к журналу питания и подсчёту калорий",
     },
     {
         icon: "🤖",
-        title: "AI Meal Planning",
-        description: "Personalized meal plans built by AI based on your goals",
+        title: "ИИ-планирование питания",
+        description: "Персональные планы питания от ИИ на основе ваших целей",
     },
     {
         icon: "📊",
-        title: "Advanced Analytics",
-        description: "Detailed charts and progress insights for nutrition and workouts",
+        title: "Расширенная аналитика",
+        description: "Детальные графики и инсайты прогресса по питанию и тренировкам",
     },
     {
         icon: "⚡",
-        title: "AI Workout Intelligence",
-        description: "Smart workout recommendations and real-time adjustments",
+        title: "ИИ-интеллект тренировок",
+        description: "Умные рекомендации и корректировки тренировок в реальном времени",
     },
     {
         icon: "🎯",
-        title: "Goal Optimization",
-        description: "Dynamic goal recalibration as your fitness evolves",
+        title: "Оптимизация целей",
+        description: "Динамическая перекалибровка целей по мере вашего прогресса",
     },
     {
         icon: "💬",
-        title: "Priority Support",
-        description: "Fast-track access to our support team",
+        title: "Приоритетная поддержка",
+        description: "Быстрый доступ к нашей команде поддержки",
     },
 ];
 
@@ -59,16 +59,16 @@ const SubscriptionSidebar: React.FC<SubscriptionSidebarProps> = ({ isOpen, onClo
                     <div className="subscription-sidebar__content">
                         <div className="subscription-sidebar__status-badge">
                             <span className="subscription-sidebar__status-icon">✦</span>
-                            <span>PRO Active</span>
+                            <span>PRO Активен</span>
                         </div>
-                        <h2 className="subscription-sidebar__title">Your TrAi PRO</h2>
+                        <h2 className="subscription-sidebar__title">Ваш TrAi PRO</h2>
                         <p className="subscription-sidebar__subtitle">
-                            You have full access to all premium features.
+                            У вас полный доступ ко всем премиум-функциям.
                         </p>
 
                         <div className="subscription-sidebar__divider" />
 
-                        <h3 className="subscription-sidebar__section-title">What you get</h3>
+                        <h3 className="subscription-sidebar__section-title">Что вы получаете</h3>
                         <ul className="subscription-sidebar__benefits">
                             {PRO_BENEFITS.map((b) => (
                                 <li key={b.title} className="subscription-sidebar__benefit">
@@ -85,15 +85,15 @@ const SubscriptionSidebar: React.FC<SubscriptionSidebarProps> = ({ isOpen, onClo
                     <div className="subscription-sidebar__content">
                         <div className="subscription-sidebar__upgrade-header">
                             <span className="subscription-sidebar__crown">♛</span>
-                            <h2 className="subscription-sidebar__title">Upgrade to PRO</h2>
+                            <h2 className="subscription-sidebar__title">Перейти на PRO</h2>
                             <p className="subscription-sidebar__subtitle">
-                                Unlock the full power of AI-driven training and nutrition.
+                                Раскройте весь потенциал ИИ-тренировок и питания.
                             </p>
                         </div>
 
                         <div className="subscription-sidebar__divider" />
 
-                        <h3 className="subscription-sidebar__section-title">PRO Benefits</h3>
+                        <h3 className="subscription-sidebar__section-title">Преимущества PRO</h3>
                         <ul className="subscription-sidebar__benefits">
                             {PRO_BENEFITS.map((b) => (
                                 <li key={b.title} className="subscription-sidebar__benefit">
@@ -108,10 +108,10 @@ const SubscriptionSidebar: React.FC<SubscriptionSidebarProps> = ({ isOpen, onClo
 
                         <div className="subscription-sidebar__cta">
                             <button className="subscription-sidebar__cta-button">
-                                Get PRO Now
+                                Получить PRO сейчас
                             </button>
                             <p className="subscription-sidebar__cta-note">
-                                Contact your administrator to upgrade your account.
+                                Обратитесь к администратору для активации.
                             </p>
                         </div>
                     </div>

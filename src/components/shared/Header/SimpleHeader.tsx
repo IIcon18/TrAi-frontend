@@ -12,7 +12,7 @@ const SimpleHeader: React.FC = () => {
                     <span className="logo-red">Ai</span>
                 </div>
                 <div className="tagline">
-                    your personal training intelligence
+                    ваш персональный ИИ-тренер
                 </div>
             </div>
         </header>

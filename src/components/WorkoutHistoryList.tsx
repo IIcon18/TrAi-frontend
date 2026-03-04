@@ -24,10 +24,10 @@ interface WorkoutListResponse {
 }
 
 const MUSCLE_GROUP_LABELS: Record<string, string> = {
-  upper_body_push: 'Upper Body Push',
-  upper_body_pull: 'Upper Body Pull',
-  core_stability: 'Core & Stability',
-  lower_body: 'Lower Body',
+  upper_body_push: 'Верхняя часть (толчок)',
+  upper_body_pull: 'Верхняя часть (тяга)',
+  core_stability: 'Корпус и стабильность',
+  lower_body: 'Нижняя часть тела',
 };
 
 interface WorkoutHistoryListProps {
@@ -84,20 +84,20 @@ const WorkoutHistoryList: React.FC<WorkoutHistoryListProps> = ({ onBack, onEdit 
       await apiClient.post(`/workouts/${id}/complete`);
       fetchWorkouts();
     } catch (err: any) {
-      alert(err?.response?.data?.detail || 'Failed to complete workout');
+      alert(err?.response?.data?.detail || 'Не удалось завершить тренировку');
     } finally {
       setCompletingId(null);
     }
   };
 
   const handleDelete = async (id: number) => {
-    if (!window.confirm('Delete this workout?')) return;
+    if (!window.confirm('Удалить эту тренировку?')) return;
     setDeletingId(id);
     try {
       await apiClient.delete(`/workouts/${id}`);
       fetchWorkouts();
     } catch (err: any) {
-      alert(err?.response?.data?.detail || 'Failed to delete workout');
+      alert(err?.response?.data?.detail || 'Не удалось удалить тренировку');
     } finally {
       setDeletingId(null);
     }
@@ -124,8 +124,8 @@ const WorkoutHistoryList: React.FC<WorkoutHistoryListProps> = ({ onBack, onEdit 
     <div className="wh-container">
       {/* Header */}
       <div className="wh-header">
-        <button className="wh-back-btn" onClick={onBack}>← Back to Plan</button>
-        <h2 className="wh-title">Workout History</h2>
+        <button className="wh-back-btn" onClick={onBack}>← К плану</button>
+        <h2 className="wh-title">История тренировок</h2>
       </div>
 
       {/* Filter bar */}
@@ -133,21 +133,21 @@ const WorkoutHistoryList: React.FC<WorkoutHistoryListProps> = ({ onBack, onEdit 
         <input
           className="wh-search"
           type="text"
-          placeholder="Search by name..."
+          placeholder="Поиск по названию..."
           value={search}
           onChange={(e) => setParam('search', e.target.value)}
         />
         <select className="wh-select" value={muscleGroup} onChange={(e) => setParam('muscle_group', e.target.value)}>
-          <option value="">All muscles</option>
+          <option value="">Все мышцы</option>
           {Object.entries(MUSCLE_GROUP_LABELS).map(([v, l]) => (
             <option key={v} value={v}>{l}</option>
           ))}
         </select>
         <select className="wh-select" value={difficulty} onChange={(e) => setParam('difficulty', e.target.value)}>
-          <option value="">Any difficulty</option>
-          <option value="easy">Easy</option>
-          <option value="medium">Medium</option>
-          <option value="hard">Hard</option>
+          <option value="">Любая сложность</option>
+          <option value="easy">Лёгкая</option>
+          <option value="medium">Средняя</option>
+          <option value="hard">Тяжёлая</option>
         </select>
         <label className="wh-checkbox-label">
           <input
@@ -155,32 +155,32 @@ const WorkoutHistoryList: React.FC<WorkoutHistoryListProps> = ({ onBack, onEdit 
             checked={completed === 'true'}
             onChange={(e) => setParam('completed', e.target.checked ? 'true' : '')}
           />
-          Done only
+          Только завершённые
         </label>
         {(search || muscleGroup || difficulty || completed) && (
-          <button className="wh-reset-btn" onClick={() => setSearchParams({ page: '1' })}>Reset</button>
+          <button className="wh-reset-btn" onClick={() => setSearchParams({ page: '1' })}>Сбросить</button>
         )}
       </div>
 
       {/* Table */}
       {loading ? (
-        <p className="wh-loading">Loading...</p>
+        <p className="wh-loading">Загрузка...</p>
       ) : data && data.items.length > 0 ? (
         <>
           <div className="wh-table">
             <div className="wh-table-head">
               <span className="wh-th wh-th-name wh-sortable" onClick={() => toggleSort('name')}>
-                Name <SortArrow col="name" />
+                Название <SortArrow col="name" />
               </span>
-              <span className="wh-th">Muscle</span>
+              <span className="wh-th">Мышцы</span>
               <span className="wh-th wh-sortable" onClick={() => toggleSort('difficulty')}>
-                Difficulty <SortArrow col="difficulty" />
+                Сложность <SortArrow col="difficulty" />
               </span>
               <span className="wh-th wh-sortable" onClick={() => toggleSort('scheduled_at')}>
-                Date <SortArrow col="scheduled_at" />
+                Дата <SortArrow col="scheduled_at" />
               </span>
-              <span className="wh-th">Status</span>
-              <span className="wh-th">Actions</span>
+              <span className="wh-th">Статус</span>
+              <span className="wh-th">Действия</span>
             </div>
             {data.items.map((w) => (
               <div key={w.id} className="wh-table-row">
@@ -193,8 +193,8 @@ const WorkoutHistoryList: React.FC<WorkoutHistoryListProps> = ({ onBack, onEdit 
                 <span className="wh-td">{new Date(w.scheduled_at).toLocaleDateString()}</span>
                 <span className="wh-td">
                   {w.completed
-                    ? <span className="wh-status-done">✓ Done</span>
-                    : <span className="wh-status-pending">Pending</span>}
+                    ? <span className="wh-status-done">✓ Выполнено</span>
+                    : <span className="wh-status-pending">В ожидании</span>}
                 </span>
                 <span className="wh-td wh-actions-cell">
                   {!w.completed && (
@@ -207,13 +207,13 @@ const WorkoutHistoryList: React.FC<WorkoutHistoryListProps> = ({ onBack, onEdit 
                       {completingId === w.id ? '...' : '✓'}
                     </button>
                   )}
-                  <button className="wh-btn-edit" onClick={() => onEdit(w)}>Edit</button>
+                  <button className="wh-btn-edit" onClick={() => onEdit(w)}>Ред.</button>
                   <button
                     className="wh-btn-delete"
                     onClick={() => handleDelete(w.id)}
                     disabled={deletingId === w.id}
                   >
-                    {deletingId === w.id ? '...' : 'Del'}
+                    {deletingId === w.id ? '...' : 'Удал.'}
                   </button>
                 </span>
               </div>
@@ -227,7 +227,7 @@ const WorkoutHistoryList: React.FC<WorkoutHistoryListProps> = ({ onBack, onEdit 
               disabled={page <= 1}
               onClick={() => setParam('page', String(page - 1))}
             >
-              ‹ Prev
+              ‹ Назад
             </button>
             <span className="wh-page-info">{page} / {data.pages}</span>
             <button
@@ -235,12 +235,12 @@ const WorkoutHistoryList: React.FC<WorkoutHistoryListProps> = ({ onBack, onEdit 
               disabled={page >= data.pages}
               onClick={() => setParam('page', String(page + 1))}
             >
-              Next ›
+              Вперёд ›
             </button>
           </div>
         </>
       ) : (
-        <p className="wh-empty">No workouts found. Try adjusting the filters.</p>
+        <p className="wh-empty">Тренировки не найдены. Измените фильтры.</p>
       )}
     </div>
   );

@@ -13,7 +13,7 @@ export const ConfirmButton: React.FC<ConfirmButtonProps> = ({
                                                                 onClick,
                                                                 disabled = false,
                                                                 loading = false,
-                                                                children = "Confirm",
+                                                                children = "Подтвердить",
                                                                 className = ""
                                                             }) => {
     return (
@@ -26,11 +26,11 @@ export const ConfirmButton: React.FC<ConfirmButtonProps> = ({
             {!loading && (
                 <img
                     src={ConfirmIcon}
-                    alt="Confirm"
+                    alt="Подтвердить"
                     className="confirm-icon"
                 />
             )}
-            {loading ? "Loading..." : children}
+            {loading ? "Загрузка..." : children}
         </button>
     );
 };

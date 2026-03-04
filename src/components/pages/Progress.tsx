@@ -215,17 +215,25 @@ const Progress: React.FC = () => {
                         {/* Левая колонка */}
                         <div className="progress-left-column">
                             <div className="progress-card">
-                                <h1 className="progress-page-title">Your Progress</h1>
+                                <h1 className="progress-page-title">Ваш прогресс</h1>
                                 <div className="progress-tabs-container">
-                                    {['weight', 'bodyFat', 'workouts', 'recovery'].map(tab => (
+                                    {(['weight', 'bodyFat', 'workouts', 'recovery'] as const).map(tab => {
+                                        const tabLabels: Record<string, string> = {
+                                            weight: 'Вес',
+                                            bodyFat: 'Жир',
+                                            workouts: 'Тренировки',
+                                            recovery: 'Восстановление',
+                                        };
+                                        return (
                                         <button
                                             key={tab}
                                             className={`progress-tab-button ${activeTab === tab ? 'progress-active' : ''}`}
                                             onClick={() => setActiveTab(tab as any)}
                                         >
-                                            {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                                            {tabLabels[tab]}
                                         </button>
-                                    ))}
+                                        );
+                                    })}
                                 </div>
 
                                 {/* График активности / тренировок */}
@@ -298,11 +306,11 @@ const Progress: React.FC = () => {
                                             <div className="progress-chart-legend">
                                                 <div className="progress-legend-item">
                                                     <div className="progress-legend-color progress-workout-color"></div>
-                                                    <span>Workouts</span>
+                                                    <span>Тренировки</span>
                                                 </div>
                                                 <div className="progress-legend-item">
                                                     <div className="progress-legend-color progress-weight-color"></div>
-                                                    <span>Weight (kg)</span>
+                                                    <span>Вес (кг)</span>
                                                 </div>
                                             </div>
                                         </>
@@ -370,16 +378,16 @@ const Progress: React.FC = () => {
                                             <div className="progress-chart-legend">
                                                 <div className="progress-legend-item">
                                                     <div className="progress-legend-color progress-mood-color"></div>
-                                                    <span>Mood</span>
+                                                    <span>Настроение</span>
                                                 </div>
                                                 <div className="progress-legend-item">
                                                     <div className="progress-legend-color progress-energy-color"></div>
-                                                    <span>Energy</span>
+                                                    <span>Энергия</span>
                                                 </div>
                                             </div>
                                         </>
                                     ) : (
-                                        <p>No data yet</p>
+                                        <p>Данных пока нет</p>
                                     )}
                                 </div>
 
@@ -387,7 +395,7 @@ const Progress: React.FC = () => {
                                 <div className="progress-ai-message">
                                     <div className="progress-ai-icon">🤖</div>
                                     <p className="progress-message-text">
-                                        {aiMessage || progressData.aiMessage || 'No AI data yet'}
+                                        {aiMessage || progressData.aiMessage || 'Данных ИИ пока нет'}
                                     </p>
                                 </div>
                             </div>
@@ -397,7 +405,7 @@ const Progress: React.FC = () => {
                         <div className="progress-right-column">
                             {/* Goal Overview */}
                             <div className="progress-goal-overview-card">
-                                <h3 className="progress-card-title">Goal Overview</h3>
+                                <h3 className="progress-card-title">Обзор цели</h3>
                                 <div className="progress-goal-circle-wrapper">
                                     <GoalOverviewCircle
                                         percentage={progressData.goalOverview.percentage}
@@ -412,19 +420,19 @@ const Progress: React.FC = () => {
                                 </div>
                                 <div className="progress-stats-grid">
                                     <div className="progress-stat-item">
-                                        <span className="progress-stat-label">Weight</span>
+                                        <span className="progress-stat-label">Вес</span>
                                         <span className="progress-stat-value">{progressData.goalOverview.weightChange}</span>
-                                        <span className="progress-stat-sublabel">average</span>
+                                        <span className="progress-stat-sublabel">среднее</span>
                                     </div>
                                     <div className="progress-stat-item">
-                                        <span className="progress-stat-label">Calories</span>
+                                        <span className="progress-stat-label">Калории</span>
                                         <span className="progress-stat-value">{progressData.goalOverview.caloriesChange}</span>
-                                        <span className="progress-stat-sublabel">every day</span>
+                                        <span className="progress-stat-sublabel">каждый день</span>
                                     </div>
                                     <div className="progress-stat-item">
-                                        <span className="progress-stat-label">Streak 🔥</span>
+                                        <span className="progress-stat-label">Серия 🔥</span>
                                         <span className="progress-stat-value">{progressData.goalOverview.streak}</span>
-                                        <span className="progress-stat-sublabel">weeks</span>
+                                        <span className="progress-stat-sublabel">недель</span>
                                     </div>
                                 </div>
                             </div>

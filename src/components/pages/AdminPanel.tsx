@@ -76,18 +76,18 @@ const AdminPanel: React.FC = () => {
                 prev.map(u => u.id === userId ? { ...u, role: newRole } : u)
             );
         } catch (err: any) {
-            alert(err.response?.data?.detail || 'Error updating role');
+            alert(err.response?.data?.detail || 'Ошибка при обновлении роли');
         }
     };
 
     const handleDelete = async (userId: number, email: string) => {
-        if (!window.confirm(`Delete user ${email}?`)) return;
+        if (!window.confirm(`Удалить пользователя ${email}?`)) return;
 
         try {
             await apiClient.delete(`/admin/users/${userId}`);
             fetchUsers();
         } catch (err: any) {
-            alert(err.response?.data?.detail || 'Error deleting user');
+            alert(err.response?.data?.detail || 'Ошибка при удалении пользователя');
         }
     };
 
@@ -100,14 +100,14 @@ const AdminPanel: React.FC = () => {
             />
             <Header />
             <div className="admin-container">
-                <h1 className="admin-title">Admin Panel</h1>
-                <p className="admin-subtitle">User Management · {total} users</p>
+                <h1 className="admin-title">Панель администратора</h1>
+                <p className="admin-subtitle">Управление пользователями · {total} пользователей</p>
 
                 <div className="admin-filters">
                     <input
                         type="text"
                         className="admin-search"
-                        placeholder="Search by email or nickname..."
+                        placeholder="Поиск по email или никнейму..."
                         value={search}
                         onChange={(e) => setParam('search', e.target.value)}
                     />
@@ -116,7 +116,7 @@ const AdminPanel: React.FC = () => {
                         value={role}
                         onChange={(e) => setParam('role', e.target.value)}
                     >
-                        <option value="">All roles</option>
+                        <option value="">Все роли</option>
                         <option value="user">user</option>
                         <option value="pro">pro</option>
                         <option value="admin">admin</option>
@@ -124,7 +124,7 @@ const AdminPanel: React.FC = () => {
                 </div>
 
                 {loading ? (
-                    <div className="admin-loading">Loading...</div>
+                    <div className="admin-loading">Загрузка...</div>
                 ) : (
                     <>
                         <div className="admin-table-wrapper">
@@ -132,18 +132,18 @@ const AdminPanel: React.FC = () => {
                                 <thead>
                                     <tr>
                                         <th>ID</th>
-                                        <th>Nickname</th>
+                                        <th>Никнейм</th>
                                         <th>Email</th>
-                                        <th>Role</th>
-                                        <th>Profile</th>
-                                        <th>Created</th>
-                                        <th>Actions</th>
+                                        <th>Роль</th>
+                                        <th>Профиль</th>
+                                        <th>Создан</th>
+                                        <th>Действия</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {users.length === 0 ? (
                                         <tr>
-                                            <td colSpan={7} className="admin-empty">No users found</td>
+                                            <td colSpan={7} className="admin-empty">Пользователи не найдены</td>
                                         </tr>
                                     ) : users.map(user => (
                                         <tr key={user.id}>
@@ -163,7 +163,7 @@ const AdminPanel: React.FC = () => {
                                             </td>
                                             <td>
                                                 <span className={user.profile_completed ? 'status-ok' : 'status-pending'}>
-                                                    {user.profile_completed ? 'Complete' : 'Pending'}
+                                                    {user.profile_completed ? 'Заполнен' : 'Не заполнен'}
                                                 </span>
                                             </td>
                                             <td>{user.created_at ? new Date(user.created_at).toLocaleDateString() : '-'}</td>
@@ -172,7 +172,7 @@ const AdminPanel: React.FC = () => {
                                                     className="delete-btn"
                                                     onClick={() => handleDelete(user.id, user.email)}
                                                 >
-                                                    Delete
+                                                    Удалить
                                                 </button>
                                             </td>
                                         </tr>
@@ -188,15 +188,15 @@ const AdminPanel: React.FC = () => {
                                     disabled={page <= 1}
                                     onClick={() => setParam('page', String(page - 1))}
                                 >
-                                    ← Prev
+                                    ← Назад
                                 </button>
-                                <span className="admin-page-info">Page {page} of {pages}</span>
+                                <span className="admin-page-info">Страница {page} из {pages}</span>
                                 <button
                                     className="admin-page-btn"
                                     disabled={page >= pages}
                                     onClick={() => setParam('page', String(page + 1))}
                                 >
-                                    Next →
+                                    Вперёд →
                                 </button>
                             </div>
                         )}

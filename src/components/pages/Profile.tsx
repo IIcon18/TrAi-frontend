@@ -91,7 +91,7 @@ const Profile: React.FC = () => {
   const handleLinkTelegram = async () => {
     if (!profile) return;
     try {
-      const telegramChatId = prompt('Enter your Telegram chat ID:');
+      const telegramChatId = prompt('Введите ваш Telegram chat ID:');
       if (!telegramChatId) return;
       await apiClient.post('/profile/connect-telegram', {
         telegram_chat_id: telegramChatId,
@@ -122,7 +122,7 @@ const Profile: React.FC = () => {
       <Header />
       <main className="profile-main">
         {loading ? (
-          <p style={{ color: 'white', textAlign: 'center' }}>Loading profile...</p>
+          <p style={{ color: 'white', textAlign: 'center' }}>Загрузка профиля...</p>
         ) : profile ? (
           <div className="profile-wrapper">
             {/* Левая колонка: Профиль */}
@@ -138,47 +138,47 @@ const Profile: React.FC = () => {
                     </svg>
                   </div>
                 )}
-                <button className="choose-photo-btn">Choose a photo</button>
+                <button className="choose-photo-btn">Выбрать фото</button>
               </div>
 
               <div className="profile-info-grid">
                 <div className="info-row">
-                  <span className="label">Nickname:</span>
+                  <span className="label">Никнейм:</span>
                   <span className="value">{profile.nickname}</span>
                 </div>
                 {profile.age && (
                   <div className="info-row">
-                    <span className="label">Age:</span>
-                    <span className="value">{profile.age} years</span>
+                    <span className="label">Возраст:</span>
+                    <span className="value">{profile.age} лет</span>
                   </div>
                 )}
                 {profile.height && (
                   <div className="info-row">
-                    <span className="label">Height:</span>
-                    <span className="value">{profile.height} cm</span>
+                    <span className="label">Рост:</span>
+                    <span className="value">{profile.height} см</span>
                   </div>
                 )}
                 {profile.weight && (
                   <div className="info-row">
-                    <span className="label">Weight:</span>
-                    <span className="value">{profile.weight} kg</span>
+                    <span className="label">Вес:</span>
+                    <span className="value">{profile.weight} кг</span>
                   </div>
                 )}
                 {profile.lifestyle && (
                   <div className="info-row">
-                    <span className="label">Lifestyle:</span>
+                    <span className="label">Активность:</span>
                     <span className="value">{profile.lifestyle}</span>
                   </div>
                 )}
                 {profile.gender && (
                   <div className="info-row">
-                    <span className="label">Gender:</span>
+                    <span className="label">Пол:</span>
                     <span className="value">{profile.gender}</span>
                   </div>
                 )}
                 {profile.ai_calorie_plan && (
                   <div className="info-row">
-                    <span className="label">AI plan:</span>
+                    <span className="label">ИИ-план:</span>
                     <span className="value">{profile.ai_calorie_plan}</span>
                   </div>
                 )}
@@ -189,56 +189,56 @@ const Profile: React.FC = () => {
                   className="complete-profile-btn"
                   onClick={() => setShowSetupModal(true)}
                 >
-                  Complete Profile
+                  Заполнить профиль
                 </button>
               )}
 
-              <button className="change-btn">Change</button>
+              <button className="change-btn">Изменить</button>
 
               <button className="logout-btn" onClick={handleLogout}>
-                Logout
+                Выйти
               </button>
             </div>
 
             {/* Правая колонка: Telegram + AI Tips */}
             <div className="side-cards">
               <div className="telegram-card">
-                <h3>Connect Telegram</h3>
+                <h3>Подключить Telegram</h3>
                 <button
                   className="link-telegram-btn"
                   onClick={handleLinkTelegram}
                 >
-                  Link Telegram
+                  Привязать Telegram
                 </button>
                 {profile.telegram_connected && (
                   <div className="status-connected">
                     <div className="dot"></div>
-                    Connected
+                    Подключено
                   </div>
                 )}
               </div>
 
               <div className="ai-tips-card">
                 <h3>
-                  <span className="ai-icon">AI</span> tip
+                  <span className="ai-icon">AI</span> подсказка
                 </h3>
                 {profile.ai_tips && profile.ai_tips.length > 0 ? (
                   <p className="tip-text">{profile.ai_tips[0].tip}</p>
                 ) : (
-                  <p className="tip-text">{profile.profile_completed ? 'No tips yet' : 'Complete your profile to get AI tips'}</p>
+                  <p className="tip-text">{profile.profile_completed ? 'Пока нет подсказок' : 'Заполните профиль для получения ИИ-подсказок'}</p>
                 )}
                 <button
                   className="refresh-tips-btn"
                   onClick={handleRefreshTips}
                   disabled={refreshingTips || !profile.profile_completed}
                 >
-                  {refreshingTips ? 'Generating...' : 'Generate new'}
+                  {refreshingTips ? 'Генерация...' : 'Сгенерировать новую'}
                 </button>
               </div>
             </div>
           </div>
         ) : (
-          <p style={{ color: 'white', textAlign: 'center' }}>Profile not found</p>
+          <p style={{ color: 'white', textAlign: 'center' }}>Профиль не найден</p>
         )}
       </main>
       <Footer />

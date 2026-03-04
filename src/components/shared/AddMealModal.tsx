@@ -52,10 +52,10 @@ const AddMealModal: React.FC<AddMealModalProps> = ({ isOpen, onClose, onMealAdde
         try {
             // Создаём meal на бэкенде
             const mealTypeMap: Record<string, string> = {
-                'Breakfast': 'breakfast',
-                'Lunch': 'lunch',
-                'Dinner': 'dinner',
-                'Snacks': 'snack',
+                'Завтрак': 'breakfast',
+                'Обед': 'lunch',
+                'Ужин': 'dinner',
+                'Перекус': 'snack',
             };
             const res = await apiClient.post('/dishes/create-meal', {
                 type: mealTypeMap[type] || 'snack'
@@ -169,14 +169,14 @@ const AddMealModal: React.FC<AddMealModalProps> = ({ isOpen, onClose, onMealAdde
             <div className="add-meal-modal">
                 {step === 'select' && (
                     <>
-                        <h3>Add Meal</h3>
+                        <h3>Добавить приём пищи</h3>
                         {error && <div style={{ color: '#FF3B30', fontSize: 13, textAlign: 'center' }}>{error}</div>}
                         <div className="meal-selection-list">
                             {[
-                                { name: 'Breakfast', icon: '🍽️' },
-                                { name: 'Lunch', icon: '🍲' },
-                                { name: 'Dinner', icon: '🍗' },
-                                { name: 'Snacks', icon: '🍿' },
+                                { name: 'Завтрак', icon: '🍽️' },
+                                { name: 'Обед', icon: '🍲' },
+                                { name: 'Ужин', icon: '🍗' },
+                                { name: 'Перекус', icon: '🍿' },
                             ].map((meal, index) => (
                                 <div
                                     key={index}
@@ -201,7 +201,7 @@ const AddMealModal: React.FC<AddMealModalProps> = ({ isOpen, onClose, onMealAdde
                             <input
                                 type="text"
                                 className="search-input"
-                                placeholder="Search dish..."
+                                placeholder="Поиск блюда..."
                                 value={searchQuery}
                                 onChange={handleSearchChange}
                                 onKeyDown={handleSearchKeyDown}
@@ -215,7 +215,7 @@ const AddMealModal: React.FC<AddMealModalProps> = ({ isOpen, onClose, onMealAdde
                                 🔍
                             </span>
                         </div>
-                        {loading && <p style={{ color: '#999', textAlign: 'center', fontSize: 13 }}>Searching...</p>}
+                        {loading && <p style={{ color: '#999', textAlign: 'center', fontSize: 13 }}>Поиск...</p>}
                         <div className="dish-list" style={{ maxHeight: 300, overflowY: 'auto' }}>
                             {searchResults.map((dish, index) => (
                                 <div
@@ -226,10 +226,10 @@ const AddMealModal: React.FC<AddMealModalProps> = ({ isOpen, onClose, onMealAdde
                                     <div>
                                         <div className="dish-name">{dish.name}</div>
                                         <div className="dish-info">
-                                            per 100g: {dish.calories_per_100g} kcal |
-                                            P: {dish.protein_per_100g}g |
-                                            C: {dish.carbs_per_100g}g |
-                                            F: {dish.fat_per_100g}g
+                                            на 100г: {dish.calories_per_100g} ккал |
+                                            Б: {dish.protein_per_100g}г |
+                                            У: {dish.carbs_per_100g}г |
+                                            Ж: {dish.fat_per_100g}г
                                         </div>
                                     </div>
                                     <button className="dish-add-button">+</button>
@@ -237,7 +237,7 @@ const AddMealModal: React.FC<AddMealModalProps> = ({ isOpen, onClose, onMealAdde
                             ))}
                             {!loading && searchQuery && searchResults.length === 0 && (
                                 <p style={{ color: '#999', textAlign: 'center', fontSize: 13 }}>
-                                    No results. Try a different query.
+                                    Ничего не найдено. Попробуйте другой запрос.
                                 </p>
                             )}
                             {!loading && searchResults.length > 0 && searchSource && (
@@ -257,14 +257,14 @@ const AddMealModal: React.FC<AddMealModalProps> = ({ isOpen, onClose, onMealAdde
                         {error && <div style={{ color: '#FF3B30', fontSize: 13, textAlign: 'center', marginBottom: 8 }}>{error}</div>}
                         <div style={{ background: '#2D2D2D', borderRadius: 8, padding: 12, marginBottom: 12 }}>
                             <div style={{ fontSize: 13, color: '#CCC', lineHeight: 1.6 }}>
-                                <div>Calories: {Math.round(selectedDish.calories_per_100g * quantity / 100)} kcal</div>
-                                <div>Protein: {(selectedDish.protein_per_100g * quantity / 100).toFixed(1)}g</div>
-                                <div>Carbs: {(selectedDish.carbs_per_100g * quantity / 100).toFixed(1)}g</div>
-                                <div>Fat: {(selectedDish.fat_per_100g * quantity / 100).toFixed(1)}g</div>
+                                <div>Калории: {Math.round(selectedDish.calories_per_100g * quantity / 100)} ккал</div>
+                                <div>Белки: {(selectedDish.protein_per_100g * quantity / 100).toFixed(1)}г</div>
+                                <div>Углеводы: {(selectedDish.carbs_per_100g * quantity / 100).toFixed(1)}г</div>
+                                <div>Жиры: {(selectedDish.fat_per_100g * quantity / 100).toFixed(1)}г</div>
                             </div>
                         </div>
                         <div className="quantity-selector">
-                            <span className="quantity-label">Grams:</span>
+                            <span className="quantity-label">Граммы:</span>
                             <input
                                 type="number"
                                 className="quantity-input"
@@ -273,7 +273,7 @@ const AddMealModal: React.FC<AddMealModalProps> = ({ isOpen, onClose, onMealAdde
                                 min="1"
                                 max="2000"
                             />
-                            <span style={{ color: '#999', fontSize: 14 }}>g</span>
+                            <span style={{ color: '#999', fontSize: 14 }}>г</span>
                         </div>
                         <button
                             className="add-meal-button"
@@ -281,7 +281,7 @@ const AddMealModal: React.FC<AddMealModalProps> = ({ isOpen, onClose, onMealAdde
                             disabled={loading}
                             style={{ opacity: loading ? 0.6 : 1 }}
                         >
-                            {loading ? 'Adding...' : '+ Add dish'}
+                            {loading ? 'Добавление...' : '+ Добавить блюдо'}
                         </button>
                     </>
                 )}
@@ -289,7 +289,7 @@ const AddMealModal: React.FC<AddMealModalProps> = ({ isOpen, onClose, onMealAdde
                 {step === 'success' && (
                     <div className="success-message">
                         <div className="success-icon">✓</div>
-                        <div className="success-text">Dish successfully added!</div>
+                        <div className="success-text">Блюдо успешно добавлено!</div>
                     </div>
                 )}
 
@@ -310,7 +310,7 @@ const AddMealModal: React.FC<AddMealModalProps> = ({ isOpen, onClose, onMealAdde
                             alignSelf: 'center',
                         }}
                     >
-                        Back
+                        Назад
                     </button>
                 )}
             </div>
