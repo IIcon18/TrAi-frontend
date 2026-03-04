@@ -172,9 +172,26 @@
     width: calc(100% + 60px);
 }
 
-.login-confirm-wrapper .confirm-button {
+.login-confirm-button {
+    width: 45%;
+    padding: 12px;
     margin-left: 95px;
+    background: #1f7a29;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.login-confirm-button:hover {
+    background: #008115;
 }
 
 .login-buttons-container {

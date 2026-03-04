@@ -6,18 +6,20 @@ interface ConfirmButtonProps {
     disabled?: boolean;
     loading?: boolean;
     children?: React.ReactNode;
+    className?: string;
 }
 
 export const ConfirmButton: React.FC<ConfirmButtonProps> = ({
                                                                 onClick,
                                                                 disabled = false,
                                                                 loading = false,
-                                                                children = "Confirm"
+                                                                children = "Confirm",
+                                                                className = ""
                                                             }) => {
     return (
         <button
             type="submit"
-            className="confirm-button"
+            className={`confirm-button ${className}`.trim()}
             onClick={onClick}
             disabled={disabled || loading}
         >

@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Register.css"
-import Header from "../shared/Header/Header";
+import SimpleHeader from "../shared/Header/SimpleHeader";
 import Footer from "../shared/Footer/Footer";
 import RegistrationForm from "../RegistrationForm";
 import { useAuth } from "../../hooks/useAuth";
@@ -26,7 +26,7 @@ const Register: React.FC = () => {
                 ogTitle="TrAi — Регистрация"
                 ogDescription="Персональный фитнес-трекер с ИИ-рекомендациями"
             />
-            <Header />
+            <SimpleHeader />
 
             <main className="main-content">
                 <RegistrationForm/>

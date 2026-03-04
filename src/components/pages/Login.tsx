@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
-import Header from "../shared/Header/Header";
+import SimpleHeader from "../shared/Header/SimpleHeader";
 import Footer from "../shared/Footer/Footer";
 import LoginForm from "../LoginForm";
 import { useAuth } from "../../hooks/useAuth";
@@ -26,7 +26,7 @@ const Login: React.FC = () => {
                 ogTitle="TrAi — Вход в аккаунт"
                 ogDescription="Персональный тренер с ИИ-рекомендациями по тренировкам и питанию"
             />
-            <Header />
+            <SimpleHeader />
 
             <main className="main-content">
                 <LoginForm/>

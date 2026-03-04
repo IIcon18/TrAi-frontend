@@ -5,7 +5,6 @@ import "./LoginForm.css";
 import EyeOpen from "../assets/icons/eye.svg";
 import EyeClosed from "../assets/icons/hide_eye.svg";
 import NewAccountButton from "./shared/Buttons/NewAccountButton";
-import ConfirmButton from "./shared/Buttons/ConfirmButton";
 import apiClient from "../api/apiClient";
 import { useAuth } from "../hooks/useAuth";
 
@@ -96,9 +95,7 @@ const LoginForm: React.FC = () => {
 
           {/* Buttons Section */}
           <div className="login-buttons-container">
-            <div className="login-confirm-wrapper">
-              <ConfirmButton onClick={handleLogin} />
-            </div>
+              <button className="login-confirm-button" onClick={handleLogin}>Confirm</button>
             <div className="login-divider"></div>
             <NewAccountButton onClick={handleCreateAccount} />
           </div>
