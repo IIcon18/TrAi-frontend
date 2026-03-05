@@ -66,7 +66,7 @@ describe('RegistrationForm', () => {
 
   it('отображает поле Nickname', () => {
     renderRegistrationForm();
-    expect(screen.getByPlaceholderText('Your nickname')).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('Ваш никнейм')).toBeInTheDocument();
   });
 
   it('отображает поле Email', () => {
@@ -76,19 +76,19 @@ describe('RegistrationForm', () => {
 
   it('отображает поле Password', () => {
     renderRegistrationForm();
-    expect(screen.getByPlaceholderText('Password')).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('Пароль')).toBeInTheDocument();
   });
 
   it('отображает кнопку Confirm', () => {
     renderRegistrationForm();
-    expect(screen.getByRole('button', { name: /confirm/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /зарегистрироваться/i })).toBeInTheDocument();
   });
 
   // --- Индикатор надёжности пароля ---
 
   it('индикатор "weak" отображается для пароля длиной < 6 символов', async () => {
     renderRegistrationForm();
-    const passwordInput = screen.getByPlaceholderText('Password');
+    const passwordInput = screen.getByPlaceholderText('Пароль');
 
     await userEvent.type(passwordInput, 'abc');
 
@@ -98,7 +98,7 @@ describe('RegistrationForm', () => {
 
   it('индикатор "medium" отображается для пароля длиной 6-9 символов', async () => {
     renderRegistrationForm();
-    const passwordInput = screen.getByPlaceholderText('Password');
+    const passwordInput = screen.getByPlaceholderText('Пароль');
 
     await userEvent.type(passwordInput, 'pass12');
 
@@ -108,7 +108,7 @@ describe('RegistrationForm', () => {
 
   it('индикатор "strong" отображается для пароля длиной >= 10 символов', async () => {
     renderRegistrationForm();
-    const passwordInput = screen.getByPlaceholderText('Password');
+    const passwordInput = screen.getByPlaceholderText('Пароль');
 
     await userEvent.type(passwordInput, 'strongpassword');
 
@@ -126,7 +126,7 @@ describe('RegistrationForm', () => {
 
   it('при отправке пустой формы отображает alert', async () => {
     renderRegistrationForm();
-    await userEvent.click(screen.getByRole('button', { name: /confirm/i }));
+    await userEvent.click(screen.getByRole('button', { name: /зарегистрироваться/i }));
 
     await waitFor(() => {
       expect(window.alert).toHaveBeenCalledWith('Все поля обязательны!');
@@ -136,11 +136,11 @@ describe('RegistrationForm', () => {
   it('при пароле < 6 символов отображает alert о минимальной длине', async () => {
     renderRegistrationForm();
 
-    await userEvent.type(screen.getByPlaceholderText('Your nickname'), 'user');
+    await userEvent.type(screen.getByPlaceholderText('Ваш никнейм'), 'user');
     await userEvent.type(screen.getByPlaceholderText('user@example.com'), 'u@test.com');
-    await userEvent.type(screen.getByPlaceholderText('Password'), '12345');
+    await userEvent.type(screen.getByPlaceholderText('Пароль'), '12345');
 
-    await userEvent.click(screen.getByRole('button', { name: /confirm/i }));
+    await userEvent.click(screen.getByRole('button', { name: /зарегистрироваться/i }));
 
     await waitFor(() => {
       expect(window.alert).toHaveBeenCalledWith(
@@ -152,11 +152,11 @@ describe('RegistrationForm', () => {
   it('при коротком пароле не вызывает apiClient.post', async () => {
     renderRegistrationForm();
 
-    await userEvent.type(screen.getByPlaceholderText('Your nickname'), 'user');
+    await userEvent.type(screen.getByPlaceholderText('Ваш никнейм'), 'user');
     await userEvent.type(screen.getByPlaceholderText('user@example.com'), 'u@test.com');
-    await userEvent.type(screen.getByPlaceholderText('Password'), 'abc');
+    await userEvent.type(screen.getByPlaceholderText('Пароль'), 'abc');
 
-    await userEvent.click(screen.getByRole('button', { name: /confirm/i }));
+    await userEvent.click(screen.getByRole('button', { name: /зарегистрироваться/i }));
 
     await waitFor(() => {
       expect(mockApiClient.post).not.toHaveBeenCalled();
@@ -176,11 +176,11 @@ describe('RegistrationForm', () => {
 
     renderRegistrationForm();
 
-    await userEvent.type(screen.getByPlaceholderText('Your nickname'), 'newuser');
+    await userEvent.type(screen.getByPlaceholderText('Ваш никнейм'), 'newuser');
     await userEvent.type(screen.getByPlaceholderText('user@example.com'), 'new@test.com');
-    await userEvent.type(screen.getByPlaceholderText('Password'), 'securepass');
+    await userEvent.type(screen.getByPlaceholderText('Пароль'), 'securepass');
 
-    await userEvent.click(screen.getByRole('button', { name: /confirm/i }));
+    await userEvent.click(screen.getByRole('button', { name: /зарегистрироваться/i }));
 
     await waitFor(() => {
       expect(mockNavigate).toHaveBeenCalledWith('/profile');
@@ -194,11 +194,11 @@ describe('RegistrationForm', () => {
 
     renderRegistrationForm();
 
-    await userEvent.type(screen.getByPlaceholderText('Your nickname'), 'newuser');
+    await userEvent.type(screen.getByPlaceholderText('Ваш никнейм'), 'newuser');
     await userEvent.type(screen.getByPlaceholderText('user@example.com'), 'new@test.com');
-    await userEvent.type(screen.getByPlaceholderText('Password'), 'securepass');
+    await userEvent.type(screen.getByPlaceholderText('Пароль'), 'securepass');
 
-    await userEvent.click(screen.getByRole('button', { name: /confirm/i }));
+    await userEvent.click(screen.getByRole('button', { name: /зарегистрироваться/i }));
 
     await waitFor(() => {
       expect(mockApiClient.post).toHaveBeenCalledWith('/auth/register', {
@@ -218,11 +218,11 @@ describe('RegistrationForm', () => {
 
     renderRegistrationForm();
 
-    await userEvent.type(screen.getByPlaceholderText('Your nickname'), 'u');
+    await userEvent.type(screen.getByPlaceholderText('Ваш никнейм'), 'u');
     await userEvent.type(screen.getByPlaceholderText('user@example.com'), 'exists@test.com');
-    await userEvent.type(screen.getByPlaceholderText('Password'), 'password123');
+    await userEvent.type(screen.getByPlaceholderText('Пароль'), 'password123');
 
-    await userEvent.click(screen.getByRole('button', { name: /confirm/i }));
+    await userEvent.click(screen.getByRole('button', { name: /зарегистрироваться/i }));
 
     await waitFor(() => {
       expect(window.alert).toHaveBeenCalledWith(
@@ -235,8 +235,8 @@ describe('RegistrationForm', () => {
 
   it('переключатель изменяет тип поля пароля', async () => {
     renderRegistrationForm();
-    const passwordInput = screen.getByPlaceholderText('Password');
-    const toggleButton = screen.getByRole('button', { name: /show password/i });
+    const passwordInput = screen.getByPlaceholderText('Пароль');
+    const toggleButton = screen.getByRole('button', { name: /показать пароль/i });
 
     expect(passwordInput).toHaveAttribute('type', 'password');
     await userEvent.click(toggleButton);

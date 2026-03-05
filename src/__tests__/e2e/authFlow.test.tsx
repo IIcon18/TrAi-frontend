@@ -77,10 +77,10 @@ describe('E2E — Полный цикл входа через LoginForm', () => 
       </MemoryRouter>
     );
 
-    await userEvent.type(screen.getByPlaceholderText('Email'), 'admin@test.com');
-    await userEvent.type(screen.getByPlaceholderText('Password'), 'adminpass');
+    await userEvent.type(screen.getByPlaceholderText('Эл. почта'), 'admin@test.com');
+    await userEvent.type(screen.getByPlaceholderText('Пароль'), 'adminpass');
 
-    await userEvent.click(screen.getByRole('button', { name: /confirm/i }));
+    await userEvent.click(screen.getByRole('button', { name: /войти/i }));
 
     await waitFor(() => {
       // Токены сохранены в localStorage
@@ -201,7 +201,7 @@ describe('E2E — Граничные случаи LoginForm', () => {
     );
 
     // Нажимаем кнопку без заполнения полей
-    await userEvent.click(screen.getByRole('button', { name: /confirm/i }));
+    await userEvent.click(screen.getByRole('button', { name: /войти/i }));
 
     // API вызван, но с пустыми данными — это допустимо для компонента,
     // т.к. форма не имеет HTML5-валидации (тип="text" для email)
@@ -224,10 +224,10 @@ describe('E2E — Граничные случаи LoginForm', () => {
       </MemoryRouter>
     );
 
-    await userEvent.type(screen.getByPlaceholderText('Email'), 'u@test.com');
-    await userEvent.type(screen.getByPlaceholderText('Password'), 'wrong');
+    await userEvent.type(screen.getByPlaceholderText('Эл. почта'), 'u@test.com');
+    await userEvent.type(screen.getByPlaceholderText('Пароль'), 'wrong');
 
-    await userEvent.click(screen.getByRole('button', { name: /confirm/i }));
+    await userEvent.click(screen.getByRole('button', { name: /войти/i }));
 
     await waitFor(() => {
       expect(mockNavigate).not.toHaveBeenCalled();

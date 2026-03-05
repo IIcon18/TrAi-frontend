@@ -73,17 +73,17 @@ describe('LoginForm', () => {
 
   it('отображает поле Email', () => {
     renderLoginForm();
-    expect(screen.getByPlaceholderText('Email')).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('Эл. почта')).toBeInTheDocument();
   });
 
   it('отображает поле Password', () => {
     renderLoginForm();
-    expect(screen.getByPlaceholderText('Password')).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('Пароль')).toBeInTheDocument();
   });
 
   it('поле пароля по умолчанию имеет тип "password"', () => {
     renderLoginForm();
-    const passwordInput = screen.getByPlaceholderText('Password');
+    const passwordInput = screen.getByPlaceholderText('Пароль');
     expect(passwordInput).toHaveAttribute('type', 'password');
   });
 
@@ -91,8 +91,8 @@ describe('LoginForm', () => {
 
   it('переключатель видимости меняет тип поля пароля на "text"', async () => {
     renderLoginForm();
-    const passwordInput = screen.getByPlaceholderText('Password');
-    const toggleButton = screen.getByRole('button', { name: /show password/i });
+    const passwordInput = screen.getByPlaceholderText('Пароль');
+    const toggleButton = screen.getByRole('button', { name: /показать пароль/i });
 
     await userEvent.click(toggleButton);
 
@@ -101,8 +101,8 @@ describe('LoginForm', () => {
 
   it('повторное нажение переключателя возвращает тип "password"', async () => {
     renderLoginForm();
-    const passwordInput = screen.getByPlaceholderText('Password');
-    const toggleButton = screen.getByRole('button', { name: /show password/i });
+    const passwordInput = screen.getByPlaceholderText('Пароль');
+    const toggleButton = screen.getByRole('button', { name: /показать пароль/i });
 
     await userEvent.click(toggleButton);
     await userEvent.click(toggleButton);
@@ -124,10 +124,10 @@ describe('LoginForm', () => {
     renderLoginForm();
 
     await userEvent.type(screen.getByPlaceholderText('Email'), 'user@test.com');
-    await userEvent.type(screen.getByPlaceholderText('Password'), 'password123');
+    await userEvent.type(screen.getByPlaceholderText('Пароль'), 'password123');
 
     // Нажимаем кнопку подтверждения
-    const confirmBtn = screen.getByRole('button', { name: /confirm/i });
+    const confirmBtn = screen.getByRole('button', { name: /войти/i });
     await userEvent.click(confirmBtn);
 
     await waitFor(() => {
@@ -148,9 +148,9 @@ describe('LoginForm', () => {
     renderLoginForm();
 
     await userEvent.type(screen.getByPlaceholderText('Email'), 'user@test.com');
-    await userEvent.type(screen.getByPlaceholderText('Password'), 'password123');
+    await userEvent.type(screen.getByPlaceholderText('Пароль'), 'password123');
 
-    const confirmBtn = screen.getByRole('button', { name: /confirm/i });
+    const confirmBtn = screen.getByRole('button', { name: /войти/i });
     await userEvent.click(confirmBtn);
 
     await waitFor(() => {
@@ -166,9 +166,9 @@ describe('LoginForm', () => {
     renderLoginForm();
 
     await userEvent.type(screen.getByPlaceholderText('Email'), 'user@test.com');
-    await userEvent.type(screen.getByPlaceholderText('Password'), 'pass123');
+    await userEvent.type(screen.getByPlaceholderText('Пароль'), 'pass123');
 
-    await userEvent.click(screen.getByRole('button', { name: /confirm/i }));
+    await userEvent.click(screen.getByRole('button', { name: /войти/i }));
 
     await waitFor(() => {
       expect(mockApiClient.post).toHaveBeenCalledWith('/auth/login', {
@@ -186,9 +186,9 @@ describe('LoginForm', () => {
     renderLoginForm();
 
     await userEvent.type(screen.getByPlaceholderText('Email'), 'wrong@test.com');
-    await userEvent.type(screen.getByPlaceholderText('Password'), 'wrongpass');
+    await userEvent.type(screen.getByPlaceholderText('Пароль'), 'wrongpass');
 
-    await userEvent.click(screen.getByRole('button', { name: /confirm/i }));
+    await userEvent.click(screen.getByRole('button', { name: /войти/i }));
 
     await waitFor(() => {
       expect(window.alert).toHaveBeenCalledWith(
@@ -203,9 +203,9 @@ describe('LoginForm', () => {
     renderLoginForm();
 
     await userEvent.type(screen.getByPlaceholderText('Email'), 'u@test.com');
-    await userEvent.type(screen.getByPlaceholderText('Password'), 'wrong');
+    await userEvent.type(screen.getByPlaceholderText('Пароль'), 'wrong');
 
-    await userEvent.click(screen.getByRole('button', { name: /confirm/i }));
+    await userEvent.click(screen.getByRole('button', { name: /войти/i }));
 
     await waitFor(() => {
       expect(mockNavigate).not.toHaveBeenCalled();
