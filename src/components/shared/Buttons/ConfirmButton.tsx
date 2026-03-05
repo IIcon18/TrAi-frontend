@@ -6,29 +6,31 @@ interface ConfirmButtonProps {
     disabled?: boolean;
     loading?: boolean;
     children?: React.ReactNode;
+    className?: string;
 }
 
 export const ConfirmButton: React.FC<ConfirmButtonProps> = ({
                                                                 onClick,
                                                                 disabled = false,
                                                                 loading = false,
-                                                                children = "Confirm"
+                                                                children = "Подтвердить",
+                                                                className = ""
                                                             }) => {
     return (
         <button
             type="submit"
-            className="confirm-button"
+            className={`confirm-button ${className}`.trim()}
             onClick={onClick}
             disabled={disabled || loading}
         >
             {!loading && (
                 <img
                     src={ConfirmIcon}
-                    alt="Confirm"
+                    alt="Подтвердить"
                     className="confirm-icon"
                 />
             )}
-            {loading ? "Loading..." : children}
+            {loading ? "Загрузка..." : children}
         </button>
     );
 };

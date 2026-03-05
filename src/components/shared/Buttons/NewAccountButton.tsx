@@ -13,7 +13,7 @@ export const NewAccountButton: React.FC<NewAccountButtonProps> = ({
                                                                       onClick,
                                                                       disabled = false,
                                                                       loading = false,
-                                                                      children = "New account"
+                                                                      children = "Новый аккаунт"
                                                                   }) => {
     return (
         <button
@@ -25,11 +25,11 @@ export const NewAccountButton: React.FC<NewAccountButtonProps> = ({
             {!loading && (
                 <img
                     src={NewAccountIcon}
-                    alt="New account"
+                    alt="Новый аккаунт"
                     className="new-account-icon"
                 />
             )}
-            {loading ? "Loading..." : children}
+            {loading ? "Загрузка..." : children}
         </button>
     );
 };

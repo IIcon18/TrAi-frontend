@@ -24,7 +24,7 @@ const Header: React.FC = () => {
                         <span className="logo-red">Ai</span>
                     </div>
                     <div className="tagline">
-                        your personal training intelligence
+                        ваш персональный ИИ-тренер
                     </div>
                 </div>
 
@@ -33,25 +33,25 @@ const Header: React.FC = () => {
                         className="nav-button"
                         onClick={() => handleNavClick("/dashboard")}
                     >
-                        Dashboard
+                        Главная
                     </button>
                     <button
                         className="nav-button"
                         onClick={() => handleNavClick("/workouts")}
                     >
-                        Workouts
+                        Тренировки
                     </button>
                     <button
                         className="nav-button"
                         onClick={() => handleNavClick("/progress")}
                     >
-                        Progress
+                        Прогресс
                     </button>
                     <button
                         className="nav-button"
                         onClick={() => handleNavClick("/profile")}
                     >
-                        Profile
+                        Профиль
                     </button>
 
                     {isAdmin() && (
@@ -59,7 +59,7 @@ const Header: React.FC = () => {
                             className="nav-button nav-button-admin"
                             onClick={() => handleNavClick("/admin")}
                         >
-                            Admin
+                            Админ
                         </button>
                     )}
 
@@ -75,7 +75,7 @@ const Header: React.FC = () => {
                         ) : (
                             <>
                                 <span className="nav-button-subscription__icon">♛</span>
-                                Get PRO
+                                Получить PRO
                             </>
                         )}
                     </button>

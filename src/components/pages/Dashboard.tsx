@@ -73,7 +73,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   const lastTraining = data.last_training_message || '—';
 
   const weeklyProgress = {
-    label: 'Trainings',
+    label: 'Тренировки',
     current: data.weekly_progress?.completed_workouts || 0,
     total: data.weekly_progress?.planned_workouts || 0,
     color: '#FF3B30',
@@ -86,20 +86,20 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   const currentFat = data.current_nutrition?.fat ?? 0;
   
   const aiPlan = [
-    { 
-      label: 'Proteins', 
+    {
+      label: 'Белки',
       current: Math.round(currentProtein), 
       total: data.nutrition_plan?.protein || 0, 
       color: '#FF3B30' 
     },
-    { 
-      label: 'Carbohydrates', 
+    {
+      label: 'Углеводы',
       current: Math.round(currentCarbs), 
       total: data.nutrition_plan?.carbs || 0, 
       color: '#FF9800' 
     },
-    { 
-      label: 'Fats', 
+    {
+      label: 'Жиры',
       current: Math.round(currentFat), 
       total: data.nutrition_plan?.fat || 0, 
       color: '#FFEB3B' 
@@ -107,10 +107,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   ];
   
   const quickStats = [
-    { label: 'Weekly Volume:', value: `${data.quick_stats?.planned_workouts || 0} trainings` },
-    { label: 'Average Weight:', value: `${data.quick_stats?.total_weight_lifted || 0} kg` },
-    { label: 'Average Recovery:', value: `${data.quick_stats?.recovery_score || 0}%` },
-    { label: 'AI Goal Progress:', value: `${data.quick_stats?.weight_change || 0} kg` },
+    { label: 'Объём за неделю:', value: `${data.quick_stats?.planned_workouts || 0} тренировок` },
+    { label: 'Средний вес:', value: `${data.quick_stats?.total_weight_lifted || 0} кг` },
+    { label: 'Среднее восстановление:', value: `${data.quick_stats?.recovery_score || 0}%` },
+    { label: 'Прогресс цели ИИ:', value: `${data.quick_stats?.weight_change || 0} кг` },
   ];
 
   return (
@@ -119,8 +119,8 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       <main className="dashboard-main">
         <div className="dashboard-container">
           <section className="welcome-section">
-            <h1 className="welcome-title">Welcome back, {username}</h1>
-            <p className="welcome-subtitle">your last training was {lastTraining}</p>
+            <h1 className="welcome-title">С возвращением, {username}</h1>
+            <p className="welcome-subtitle">ваша последняя тренировка: {lastTraining}</p>
           </section>
 
           <div className="dashboard-content">
@@ -128,7 +128,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               <div className="main-dashboard-card">
                 {/* Activity Chart */}
                 <div className="activity-section">
-                  <h3>Your activity!</h3>
+                  <h3>Ваша активность!</h3>
                   <div className="activity-chart-wrapper">
                     <svg width="100%" height="200" viewBox="0 0 700 200" className="chart-svg" preserveAspectRatio="none">
                       {/* Grid lines */}
@@ -148,7 +148,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                       {/* X-axis labels (days) */}
                       {data.energy_chart.map((point, i) => {
                         const x = 60 + (i / Math.max(data.energy_chart.length - 1, 1)) * 600;
-                        const dayLabel = new Date(point.date).toLocaleDateString('en-US', { weekday: 'short' });
+                        const dayLabel = new Date(point.date).toLocaleDateString('ru-RU', { weekday: 'short' });
                         return (
                           <text key={i} x={x} y={190} className="axis-label">{dayLabel}</text>
                         );
@@ -191,8 +191,8 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                       })}
                     </svg>
                     <div className="chart-legend">
-                      <div className="legend-item"><div className="legend-color mood-color"></div><span>Mood</span></div>
-                      <div className="legend-item"><div className="legend-color energy-color"></div><span>Energy</span></div>
+                      <div className="legend-item"><div className="legend-color mood-color"></div><span>Настроение</span></div>
+                      <div className="legend-item"><div className="legend-color energy-color"></div><span>Энергия</span></div>
                     </div>
                   </div>
                 </div>
@@ -200,9 +200,9 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 {/* Weekly Progress + AI Plan */}
                 <div className="combined-bottom-section">
                   <div className="weekly-progress-section">
-                    <h3>Your Weekly Progress</h3>
+                    <h3>Ваш прогресс за неделю</h3>
                     <div className="trainings-card">
-                      <h4>Trainings</h4>
+                      <h4>Тренировки</h4>
                       <div className="progress-bar-container">
                         <div className="progress-fill-background">
                           <div
@@ -212,13 +212,13 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                         </div>
                         <span className="progress-value">{weeklyProgress.current}/{weeklyProgress.total}</span>
                       </div>
-                      <p className="workouts-left">{weeklyProgress.total - weeklyProgress.current} workout{weeklyProgress.total - weeklyProgress.current !== 1 ? 's' : ''} left!</p>
+                      <p className="workouts-left">{weeklyProgress.total - weeklyProgress.current} тренировок осталось!</p>
                     </div>
                     <p className="progress-message">{data.weekly_progress_message || ''}</p>
                   </div>
 
                   <div className="ai-plan-section">
-                    <h3>AI Plan</h3>
+                    <h3>ИИ-план</h3>
                     <div className="ai-plan-grid-container">
                       <div className={`ai-plan-grid ${!isPro() ? 'nutrition-blurred' : ''}`}>
                         {aiPlan.map((item, i) => (
@@ -250,13 +250,13 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                             <path d="M7 11V7a5 5 0 0110 0v4"/>
                           </svg>
                           <span style={{ color: '#9D2628', fontSize: '13px', fontWeight: 600, textAlign: 'center', letterSpacing: '0.3px' }}>
-                            Nutrition tracking available in Pro
+                            Отслеживание питания доступно в Pro
                           </span>
                         </div>
                       )}
                     </div>
                     {isPro() && (
-                      <button className="add-meal-button" onClick={onOpenAddMeal}>+ Add meal</button>
+                      <button className="add-meal-button" onClick={onOpenAddMeal}>+ Добавить приём пищи</button>
                     )}
                   </div>
                 </div>
@@ -266,7 +266,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             <div className="right-column">
               {/* Quick Stats */}
               <div className="stats-card">
-                <h3>Quick stats</h3>
+                <h3>Быстрая статистика</h3>
                 <div className="quick-stats-list">
                   {quickStats.map((s, i) => (
                     <div key={i} className="quick-stat-item">
@@ -279,18 +279,18 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
               {/* Quick Actions */}
               <div className="actions-card">
-                <h3>Actions</h3>
+                <h3>Действия</h3>
                 <div className="actions-content">
                   <div className="action-buttons">
                     <button className="action-btn red-btn" onClick={onGoProgress}>
-                      <GraphIcon className="action-icon-svg" />Open statistic
+                      <GraphIcon className="action-icon-svg" />Открыть статистику
                     </button>
                     <button className="action-btn red-btn" onClick={onOpenChangeGoal}>
-                      <DartboardIcon className="action-icon-svg" />Change goal
+                      <DartboardIcon className="action-icon-svg" />Изменить цель
                     </button>
                   </div>
                   <button className="action-btn start-training-btn" onClick={onStartTraining}>
-                    <PlayIcon className="action-icon-svg" />Start training
+                    <PlayIcon className="action-icon-svg" />Начать тренировку
                   </button>
                 </div>
                 <div className="bot-status bot-status--dev">
@@ -334,6 +334,7 @@ const Dashboard: React.FC = () => {
 
   useEffect(() => {
     fetchDashboard();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [navigate]);
 
   const handleMealAdded = () => {
@@ -347,7 +348,7 @@ const Dashboard: React.FC = () => {
         <Header />
         <main className="dashboard-main">
           <div className="dashboard-container">
-            <p style={{ color: 'white', textAlign: 'center' }}>Loading...</p>
+            <p style={{ color: 'white', textAlign: 'center' }}>Загрузка...</p>
           </div>
         </main>
         <Footer />

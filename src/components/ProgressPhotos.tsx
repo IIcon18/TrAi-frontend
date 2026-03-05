@@ -45,6 +45,7 @@ const ProgressPhotos: React.FC = () => {
 
   useEffect(() => {
     if (userId) fetchPhotos();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -55,11 +56,11 @@ const ProgressPhotos: React.FC = () => {
     if (!file) return;
 
     if (!ALLOWED_TYPES.includes(file.type)) {
-      alert('Only JPEG, PNG, GIF, and PDF files are allowed.');
+      alert('Допустимы только JPEG, PNG, GIF и PDF файлы.');
       return;
     }
     if (file.size > MAX_FILE_SIZE) {
-      alert('File size must not exceed 10 MB.');
+      alert('Размер файла не должен превышать 10 МБ.');
       return;
     }
 
@@ -68,7 +69,7 @@ const ProgressPhotos: React.FC = () => {
       await uploadAttachment(file, 'user', userId);
       await fetchPhotos();
     } catch (err: any) {
-      alert(err?.response?.data?.detail || 'Upload failed. Please try again.');
+      alert(err?.response?.data?.detail || 'Ошибка загрузки. Попробуйте снова.');
     } finally {
       setUploading(false);
     }
@@ -80,19 +81,19 @@ const ProgressPhotos: React.FC = () => {
       const url = await getAttachmentUrl(photo.id);
       window.open(url, '_blank');
     } catch (err: any) {
-      alert('Failed to get download link.');
+      alert('Не удалось получить ссылку для скачивания.');
     } finally {
       setLoadingId(null);
     }
   };
 
   const handleDelete = async (id: number) => {
-    if (!window.confirm('Delete this photo?')) return;
+    if (!window.confirm('Удалить это фото?')) return;
     try {
       await deleteAttachment(id);
       setPhotos((prev) => prev.filter((p) => p.id !== id));
     } catch (err: any) {
-      alert(err?.response?.data?.detail || 'Failed to delete photo.');
+      alert(err?.response?.data?.detail || 'Не удалось удалить фото.');
     }
   };
 
@@ -103,7 +104,7 @@ const ProgressPhotos: React.FC = () => {
 
   return (
     <div className="pp-card">
-      <h3 className="pp-title">Progress Photos</h3>
+      <h3 className="pp-title">Фото прогресса</h3>
 
       <div className="pp-grid">
         {photos.map((photo) => (
@@ -160,7 +161,7 @@ const ProgressPhotos: React.FC = () => {
       />
 
       {photos.length === 0 && !uploading && (
-        <p className="pp-hint">Click + to add your first progress photo</p>
+        <p className="pp-hint">Нажмите + чтобы добавить первое фото прогресса</p>
       )}
     </div>
   );

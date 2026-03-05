@@ -31,19 +31,19 @@ interface AddWorkoutModalProps {
 }
 
 const muscleGroups: { value: MuscleGroup; label: string }[] = [
-    { value: 'upper_body_push', label: 'Upper Body Push 💪' },
-    { value: 'upper_body_pull', label: 'Upper Body Pull 🔙' },
-    { value: 'core_stability', label: 'Core & Stability 🧘' },
-    { value: 'lower_body', label: 'Lower Body 🦵' },
+    { value: 'upper_body_push', label: 'Верхняя часть (толчок) 💪' },
+    { value: 'upper_body_pull', label: 'Верхняя часть (тяга) 🔙' },
+    { value: 'core_stability', label: 'Корпус и стабильность 🧘' },
+    { value: 'lower_body', label: 'Нижняя часть тела 🦵' },
 ];
 
 const equipmentOptions = [
-    { value: 'bodyweight', label: 'Bodyweight' },
-    { value: 'dumbbells', label: 'Dumbbells' },
-    { value: 'barbell', label: 'Barbell' },
-    { value: 'resistance_band', label: 'Resistance Band' },
-    { value: 'machine', label: 'Machine' },
-    { value: 'none', label: 'No Equipment' },
+    { value: 'bodyweight', label: 'Без инвентаря' },
+    { value: 'dumbbells', label: 'Гантели' },
+    { value: 'barbell', label: 'Штанга' },
+    { value: 'resistance_band', label: 'Резинка' },
+    { value: 'machine', label: 'Тренажёр' },
+    { value: 'none', label: 'Без оборудования' },
 ];
 
 const AddWorkoutModal: React.FC<AddWorkoutModalProps> = ({ isOpen, onClose, onWorkoutAdded, editWorkout }) => {
@@ -92,13 +92,13 @@ const AddWorkoutModal: React.FC<AddWorkoutModalProps> = ({ isOpen, onClose, onWo
 
     const handleSelectMuscleGroup = (group: MuscleGroup) => {
         setSelectedMuscleGroup(group);
-        setWorkoutName(`Custom ${muscleGroups.find(g => g.value === group)?.label || 'Workout'}`);
+        setWorkoutName(`${muscleGroups.find(g => g.value === group)?.label || 'Тренировка'}`);
         setStep('add-exercises');
     };
 
     const handleAddExercise = () => {
         if (!currentExercise.name.trim()) {
-            setError('Exercise name is required');
+            setError('Введите название упражнения');
             return;
         }
 
@@ -121,7 +121,7 @@ const AddWorkoutModal: React.FC<AddWorkoutModalProps> = ({ isOpen, onClose, onWo
 
     const handleSaveWorkout = async () => {
         if (exercises.length === 0) {
-            setError('Add at least one exercise');
+            setError('Добавьте хотя бы одно упражнение');
             return;
         }
 
@@ -148,7 +148,7 @@ const AddWorkoutModal: React.FC<AddWorkoutModalProps> = ({ isOpen, onClose, onWo
             }, 1500);
         } catch (err: any) {
             console.error('Failed to create workout:', err);
-            setError('Failed to create workout');
+            setError('Не удалось создать тренировку');
         } finally {
             setLoading(false);
         }
@@ -163,7 +163,7 @@ const AddWorkoutModal: React.FC<AddWorkoutModalProps> = ({ isOpen, onClose, onWo
 
     const handleSaveEdit = async () => {
         if (!editName.trim() || editName.trim().length < 3) {
-            setEditNameError('Name must be at least 3 characters');
+            setEditNameError('Название должно содержать не менее 3 символов');
             return;
         }
         setEditNameError('');
@@ -178,7 +178,7 @@ const AddWorkoutModal: React.FC<AddWorkoutModalProps> = ({ isOpen, onClose, onWo
             if (onWorkoutAdded) onWorkoutAdded();
             setTimeout(() => { resetState(); onClose(); }, 1500);
         } catch (err: any) {
-            setEditNameError(err?.response?.data?.detail || 'Failed to update workout');
+            setEditNameError(err?.response?.data?.detail || 'Не удалось обновить тренировку');
         } finally {
             setLoading(false);
         }
@@ -193,38 +193,38 @@ const AddWorkoutModal: React.FC<AddWorkoutModalProps> = ({ isOpen, onClose, onWo
                 {/* Edit mode */}
                 {isEditMode && step !== 'success' && (
                     <>
-                        <h3>Edit Workout</h3>
+                        <h3>Редактировать тренировку</h3>
                         {editNameError && <div className="error-message">{editNameError}</div>}
                         <div className="form-group">
-                            <label>Name</label>
+                            <label>Название</label>
                             <input
                                 type="text"
                                 className="exercise-input"
                                 value={editName}
                                 onChange={(e) => setEditName(e.target.value)}
-                                placeholder="Workout name (min 3 chars)"
+                                placeholder="Название тренировки (мин. 3 символа)"
                                 minLength={3}
                                 maxLength={100}
                             />
                         </div>
                         <div className="form-group">
-                            <label>Muscle Group</label>
+                            <label>Группа мышц</label>
                             <select className="exercise-select" value={editMuscleGroup} onChange={(e) => setEditMuscleGroup(e.target.value)}>
                                 {muscleGroups.map(g => <option key={g.value} value={g.value}>{g.label}</option>)}
                             </select>
                         </div>
                         <div className="form-group">
-                            <label>Difficulty</label>
+                            <label>Сложность</label>
                             <select className="exercise-select" value={editDifficulty} onChange={(e) => setEditDifficulty(e.target.value)}>
-                                <option value="easy">Easy</option>
-                                <option value="medium">Medium</option>
-                                <option value="hard">Hard</option>
+                                <option value="easy">Лёгкая</option>
+                                <option value="medium">Средняя</option>
+                                <option value="hard">Тяжёлая</option>
                             </select>
                         </div>
                         <div className="modal-actions">
-                            <button className="btn-secondary" onClick={() => { resetState(); onClose(); }}>Cancel</button>
+                            <button className="btn-secondary" onClick={() => { resetState(); onClose(); }}>Отмена</button>
                             <button className="btn-primary" onClick={handleSaveEdit} disabled={loading}>
-                                {loading ? 'Saving...' : 'Save Changes'}
+                                {loading ? 'Сохранение...' : 'Сохранить изменения'}
                             </button>
                         </div>
                     </>
@@ -232,9 +232,9 @@ const AddWorkoutModal: React.FC<AddWorkoutModalProps> = ({ isOpen, onClose, onWo
 
                 {!isEditMode && step === 'select' && (
                     <>
-                        <h3>Create Workout</h3>
+                        <h3>Создать тренировку</h3>
                         {error && <div className="error-message">{error}</div>}
-                        <p className="modal-subtitle">Select muscle group</p>
+                        <p className="modal-subtitle">Выберите группу мышц</p>
                         <div className="muscle-group-list">
                             {muscleGroups.map((group) => (
                                 <div
@@ -252,31 +252,31 @@ const AddWorkoutModal: React.FC<AddWorkoutModalProps> = ({ isOpen, onClose, onWo
 
                 {!isEditMode && step === 'add-exercises' && (
                     <>
-                        <h3>Create Workout</h3>
+                        <h3>Создать тренировку</h3>
                         {error && <div className="error-message">{error}</div>}
 
                         <div className="form-row">
                             <div className="form-group" style={{ flex: 2 }}>
-                                <label>Workout Name</label>
+                                <label>Название тренировки</label>
                                 <input
                                     type="text"
                                     className="exercise-input"
                                     value={workoutName}
                                     onChange={(e) => setWorkoutName(e.target.value)}
-                                    placeholder="Workout name"
+                                    placeholder="Название тренировки"
                                     maxLength={100}
                                 />
                             </div>
                             <div className="form-group" style={{ flex: 1 }}>
-                                <label>Difficulty</label>
+                                <label>Сложность</label>
                                 <select
                                     className="exercise-select"
                                     value={workoutDifficulty}
                                     onChange={(e) => setWorkoutDifficulty(e.target.value as 'easy' | 'medium' | 'hard')}
                                 >
-                                    <option value="easy">Easy</option>
-                                    <option value="medium">Medium</option>
-                                    <option value="hard">Hard</option>
+                                    <option value="easy">Лёгкая</option>
+                                    <option value="medium">Средняя</option>
+                                    <option value="hard">Тяжёлая</option>
                                 </select>
                             </div>
                         </div>
@@ -284,7 +284,7 @@ const AddWorkoutModal: React.FC<AddWorkoutModalProps> = ({ isOpen, onClose, onWo
                         {/* Список добавленных упражнений */}
                         {exercises.length > 0 && (
                             <div className="exercises-list">
-                                <h4>Exercises ({exercises.length})</h4>
+                                <h4>Упражнения ({exercises.length})</h4>
                                 {exercises.map((ex, idx) => (
                                     <div key={idx} className="exercise-item">
                                         <div className="exercise-info">
@@ -306,19 +306,19 @@ const AddWorkoutModal: React.FC<AddWorkoutModalProps> = ({ isOpen, onClose, onWo
 
                         {/* Форма добавления упражнения */}
                         <div className="add-exercise-form">
-                            <h4>Add Exercise</h4>
+                            <h4>Добавить упражнение</h4>
 
                             <input
                                 type="text"
                                 className="exercise-input"
-                                placeholder="Exercise name (e.g., Push-ups)"
+                                placeholder="Название упражнения (напр., Отжимания)"
                                 value={currentExercise.name}
                                 onChange={(e) => setCurrentExercise({ ...currentExercise, name: e.target.value })}
                             />
 
                             <textarea
                                 className="exercise-textarea"
-                                placeholder="Description (optional)"
+                                placeholder="Описание (необязательно)"
                                 value={currentExercise.description}
                                 onChange={(e) => setCurrentExercise({ ...currentExercise, description: e.target.value })}
                                 rows={2}
@@ -326,7 +326,7 @@ const AddWorkoutModal: React.FC<AddWorkoutModalProps> = ({ isOpen, onClose, onWo
 
                             <div className="form-row">
                                 <div className="form-group">
-                                    <label>Equipment</label>
+                                    <label>Инвентарь</label>
                                     <select
                                         className="exercise-select"
                                         value={currentExercise.equipment}
@@ -339,22 +339,22 @@ const AddWorkoutModal: React.FC<AddWorkoutModalProps> = ({ isOpen, onClose, onWo
                                 </div>
 
                                 <div className="form-group">
-                                    <label>Intensity</label>
+                                    <label>Интенсивность</label>
                                     <select
                                         className="exercise-select"
                                         value={currentExercise.intensity}
                                         onChange={(e) => setCurrentExercise({ ...currentExercise, intensity: e.target.value as Intensity })}
                                     >
-                                        <option value="low">Low</option>
-                                        <option value="medium">Medium</option>
-                                        <option value="high">High</option>
+                                        <option value="low">Низкая</option>
+                                        <option value="medium">Средняя</option>
+                                        <option value="high">Высокая</option>
                                     </select>
                                 </div>
                             </div>
 
                             <div className="form-row">
                                 <div className="form-group">
-                                    <label>Sets</label>
+                                    <label>Подходы</label>
                                     <input
                                         type="number"
                                         className="exercise-number-input"
@@ -366,7 +366,7 @@ const AddWorkoutModal: React.FC<AddWorkoutModalProps> = ({ isOpen, onClose, onWo
                                 </div>
 
                                 <div className="form-group">
-                                    <label>Reps</label>
+                                    <label>Повторения</label>
                                     <input
                                         type="number"
                                         className="exercise-number-input"
@@ -378,7 +378,7 @@ const AddWorkoutModal: React.FC<AddWorkoutModalProps> = ({ isOpen, onClose, onWo
                                 </div>
 
                                 <div className="form-group">
-                                    <label>Weight (kg)</label>
+                                    <label>Вес (кг)</label>
                                     <input
                                         type="number"
                                         className="exercise-number-input"
@@ -391,7 +391,7 @@ const AddWorkoutModal: React.FC<AddWorkoutModalProps> = ({ isOpen, onClose, onWo
                             </div>
 
                             <button className="add-exercise-btn" onClick={handleAddExercise}>
-                                + Add Exercise
+                                + Добавить упражнение
                             </button>
                         </div>
 
@@ -401,14 +401,14 @@ const AddWorkoutModal: React.FC<AddWorkoutModalProps> = ({ isOpen, onClose, onWo
                                 className="btn-secondary"
                                 onClick={() => setStep('select')}
                             >
-                                Back
+                                Назад
                             </button>
                             <button
                                 className="btn-primary"
                                 onClick={handleSaveWorkout}
                                 disabled={loading || exercises.length === 0}
                             >
-                                {loading ? 'Saving...' : `Save Workout (${exercises.length} exercises)`}
+                                {loading ? 'Сохранение...' : `Сохранить тренировку (${exercises.length} упр.)`}
                             </button>
                         </div>
                     </>
@@ -417,7 +417,7 @@ const AddWorkoutModal: React.FC<AddWorkoutModalProps> = ({ isOpen, onClose, onWo
                 {step === 'success' && (
                     <div className="success-message">
                         <div className="success-icon">✓</div>
-                        <div className="success-text">Workout created successfully!</div>
+                        <div className="success-text">Тренировка успешно создана!</div>
                     </div>
                 )}
             </div>

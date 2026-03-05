@@ -4,7 +4,7 @@ import "./Footer.css";
 const Footer: React.FC = () => {
     return (
         <footer className="footer">
-            © TrAI - your personal training intelligence
+            © TrAI - ваш персональный ИИ-тренер
         </footer>
     );
 };

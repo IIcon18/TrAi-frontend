@@ -9,7 +9,7 @@ interface ChangeGoalModalProps {
     onSuccess?: () => void;
 }
 
-type DayName = 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday' | 'Sunday';
+type DayName = 'Понедельник' | 'Вторник' | 'Среда' | 'Четверг' | 'Пятница' | 'Суббота' | 'Воскресенье';
 
 const goalTypeMap: Record<string, string> = {
     'lose weight': 'weight_loss',
@@ -30,13 +30,13 @@ const ChangeGoalModal: React.FC<ChangeGoalModalProps> = ({ isOpen, onClose, onSu
     const [daysCount, setDaysCount] = useState<number>(3);
     const [saving, setSaving] = useState<boolean>(false);
     const [selectedDays, setSelectedDays] = useState<Record<DayName, boolean>>({
-        Monday: true,
-        Tuesday: false,
-        Wednesday: true,
-        Thursday: false,
-        Friday: true,
-        Saturday: false,
-        Sunday: false,
+        Понедельник: true,
+        Вторник: false,
+        Среда: true,
+        Четверг: false,
+        Пятница: true,
+        Суббота: false,
+        Воскресенье: false,
     });
 
     if (!isOpen) return null;
@@ -50,7 +50,7 @@ const ChangeGoalModal: React.FC<ChangeGoalModalProps> = ({ isOpen, onClose, onSu
             .filter(day => selectedDays[day]);
 
         if (selectedDaysList.length !== daysCount) {
-            alert(`Please select exactly ${daysCount} days.`);
+            alert(`Пожалуйста, выберите ровно ${daysCount} дней.`);
             return;
         }
 
@@ -71,7 +71,7 @@ const ChangeGoalModal: React.FC<ChangeGoalModalProps> = ({ isOpen, onClose, onSu
         } catch (error: any) {
             console.error('Failed to save goal:', error);
             const errorMessage = error?.response?.data?.detail || error?.message || 'Unknown error';
-            alert(`Failed to save goal: ${errorMessage}`);
+            alert(`Не удалось сохранить цель: ${errorMessage}`);
         } finally {
             setSaving(false);
         }
@@ -103,35 +103,35 @@ const ChangeGoalModal: React.FC<ChangeGoalModalProps> = ({ isOpen, onClose, onSu
                 {step === 'goal' && (
                     <>
                         <div className="change-goal-header">
-                            <h2 className="change-goal-title">Change your goal</h2>
+                            <h2 className="change-goal-title">Изменить цель</h2>
                         </div>
                         <div className="change-goal-form">
                             <div className="change-goal-form-group">
-                                <label className="change-goal-label">What do you want?</label>
+                                <label className="change-goal-label">Что вы хотите?</label>
                                 <select
                                     className="change-goal-select"
                                     value={goal}
                                     onChange={(e) => setGoal(e.target.value)}
                                 >
-                                    <option value="lose weight">Lose weight</option>
-                                    <option value="gain muscle">Gain muscle</option>
-                                    <option value="maintain weight">Maintain weight</option>
+                                    <option value="lose weight">Похудеть</option>
+                                    <option value="gain muscle">Набрать мышцы</option>
+                                    <option value="maintain weight">Поддерживать вес</option>
                                 </select>
                             </div>
                             <div className="change-goal-form-group">
-                                <label className="change-goal-label">What your level in sport?</label>
+                                <label className="change-goal-label">Какой ваш уровень в спорте?</label>
                                 <select
                                     className="change-goal-select"
                                     value={level}
                                     onChange={(e) => setLevel(e.target.value)}
                                 >
-                                    <option value="beginner">Beginner</option>
-                                    <option value="intermediate">Intermediate</option>
-                                    <option value="advanced">Advanced</option>
+                                    <option value="beginner">Начинающий</option>
+                                    <option value="intermediate">Средний</option>
+                                    <option value="advanced">Продвинутый</option>
                                 </select>
                             </div>
                             <div className="change-goal-form-group">
-                                <label className="change-goal-label">How much days do you prefer for workouts?</label>
+                                <label className="change-goal-label">Сколько дней в неделю вы хотите тренироваться?</label>
                                 <input
                                     type="number"
                                     className="change-goal-input"
@@ -146,7 +146,7 @@ const ChangeGoalModal: React.FC<ChangeGoalModalProps> = ({ isOpen, onClose, onSu
                             className="change-goal-button confirm"
                             onClick={handleConfirmGoal}
                         >
-                            ✓ Confirm
+                            ✓ Подтвердить
                         </button>
                     </>
                 )}
@@ -154,7 +154,7 @@ const ChangeGoalModal: React.FC<ChangeGoalModalProps> = ({ isOpen, onClose, onSu
                 {step === 'days' && (
                     <>
                         <div className="change-goal-header">
-                            <h2 className="change-goal-title">Select days for workouts</h2>
+                            <h2 className="change-goal-title">Выберите дни тренировок</h2>
                         </div>
                         <div className="change-goal-days-selector">
                             {Object.keys(selectedDays).map(day => (
@@ -174,14 +174,14 @@ const ChangeGoalModal: React.FC<ChangeGoalModalProps> = ({ isOpen, onClose, onSu
                                 className="change-goal-button skip"
                                 onClick={handleSkip}
                             >
-                                ⚙️ Skip
+                                ⚙️ Пропустить
                             </button>
                             <button
                                 className="change-goal-button confirm"
                                 onClick={handleConfirmDays}
                                 disabled={saving}
                             >
-                                {saving ? 'Saving...' : '✓ Confirm'}
+                                {saving ? 'Сохранение...' : '✓ Подтвердить'}
                             </button>
                         </div>
                     </>
@@ -190,7 +190,7 @@ const ChangeGoalModal: React.FC<ChangeGoalModalProps> = ({ isOpen, onClose, onSu
                 {step === 'success' && (
                     <div className="change-goal-success-message">
                         <div className="change-goal-success-icon">✓</div>
-                        <div className="change-goal-success-text">Your goal successfully changed!</div>
+                        <div className="change-goal-success-text">Цель успешно изменена!</div>
                     </div>
                 )}
             </div>
