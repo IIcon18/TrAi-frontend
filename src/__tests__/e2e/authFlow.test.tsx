@@ -18,6 +18,7 @@ import { render, screen, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 import { renderHook } from '@testing-library/react';
+import apiClient from '../../api/apiClient';
 
 import { AuthProvider } from '../../contexts/AuthContext';
 import { useAuth } from '../../hooks/useAuth';
@@ -48,7 +49,6 @@ jest.mock('../../assets/icons/hide_eye.svg', () => 'hide-svg');
 jest.mock('../../assets/icons/confirm.svg', () => 'confirm-svg');
 jest.mock('../../assets/icons/new_acc.svg', () => 'new-acc-svg');
 
-import apiClient from '../../api/apiClient';
 const mockApiClient = apiClient as jest.Mocked<typeof apiClient>;
 
 const wrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => (
@@ -83,14 +83,11 @@ describe('E2E — Полный цикл входа через LoginForm', () => 
     await userEvent.click(screen.getByRole('button', { name: /войти/i }));
 
     await waitFor(() => {
-      // Токены сохранены в localStorage
-      expect(localStorage.getItem('access_token')).toBe('e2e_access');
-      expect(localStorage.getItem('refresh_token')).toBe('e2e_refresh');
-      expect(localStorage.getItem('user_role')).toBe('admin');
-
-      // Навигация выполнена
       expect(mockNavigate).toHaveBeenCalledWith('/dashboard');
     });
+    expect(localStorage.getItem('access_token')).toBe('e2e_access');
+    expect(localStorage.getItem('refresh_token')).toBe('e2e_refresh');
+    expect(localStorage.getItem('user_role')).toBe('admin');
   });
 });
 
@@ -230,8 +227,8 @@ describe('E2E — Граничные случаи LoginForm', () => {
     await userEvent.click(screen.getByRole('button', { name: /войти/i }));
 
     await waitFor(() => {
-      expect(mockNavigate).not.toHaveBeenCalled();
       expect(window.alert).toHaveBeenCalled();
     });
+    expect(mockNavigate).not.toHaveBeenCalled();
   });
 });

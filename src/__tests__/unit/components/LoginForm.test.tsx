@@ -15,9 +15,10 @@
  */
 
 import React from 'react';
-import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
+import apiClient from '../../../api/apiClient';
 
 import LoginForm from '../../../components/LoginForm';
 import { AuthProvider } from '../../../contexts/AuthContext';
@@ -49,7 +50,6 @@ jest.mock('../../../assets/icons/new_acc.svg', () => 'new-acc-svg');
 
 // CSS обрабатываются CRA автоматически через cssTransform.js
 
-import apiClient from '../../../api/apiClient';
 const mockApiClient = apiClient as jest.Mocked<typeof apiClient>;
 
 // Вспомогательная функция рендера
@@ -126,14 +126,13 @@ describe('LoginForm', () => {
     await userEvent.type(screen.getByPlaceholderText('Эл. почта'), 'user@test.com');
     await userEvent.type(screen.getByPlaceholderText('Пароль'), 'password123');
 
-    // Нажимаем кнопку подтверждения
     const confirmBtn = screen.getByRole('button', { name: /войти/i });
     await userEvent.click(confirmBtn);
 
     await waitFor(() => {
       expect(localStorage.getItem('access_token')).toBe('access123');
-      expect(localStorage.getItem('refresh_token')).toBe('refresh456');
     });
+    expect(localStorage.getItem('refresh_token')).toBe('refresh456');
   });
 
   it('при успешном входе перенаправляет на /dashboard', async () => {

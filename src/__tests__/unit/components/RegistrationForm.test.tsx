@@ -11,9 +11,10 @@
  */
 
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
+import apiClient from '../../../api/apiClient';
 
 import RegistrationForm from '../../../components/RegistrationForm';
 import { AuthProvider } from '../../../contexts/AuthContext';
@@ -43,7 +44,6 @@ jest.mock('../../../assets/icons/hide_eye.svg', () => 'hide-svg');
 
 // CSS обрабатываются CRA автоматически через cssTransform.js
 
-import apiClient from '../../../api/apiClient';
 const mockApiClient = apiClient as jest.Mocked<typeof apiClient>;
 
 function renderRegistrationForm() {
@@ -87,38 +87,42 @@ describe('RegistrationForm', () => {
   // --- Индикатор надёжности пароля ---
 
   it('индикатор "weak" отображается для пароля длиной < 6 символов', async () => {
-    renderRegistrationForm();
+    const { container } = renderRegistrationForm();
     const passwordInput = screen.getByPlaceholderText('Пароль');
 
     await userEvent.type(passwordInput, 'abc');
 
-    const indicator = document.querySelector('.password-strength-progress');
+    // eslint-disable-next-line testing-library/no-node-access
+    const indicator = container.querySelector('.password-strength-progress');
     expect(indicator).toHaveClass('weak');
   });
 
   it('индикатор "medium" отображается для пароля длиной 6-9 символов', async () => {
-    renderRegistrationForm();
+    const { container } = renderRegistrationForm();
     const passwordInput = screen.getByPlaceholderText('Пароль');
 
     await userEvent.type(passwordInput, 'pass12');
 
-    const indicator = document.querySelector('.password-strength-progress');
+    // eslint-disable-next-line testing-library/no-node-access
+    const indicator = container.querySelector('.password-strength-progress');
     expect(indicator).toHaveClass('medium');
   });
 
   it('индикатор "strong" отображается для пароля длиной >= 10 символов', async () => {
-    renderRegistrationForm();
+    const { container } = renderRegistrationForm();
     const passwordInput = screen.getByPlaceholderText('Пароль');
 
     await userEvent.type(passwordInput, 'strongpassword');
 
-    const indicator = document.querySelector('.password-strength-progress');
+    // eslint-disable-next-line testing-library/no-node-access
+    const indicator = container.querySelector('.password-strength-progress');
     expect(indicator).toHaveClass('strong');
   });
 
   it('индикатор не отображается для пустого пароля', () => {
-    renderRegistrationForm();
-    const indicator = document.querySelector('.password-strength-bar');
+    const { container } = renderRegistrationForm();
+    // eslint-disable-next-line testing-library/no-node-access
+    const indicator = container.querySelector('.password-strength-bar');
     expect(indicator).not.toBeInTheDocument();
   });
 
