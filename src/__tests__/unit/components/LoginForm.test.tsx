@@ -123,7 +123,7 @@ describe('LoginForm', () => {
 
     renderLoginForm();
 
-    await userEvent.type(screen.getByPlaceholderText('Email'), 'user@test.com');
+    await userEvent.type(screen.getByPlaceholderText('Эл. почта'), 'user@test.com');
     await userEvent.type(screen.getByPlaceholderText('Пароль'), 'password123');
 
     // Нажимаем кнопку подтверждения
@@ -147,7 +147,7 @@ describe('LoginForm', () => {
 
     renderLoginForm();
 
-    await userEvent.type(screen.getByPlaceholderText('Email'), 'user@test.com');
+    await userEvent.type(screen.getByPlaceholderText('Эл. почта'), 'user@test.com');
     await userEvent.type(screen.getByPlaceholderText('Пароль'), 'password123');
 
     const confirmBtn = screen.getByRole('button', { name: /войти/i });
@@ -165,7 +165,7 @@ describe('LoginForm', () => {
 
     renderLoginForm();
 
-    await userEvent.type(screen.getByPlaceholderText('Email'), 'user@test.com');
+    await userEvent.type(screen.getByPlaceholderText('Эл. почта'), 'user@test.com');
     await userEvent.type(screen.getByPlaceholderText('Пароль'), 'pass123');
 
     await userEvent.click(screen.getByRole('button', { name: /войти/i }));
@@ -185,7 +185,7 @@ describe('LoginForm', () => {
 
     renderLoginForm();
 
-    await userEvent.type(screen.getByPlaceholderText('Email'), 'wrong@test.com');
+    await userEvent.type(screen.getByPlaceholderText('Эл. почта'), 'wrong@test.com');
     await userEvent.type(screen.getByPlaceholderText('Пароль'), 'wrongpass');
 
     await userEvent.click(screen.getByRole('button', { name: /войти/i }));
@@ -202,7 +202,7 @@ describe('LoginForm', () => {
 
     renderLoginForm();
 
-    await userEvent.type(screen.getByPlaceholderText('Email'), 'u@test.com');
+    await userEvent.type(screen.getByPlaceholderText('Эл. почта'), 'u@test.com');
     await userEvent.type(screen.getByPlaceholderText('Пароль'), 'wrong');
 
     await userEvent.click(screen.getByRole('button', { name: /войти/i }));
