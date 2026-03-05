@@ -5,7 +5,9 @@ import axios, {
   AxiosResponse,
 } from 'axios';
 
-const BASE_URL = 'http://localhost:8000/api/v1';
+const BASE_URL = process.env.REACT_APP_API_URL
+  ? `${process.env.REACT_APP_API_URL}/api/v1`
+  : 'http://localhost:8000/api/v1';
 
 const apiClient = axios.create({
   baseURL: BASE_URL,
