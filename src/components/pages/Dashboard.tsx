@@ -334,6 +334,7 @@ const Dashboard: React.FC = () => {
 
   useEffect(() => {
     fetchDashboard();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [navigate]);
 
   const handleMealAdded = () => {

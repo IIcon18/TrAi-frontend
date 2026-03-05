@@ -45,6 +45,7 @@ const ProgressPhotos: React.FC = () => {
 
   useEffect(() => {
     if (userId) fetchPhotos();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {

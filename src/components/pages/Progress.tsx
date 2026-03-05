@@ -185,6 +185,7 @@ const Progress: React.FC = () => {
         if (activeTab === 'workouts') {
             fetchWorkoutStats();
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [activeTab]);
 
     if (loading) {

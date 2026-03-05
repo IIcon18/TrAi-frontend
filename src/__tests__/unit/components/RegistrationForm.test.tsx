@@ -92,7 +92,7 @@ describe('RegistrationForm', () => {
 
     await userEvent.type(passwordInput, 'abc');
 
-    // eslint-disable-next-line testing-library/no-node-access
+    // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
     const indicator = container.querySelector('.password-strength-progress');
     expect(indicator).toHaveClass('weak');
   });
@@ -103,7 +103,7 @@ describe('RegistrationForm', () => {
 
     await userEvent.type(passwordInput, 'pass12');
 
-    // eslint-disable-next-line testing-library/no-node-access
+    // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
     const indicator = container.querySelector('.password-strength-progress');
     expect(indicator).toHaveClass('medium');
   });
@@ -114,14 +114,14 @@ describe('RegistrationForm', () => {
 
     await userEvent.type(passwordInput, 'strongpassword');
 
-    // eslint-disable-next-line testing-library/no-node-access
+    // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
     const indicator = container.querySelector('.password-strength-progress');
     expect(indicator).toHaveClass('strong');
   });
 
   it('индикатор не отображается для пустого пароля', () => {
     const { container } = renderRegistrationForm();
-    // eslint-disable-next-line testing-library/no-node-access
+    // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
     const indicator = container.querySelector('.password-strength-bar');
     expect(indicator).not.toBeInTheDocument();
   });
