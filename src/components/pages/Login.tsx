@@ -22,7 +22,7 @@ const Login: React.FC = () => {
             <SEOHead
                 title="Вход"
                 description="Войдите в TrAi — персональный фитнес-трекер с ИИ-тренировками и трекингом питания"
-                canonical="http://localhost:3000/login"
+                canonical={`${process.env.REACT_APP_BASE_URL || 'http://localhost:3000'}/login`}
                 ogTitle="TrAi — Вход в аккаунт"
                 ogDescription="Персональный тренер с ИИ-рекомендациями по тренировкам и питанию"
             />

@@ -5,7 +5,6 @@ import Register from "../components/pages/Register";
 import NotFound from "../components/pages/NotFound";
 import PrivateRoute from "../components/shared/PrivateRoute";
 
-// Закрытые страницы загружаются лениво — уменьшает начальный бандл для публичных маршрутов
 const Dashboard = React.lazy(() => import("../components/pages/Dashboard"));
 const Profile = React.lazy(() => import("../components/pages/Profile"));
 const Progress = React.lazy(() => import("../components/pages/Progress"));

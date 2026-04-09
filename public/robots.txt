@@ -1,3 +1,10 @@
-# https://www.robotstxt.org/robotstxt.html
 User-agent: *
-Disallow:
+Allow: /login
+Allow: /register
+Disallow: /dashboard
+Disallow: /profile
+Disallow: /progress
+Disallow: /workouts
+Disallow: /admin
+
+Sitemap: http://localhost:3000/sitemap.xml

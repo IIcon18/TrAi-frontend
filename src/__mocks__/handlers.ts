@@ -74,4 +74,75 @@ export const handlers = [
       })
     );
   }),
+
+  // POST /dishes/create-meal — создание приёма пищи
+  rest.post(`${BASE_URL}/dishes/create-meal`, (req, res, ctx) => {
+    return res(
+      ctx.status(200),
+      ctx.json({
+        id: 1,
+        user_id: 1,
+        type: 'breakfast',
+        eaten_at: new Date().toISOString(),
+        dishes: [],
+      })
+    );
+  }),
+
+  // POST /dishes/search — поиск блюд (результат из БД)
+  rest.post(`${BASE_URL}/dishes/search`, (req, res, ctx) => {
+    return res(
+      ctx.status(200),
+      ctx.json({
+        query: 'банан',
+        results: [
+          {
+            id: 1,
+            name: 'Банан',
+            calories_per_100g: 89,
+            protein_per_100g: 1.1,
+            fat_per_100g: 0.3,
+            carbs_per_100g: 22.8,
+          },
+        ],
+        total_count: 1,
+        source: 'database',
+      })
+    );
+  }),
+
+  // POST /dishes/analyze — AI-анализ блюда
+  rest.post(`${BASE_URL}/dishes/analyze`, (req, res, ctx) => {
+    return res(
+      ctx.status(200),
+      ctx.json({
+        dish_name: 'банан',
+        grams: 100,
+        nutrition: {
+          calories: 89,
+          protein: 1.1,
+          fat: 0.3,
+          carbs: 22.8,
+        },
+        source: 'ai',
+      })
+    );
+  }),
+
+  // POST /dishes/add-to-meal/:meal_id — добавление блюда в приём пищи
+  rest.post(`${BASE_URL}/dishes/add-to-meal/:mealId`, (req, res, ctx) => {
+    return res(
+      ctx.status(200),
+      ctx.json({
+        id: 1,
+        meal_id: 1,
+        name: 'Банан',
+        grams: 100,
+        calories: 89,
+        protein: 1.1,
+        fat: 0.3,
+        carbs: 22.8,
+      })
+    );
+  }),
 ];

@@ -14,7 +14,7 @@ export interface AuthState {
   accessToken: string | null;
   refreshToken: string | null;
   role: UserRole;
-  isLoading: boolean; // true только во время первоначальной гидратации из localStorage
+  isLoading: boolean;
 }
 
 const initialState: AuthState = {
@@ -25,16 +25,12 @@ const initialState: AuthState = {
   isLoading: true,
 };
 
-// ---- Actions ----
-
 type AuthAction =
   | { type: 'HYDRATE'; payload: { accessToken: string; refreshToken: string; role: UserRole } }
   | { type: 'LOGIN';   payload: { accessToken: string; refreshToken: string; role: UserRole } }
   | { type: 'LOGOUT' }
   | { type: 'SET_TOKENS'; payload: { accessToken: string; refreshToken: string } }
   | { type: 'HYDRATION_DONE' };
-
-// ---- Reducer ----
 
 function authReducer(state: AuthState, action: AuthAction): AuthState {
   switch (action.type) {
@@ -70,8 +66,6 @@ function authReducer(state: AuthState, action: AuthAction): AuthState {
   }
 }
 
-// ---- Context ----
-
 interface AuthContextValue {
   state: AuthState;
   login: (accessToken: string, refreshToken: string, role: UserRole) => void;
@@ -81,12 +75,9 @@ interface AuthContextValue {
 
 export const AuthContext = createContext<AuthContextValue | null>(null);
 
-// ---- Provider ----
-
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
 
-  // Гидратация из localStorage при монтировании
   useEffect(() => {
     const accessToken = localStorage.getItem('access_token');
     const refreshToken = localStorage.getItem('refresh_token');
@@ -112,20 +103,16 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const logout = useCallback(async () => {
     const refreshToken = state.refreshToken;
 
-    // Очищаем состояние немедленно — UI реагирует сразу
     dispatch({ type: 'LOGOUT' });
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
     localStorage.removeItem('user_role');
 
-    // Best-effort отзыв токена на сервере
     if (refreshToken) {
       try {
-        // Lazy import чтобы избежать циклической зависимости на уровне модулей
         const apiClient = (await import('../api/apiClient')).default;
         await apiClient.post('/auth/logout', { refresh_token: refreshToken });
       } catch {
-        // Игнорируем — локальное состояние уже очищено
       }
     }
   }, [state.refreshToken]);

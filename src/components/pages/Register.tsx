@@ -22,7 +22,7 @@ const Register: React.FC = () => {
             <SEOHead
                 title="Регистрация"
                 description="Создайте аккаунт TrAi и начните тренироваться умнее с ИИ-поддержкой и трекингом прогресса"
-                canonical="http://localhost:3000/register"
+                canonical={`${process.env.REACT_APP_BASE_URL || 'http://localhost:3000'}/register`}
                 ogTitle="TrAi — Регистрация"
                 ogDescription="Персональный фитнес-трекер с ИИ-рекомендациями"
             />

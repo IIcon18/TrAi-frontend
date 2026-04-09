@@ -11,8 +11,6 @@ interface PrivateRouteProps {
 const PrivateRoute: React.FC<PrivateRouteProps> = ({ children, requiredRoles }) => {
   const { isAuthenticated, isLoading, role } = useAuth();
 
-  // Ждём завершения гидратации из localStorage —
-  // без этого пользователь получит ложный редирект на /login при перезагрузке
   if (isLoading) {
     return null;
   }

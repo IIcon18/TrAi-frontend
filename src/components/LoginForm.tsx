@@ -53,7 +53,7 @@ const LoginForm: React.FC = () => {
   return (
     <div className="login-form-container">
       <div className="login-form-box">
-        <h2 className="login-form-title">Авторизация</h2>
+        <h1 className="login-form-title">Авторизация</h1>
         <div className="login-form">
           {/* Email Section */}
           <div className="login-form-group">

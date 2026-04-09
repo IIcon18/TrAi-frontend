@@ -1,4 +1,3 @@
-// src/components/ProgressPhotos.tsx
 import React, { useEffect, useRef, useState } from 'react';
 import {
   Attachment,
@@ -9,11 +8,42 @@ import {
 } from '../api/attachmentsApi';
 import './ProgressPhotos.css';
 
-// Photos are attached to the user entity (entity_type="user", entity_id=user.id)
-// We get the user id from the JWT stored by the apiClient — on the backend the
-// endpoint filters by current_user.id, so we can pass 0 as a placeholder and
-// the backend will still return only the current user's photos.
-// Better: decode the id from localStorage token.
+const PhotoThumb: React.FC<{ photo: Attachment; onClick: () => void }> = ({ photo, onClick }) => {
+  const [src, setSrc] = useState<string | null>(null);
+  const [thumbLoading, setThumbLoading] = useState(true);
+
+  useEffect(() => {
+    if (!photo.content_type.startsWith('image/')) {
+      setThumbLoading(false);
+      return;
+    }
+    getAttachmentUrl(photo.id)
+      .then(url => setSrc(url))
+      .catch(() => {})
+      .finally(() => setThumbLoading(false));
+  }, [photo.id, photo.content_type]);
+
+  if (!photo.content_type.startsWith('image/')) {
+    return (
+      <div className="pp-thumb-wrapper pp-pdf" onClick={onClick}>
+        <span className="pp-pdf-icon">📄</span>
+      </div>
+    );
+  }
+
+  return (
+    <div className="pp-thumb-wrapper" onClick={onClick}>
+      {thumbLoading ? (
+        <div className="pp-spinner">⏳</div>
+      ) : src ? (
+        <img src={src} alt={photo.filename} className="pp-thumb-img" />
+      ) : (
+        <span className="pp-thumb-placeholder">🖼</span>
+      )}
+    </div>
+  );
+};
+
 const getUserId = (): number => {
   try {
     const token = localStorage.getItem('access_token') || '';
@@ -45,7 +75,6 @@ const ProgressPhotos: React.FC = () => {
 
   useEffect(() => {
     if (userId) fetchPhotos();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -97,7 +126,6 @@ const ProgressPhotos: React.FC = () => {
     }
   };
 
-  const isImage = (ct: string) => ct.startsWith('image/');
   const formatSize = (bytes: number) => bytes < 1024 * 1024
     ? `${(bytes / 1024).toFixed(0)} KB`
     : `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
@@ -109,18 +137,12 @@ const ProgressPhotos: React.FC = () => {
       <div className="pp-grid">
         {photos.map((photo) => (
           <div key={photo.id} className="pp-item">
-            {isImage(photo.content_type) ? (
+            {loadingId === photo.id ? (
               <div className="pp-thumb-wrapper" onClick={() => handleView(photo)}>
-                {loadingId === photo.id ? (
-                  <div className="pp-spinner">⏳</div>
-                ) : (
-                  <div className="pp-thumb-placeholder">🖼</div>
-                )}
+                <div className="pp-spinner">⏳</div>
               </div>
             ) : (
-              <div className="pp-thumb-wrapper pp-pdf" onClick={() => handleView(photo)}>
-                <span className="pp-pdf-icon">📄</span>
-              </div>
+              <PhotoThumb photo={photo} onClick={() => handleView(photo)} />
             )}
             <div className="pp-item-info">
               <span className="pp-filename" title={photo.filename}>

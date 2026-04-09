@@ -1,19 +1,3 @@
-/**
- * Модульные тесты для компонента LoginForm.
- *
- * Покрываемые сценарии:
- * - Рендеринг полей email и password
- * - Переключатель видимости пароля
- * - Успешный вход: вызов API, сохранение токенов, навигация на /dashboard
- * - Ошибка входа: отображение alert
- * - Граничный случай: пустая форма
- *
- * Стратегия мокирования:
- * - apiClient мокируется через jest.mock
- * - useNavigate мокируется для проверки редиректов
- * - AuthContext предоставляется через реальный AuthProvider
- */
-
 import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';

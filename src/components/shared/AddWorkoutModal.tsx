@@ -120,6 +120,10 @@ const AddWorkoutModal: React.FC<AddWorkoutModalProps> = ({ isOpen, onClose, onWo
     };
 
     const handleSaveWorkout = async () => {
+        if (!workoutName.trim() || workoutName.trim().length < 3) {
+            setError('Введите название тренировки (минимум 3 символа)');
+            return;
+        }
         if (exercises.length === 0) {
             setError('Добавьте хотя бы одно упражнение');
             return;
@@ -417,7 +421,9 @@ const AddWorkoutModal: React.FC<AddWorkoutModalProps> = ({ isOpen, onClose, onWo
                 {step === 'success' && (
                     <div className="success-message">
                         <div className="success-icon">✓</div>
-                        <div className="success-text">Тренировка успешно создана!</div>
+                        <div className="success-text">
+                            {isEditMode ? 'Тренировка успешно обновлена!' : 'Тренировка успешно создана!'}
+                        </div>
                     </div>
                 )}
             </div>

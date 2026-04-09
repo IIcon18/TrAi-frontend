@@ -63,7 +63,7 @@ const RegistrationForm: React.FC = () => {
   return (
     <div className="registration-container">
       <div className="registration-box">
-        <h2 className="registration-title">Регистрация</h2>
+        <h1 className="registration-title">Регистрация</h1>
         <form onSubmit={handleSubmit}>
           {/* Nickname */}
           <div className="form-group">
